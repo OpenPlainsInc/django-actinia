@@ -1,13 +1,11 @@
-# django-actinia
+=====
+django-actinia
+=====
+
 A Django package to utilize [Actinia](https://actinia.mundialis.de/) REST API for GRASS GIS for distributed compuational analysis and modeling.
 
-=====
-Actinia
-=====
-
-Actinia is a Django app to that allows for easy integration of ACTINIA API for GRASS GIS into an existing Django project.
-
-## Requirments
+Requirments
+------------
 
 * django (>= 4.0)
 * celery (>=5.2.6)
@@ -23,7 +21,7 @@ Quick start
 1. Add "actinia" to your INSTALLED_APPS setting like this::
 
     INSTALLED_APPS = [
-        ...
+        # ...
         'channels',
         'djnago.contrib.gis',
         'rest_framework',
@@ -34,7 +32,7 @@ Quick start
 2. Add actinia postgis data to DATABASES in settings like this::
 
     DATABASES = {
-        ...
+        # ...
         'actinia': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
             'NAME': actinia,
