@@ -1,0 +1,6 @@
+include LICENSE
+include README.rst
+recursive-include actinia/static *
+recursive-include actinia/templates *
+recursive-include docs *
+
