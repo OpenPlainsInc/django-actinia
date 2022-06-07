@@ -2,7 +2,7 @@
 django-actinia
 =====
 
-A Django package to utilize [Actinia](https://actinia.mundialis.de/) REST API for GRASS GIS for distributed compuational analysis and modeling.
+A Django package to utilize `Actinia <https://actinia.mundialis.de/>`__ REST API for GRASS GIS for distributed compuational analysis and modeling.
 
 Requirments
 ------------
