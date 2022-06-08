@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: ResponseStatusField.py                                             #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+from rest_framework import serializers
+from actinia.models.enums import ResponseStatusEnum
+
+
+class ResponseStatusChoiceField(serializers.ChoiceField):
+    """
+    Custom serializer to handle Actinia response status json responses.
+    """
+
+    choices = ResponseStatusEnum.choices
+    default = ResponseStatusEnum.SUCCESS
+    allow_blank = False

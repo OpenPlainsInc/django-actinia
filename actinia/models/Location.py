@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: Location.py                                                        #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,47 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+from django.db import models
+from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
+from actinia.models.ActiniaUser import ActiniaUser
+from actinia.models.Mapset import Mapset
+
+
+class Location(ObjectAuditAbstract):
+    """
+    Class representing GRASS locations avaliable in Actinia
+
+    Attributes
+    ----------
+    id : BigAutoField
+        Auto generated Primary key of response
+    name : str
+        The name of the GRASS mapset
+    description: str
+        The EPSG code of the location
+    owner : User
+        The user who owns the mapset
+    epsg : str
+        The EPSG code of the location
+    organization : Organization
+        The organization the location belongs to
+    teams : Team
+        The teams that have access to the location
+    public : bool
+        Set true if location is publicly avaliable to all users.
+    """
+
+    epsg = models.CharField(max_length=8, blank=False)
+
+    def mapsets(self):
+        """Return mapsets for this location"""
+        return Mapset.objects.get(location=self)
+
+    class Meta:
+        contraints = [
+            models.UniqueConstraint(
+                fields=["location_name", "epsg", "owner", "team", "organization"],
+                name="unique_location",
+            )
+        ]

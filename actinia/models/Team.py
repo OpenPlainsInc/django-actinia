@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: Team.py                                                            #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,31 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+
+from actinia.models.ObjectInfoAbstract import ObjectInfoAbstract
+
+from django.db import models
+
+from actinia.models.ActiniaUser import ActiniaUser
+
+
+class Team(ObjectInfoAbstract):
+    """
+    Class representing a team
+
+    Attributes
+    ----------
+    id : BigAutoField
+        Auto generated Primary key of response
+    name : str
+        The name of the GRASS location
+    description : str
+        A description of the team.
+    owner : str
+        The user who owns the team
+    members: str
+        The members of the team
+    """
+
+    members = models.ManyToManyField(ActiniaUser, editable=True)

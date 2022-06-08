@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: test.settings.py                                                   #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #

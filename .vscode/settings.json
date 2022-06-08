@@ -1,167 +1,178 @@
 {
-    // https://github.com/davidquinn/psi-header/tree/main/src
-    "psi-header.config": {
-        "forceToTop": true,
-        "blankLinesAfter": 1,
-        "spacesBetweenYears": false,
-        "license": "Custom",
-        "author": "Corey White",
-        "projectname": "django-actinia",
-        "company": "OpenPlains",
-        "initials": "CW",
-        "authorEmail": "smortopahri@gmail.com",
-        "copyrightHolder": "Corey White",
-        "creationDateZero": "now",
-        // "hostname": "myhostname"
-    },
-    "psi-header.changes-tracking": {
-        "isActive": true,
-        "modAuthor": "Modified By:",
-        "modDate": "Last Modified:",
-        "modDateFormat": "dd/MM/yyyy hh:nn:ss",
-        "include": [],
-        "includeGlob": [],
-        "exclude": ["markdown", "json", "jsonc", "shellscript", "txt"],
-        "excludeGlob": ["./**/*/ignoreme.*"],
-        "autoHeader": "autoSave",
-        "enforceHeader": false,
-        "replace": [
-            "Filename:",
-            "Project"
-        ],
-        "updateLicenseVariables": false
-    },
-    "psi-header.lang-config": [
-        {
-            "language": "*",
-            "begin": "/*",
-            "prefix": " * ",
-            "suffix": "",
-            "lineLength": 80,
-            "end": " */",
-            "forceToTop": true,
-            "blankLinesAfter": 2,
-            "beforeHeader": [],
-            "afterHeader": [],
-            "rootDirFileName": "package.json",
-            "modAuthor": "Modified By:",
-            "modDate": "Last Modified:",
-            "modDateFormat": "dd/MM/yyyy hh:nn:ss",
-            "exclude": ["markdown", "json", "jsonc", "shellscript", "txt"],
-            "replace": [
-                "Filename:",
-                "Project"
-            ],
-            "ignoreLines": []
-        },
-         // {
-        //     "language": "typescript",
-        //     "mapTo": "javascript"
-        // },
-        {
-            "language": "python",
-            "begin": "###############################################################################",
-            "prefix": "# ",
-            "suffix": "#",
-            "lineLength": 80,
-            "end": "###############################################################################",
-            "forceToTop": true,
-            "blankLinesAfter": 2,
-            "beforeHeader": [],
-            "afterHeader": [],
-            "modAuthor": "Modified By:",
-            "modDate": "Last Modified:",
-            "modDateFormat": "dd/MM/yyyy hh:nn:ss",
-            "exclude": ["markdown", "json", "jsonc", "shellscript", "txt"],
-            "replace": [
-                "Project",
-                "Author"
-            ],
-            "ignoreLines": []
-        },
+  "autoDocstring.docstringFormat": "numpy",
+  "psi-header.changes-tracking": {
+    "autoHeader": "autoSave",
+    "enforceHeader": false,
+    "exclude": [
+      "markdown",
+      "json",
+      "jsonc",
+      "shellscript",
+      "txt"
     ],
-    "psi-header.templates": [
-        {
-            "language": "javascript",
-            "template": [
-                "Filename: <<filename>>",
-                "Project: <<company>>",
-                "File Created: <<filecreated('dddd MMMM Do YYYY')>>",
-                "Author: <<author>> (<<authorEmail>>)",
-                "Maintainer: <<author>>",
-                "-----",
-                "Last Modified: <<date>>",
-                "Modified By: <<author>>",
-                "-----",
-                "License: GPLv3",
-                "",
-                "Copyright (c) <<yeartoyear(fc, now)>> <<company>>",
-                "",
-                "<<licensetext>>",
-            ],
-            "changeLogCaption": "HISTORY",
-            "changeLogHeaderLineCount": 2,
-            "changeLogEntryTemplate": [
-                "",
-                "<<dateformat(DD-MM-YYYY)>>\t<<initials>>\t"
-            ],
-            "changeLogNaturalOrder": false,
-            "changeLogFooterLineCount": 0
-        },
-        // {
-        //     "language": "typescript",
-        //     "mapTo": "javascript"
-        // },
-        {
-            "language": "python",
-            "template": [
-                "Filename: <<filename>>",
-                "Project: <<company>>",
-                "File Created: <<filecreated('dddd MMMM Do YYYY')>>",
-                "Author: <<author>> (<<authorEmail>>)",
-                "Maintainer: <<author>>",
-                "-----",
-                "Last Modified: <<date>>",
-                "Modified By: <<author>>",
-                "-----",
-                "License: GPLv3",
-                "",
-                "Copyright (c) <<yeartoyear(fc, now)>> <<company>>",
-                "",
-                "<<licensetext>>",
-            ],
-            "changeLogCaption": "HISTORY",
-            "changeLogHeaderLineCount": 2,
-            "changeLogEntryTemplate": [
-                "",
-                "<<dateformat(DD-MM-YYYY)>>\t<<initials>>\t"
-            ],
-            "changeLogNaturalOrder": false,
-            "changeLogFooterLineCount": 0
-        }
+    "excludeGlob": [
+      "./**/*/ignoreme.*"
     ],
-    "psi-header.license-text": [
-       "django-actinia is an open-source django app that allows for with",
-       "the Actinia REST API for GRASS GIS for distributed computational tasks.",
-       "",
-       "This program is free software: you can redistribute it and/or modify",
-       "it under the terms of the GNU General Public License as published by",
-       "the Free Software Foundation, either version 3 of the License, or",
-       "(at your option) any later version.",
-       "",
-       "This program is distributed in the hope that it will be useful,",
-       "but WITHOUT ANY WARRANTY; without even the implied warranty of",
-       "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
-       "GNU General Public License for more details.",
-       "",
-       "You should have received a copy of the GNU General Public License",
-       "along with this program.  If not, see <https://www.gnu.org/licenses/>.",
-       "",
+    "include": [],
+    "includeGlob": [],
+    "isActive": true,
+    "modAuthor": "Modified By:",
+    "modDate": "Last Modified:",
+    "modDateFormat": "dd/MM/yyyy hh:nn:ss",
+    "replace": [
+      "Filename:",
+      "Project"
     ],
-    "psi-header.license-reference": {
-        "uri": "../LICENSE",
-        "uriIsLocalFile": true
+    "updateLicenseVariables": false
+  },
+  "psi-header.config": {
+    "author": "Corey White",
+    "authorEmail": "smortopahri@gmail.com",
+    "blankLinesAfter": 1,
+    "company": "OpenPlains",
+    "copyrightHolder": "Corey White",
+    "creationDateZero": "now",
+    "forceToTop": true,
+    "initials": "CW",
+    "license": "Custom",
+    "projectname": "django-actinia",
+    "spacesBetweenYears": false
+  },
+  "psi-header.lang-config": [
+    {
+      "afterHeader": [],
+      "beforeHeader": [],
+      "begin": "/*",
+      "blankLinesAfter": 2,
+      "end": " */",
+      "exclude": [
+        "markdown",
+        "json",
+        "jsonc",
+        "shellscript",
+        "txt"
+      ],
+      "forceToTop": true,
+      "ignoreLines": [],
+      "language": "*",
+      "lineLength": 80,
+      "modAuthor": "Modified By:",
+      "modDate": "Last Modified:",
+      "modDateFormat": "dd/MM/yyyy hh:nn:ss",
+      "prefix": " * ",
+      "replace": [
+        "Filename:",
+        "Project"
+      ],
+      "rootDirFileName": "package.json",
+      "suffix": ""
     },
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true
+    {
+      "afterHeader": [],
+      "beforeHeader": [],
+      "begin": "###############################################################################",
+      "blankLinesAfter": 2,
+      "end": "###############################################################################",
+      "exclude": [
+        "markdown",
+        "json",
+        "jsonc",
+        "shellscript",
+        "txt"
+      ],
+      "forceToTop": true,
+      "ignoreLines": [],
+      "language": "python",
+      "lineLength": 80,
+      "modAuthor": "Modified By:",
+      "modDate": "Last Modified:",
+      "modDateFormat": "dd/MM/yyyy hh:nn:ss",
+      "prefix": "# ",
+      "replace": [
+        "Project",
+        "Author"
+      ],
+      "suffix": "#"
+    }
+  ],
+  "psi-header.license-reference": {
+    "uri": "../LICENSE",
+    "uriIsLocalFile": true
+  },
+  "psi-header.license-text": [
+    "django-actinia is an open-source django app that allows for with",
+    "the Actinia REST API for GRASS GIS for distributed computational tasks.",
+    "",
+    "This program is free software: you can redistribute it and/or modify",
+    "it under the terms of the GNU General Public License as published by",
+    "the Free Software Foundation, either version 3 of the License, or",
+    "(at your option) any later version.",
+    "",
+    "This program is distributed in the hope that it will be useful,",
+    "but WITHOUT ANY WARRANTY; without even the implied warranty of",
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
+    "GNU General Public License for more details.",
+    "",
+    "You should have received a copy of the GNU General Public License",
+    "along with this program.  If not, see <https://www.gnu.org/licenses/>.",
+    ""
+  ],
+  "psi-header.templates": [
+    {
+      "changeLogCaption": "HISTORY",
+      "changeLogEntryTemplate": [
+        "",
+        "<<dateformat(DD-MM-YYYY)>>\t<<initials>>\t"
+      ],
+      "changeLogFooterLineCount": 0,
+      "changeLogHeaderLineCount": 2,
+      "changeLogNaturalOrder": false,
+      "language": "javascript",
+      "template": [
+        "Filename: <<filename>>",
+        "Project: <<company>>",
+        "File Created: <<filecreated('dddd MMMM Do YYYY')>>",
+        "Author: <<author>> (<<authorEmail>>)",
+        "Maintainer: <<author>>",
+        "-----",
+        "Last Modified: <<date>>",
+        "Modified By: <<author>>",
+        "-----",
+        "License: GPLv3",
+        "",
+        "Copyright (c) <<yeartoyear(fc, now)>> <<company>>",
+        "",
+        "<<licensetext>>"
+      ]
+    },
+    {
+      "changeLogCaption": "HISTORY",
+      "changeLogEntryTemplate": [
+        "",
+        "<<dateformat(DD-MM-YYYY)>>\t<<initials>>\t"
+      ],
+      "changeLogFooterLineCount": 0,
+      "changeLogHeaderLineCount": 2,
+      "changeLogNaturalOrder": false,
+      "language": "python",
+      "template": [
+        "Filename: <<filename>>",
+        "Project: <<company>>",
+        "File Created: <<filecreated('dddd MMMM Do YYYY')>>",
+        "Author: <<author>> (<<authorEmail>>)",
+        "Maintainer: <<author>>",
+        "-----",
+        "Last Modified: <<date>>",
+        "Modified By: <<author>>",
+        "-----",
+        "License: GPLv3",
+        "",
+        "Copyright (c) <<yeartoyear(fc, now)>> <<company>>",
+        "",
+        "<<licensetext>>"
+      ]
+    }
+  ],
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true
 }

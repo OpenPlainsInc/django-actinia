@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: ActiniaResponseStatusField.py                                      #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+from actinia.models.enums import ResponseStatusEnum
+from django.db import models
+
+
+class ActiniaResponseStatusEnumField(models.CharField):
+    """
+    Custom model field for actinia user roles
+    """
+
+    max_length = 2
+    choices = (ResponseStatusEnum.choices,)
+    default = ResponseStatusEnum.SUCCESS

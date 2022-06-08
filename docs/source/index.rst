@@ -6,7 +6,7 @@
 Welcome to django-actinia's documentation!
 ==========================================
 
-**django-actinia** is a a Django package to utilize `Actinia <https://actinia.mundialis.de/>`__ 
+**django-actinia** is a a Django package to utilize `Actinia <https://actinia.mundialis.de/>`__
 REST API for GRASS GIS for distributed compuational analysis and modeling tasks.
 
 .. note::

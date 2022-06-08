@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,4 +30,14 @@
 #                                                                              #
 ###############################################################################
 
+from django.apps import AppConfig
 
+
+class ActiniaConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "actinia"
+
+    def ready(self):
+        # Import celery app now that Django is mostly ready.
+        # This initializes Celery and autodiscovers tasks
+        import api.celery

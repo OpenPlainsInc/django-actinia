@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: LocationSerializer.py                                              #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,31 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+from rest_framework import serializers
+from actinia.models import Location
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ["id", "location_name", "epsg"]
+
+    def create(self, validated_data):
+        """
+        Create and return a new 'Location' instance, given the validated data.
+
+        Parameters
+        ----------
+        validated_data : OrderedDict
+            Dict containing validated data.
+
+        Returns
+        -------
+        Location
+            New validated 'Location' instance.
+        """
+        return Location.object.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        pass

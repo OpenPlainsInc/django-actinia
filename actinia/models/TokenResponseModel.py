@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: TokenResponseModel.py                                              #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+
+from django.db import models
+from actinia.models import SimpleResponseAbstract
+from actinia.models.Token import Token
+
+
+class TokenResponseModel(SimpleResponseAbstract):
+    """
+    Custom user class to manage actinia user.
+    """
+
+    actinia_username = models.CharField(max_length=50, blank=False, unique=True)
+    token = models.ForeignKey(Token, on_delete=models.CASCADE)

@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: Mapset.py                                                          #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,38 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+from django.db import models
+from actinia.models.ObjectInfoAbstract import ObjectInfoAbstract
+from actinia.models.Location import Location
+from actinia.models.ActiniaUser import ActiniaUser
+from actinia.models.Team import Team
+
+
+class Mapset(ObjectInfoAbstract):
+    """
+    Class representing GRASS mapsets avaliable in Actinia
+
+    Attributes
+    ----------
+    id : BigAutoField
+        Auto generated Primary key of response
+    name : str
+        The name of the GRASS mapset
+    description: str
+        The EPSG code of the location
+    owner : User
+        The user who owns the mapset
+    teams : Team
+        The teams that have access to the mapset.
+    location : Location
+        The 'Location' instance the mapset belongs to.
+    """
+
+    location = models.ForeignKey(Location, editable=False, on_delete=models.CASCADE)
+
+    class Meta:
+        contraints = [
+            models.UniqueConstraint(
+                fields=["name", "location", "owner"], name="unique_mapset"
+            )
+        ]

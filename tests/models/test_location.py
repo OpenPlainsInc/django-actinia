@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: test_location.py                                                   #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+import pytest
+from actinia.models.Location import Location
+
+pytestmark = pytest.mark.django_db
+
+
+@pytest.mark.django_db
+class TestLocations:
+    pytestmark = pytest.mark.django_db
+
+    def test_location_is_private(self):
+        location = Location.objects.get(location_name="nc_spm_08")
+        assert location.public is False

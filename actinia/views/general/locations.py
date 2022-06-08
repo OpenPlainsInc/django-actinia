@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: locations.py                                                       #
 # Project: OpenPlains                                                          #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,23 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+import requests
+import actinia.utils as acp
+from django.http import JsonResponse
+
+
+def gLocations(request):
+    """
+    Gets List of Users Avaliable Locations
+    Actinia Route
+    GET /locations
+    """
+    if request.method == "GET":
+        url = f"{acp.baseUrl()}/locations"
+        r = requests.get(url, auth=acp.auth())
+        print(f"Request URL: {url}")
+        return JsonResponse({"response": r.json()}, safe=False)
+
+    # TODO - Set up proper error handling and reponse messages
+    return JsonResponse({"error": "gLocations View: Fix Me"})

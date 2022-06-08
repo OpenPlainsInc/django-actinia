@@ -1,5 +1,5 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: mapsets.py                                                         #
 # Project: OpenPlains                                                          #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #

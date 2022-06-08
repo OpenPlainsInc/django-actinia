@@ -1,5 +1,5 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: ResponseStatusEnum.py                                              #
 # Project: OpenPlains                                                          #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
@@ -29,3 +29,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+from django.db import models
+
+
+class ResponseStatusEnum(models.TextChoices):
+    SUCCESS = "SC", "success"
+    ERROR = "ER", "error"

@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: ResourceStatusEnum.py                                              #
 # Project: OpenPlains                                                          #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+from django.db import models
+
+
+class ResourceStatusEnum(models.TextChoices):
+    ACCPECTED = "AC", "accepted"
+    RUNNING = "RN", "running"
+    FINISHED = "FN", "finished"
+    TERMINATED = "TM", "terminated"
+    ERROR = "ER", "error"

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,4 +30,12 @@
 #                                                                              #
 ###############################################################################
 
+from django.urls import re_path
+from consumers import ActiniaResourceConsumer
 
+websocket_urlpatterns = [
+    re_path(
+        r"ws/actinia/resource/(?P<resource_name>\w+)/$",
+        ActiniaResourceConsumer.as_asgi(),
+    )
+]

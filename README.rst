@@ -38,7 +38,7 @@ Quick start
             'NAME': actinia,
             'USER': actinia,
             'PASSWORD': actinia,
-            'HOST': < host >, 
+            'HOST': < host >,
             'PORT': < port > # 5432
         }
     }
@@ -46,8 +46,8 @@ Quick start
 3. Add ACTINIA default user configuration to settings like this::
 
     ACTINIA = {
-        'ACTINIA_USER': actinia-gdi, # default username 
-        'ACTINIA_PASSWORD': actinia-gdi, # default username 
+        'ACTINIA_USER': actinia-gdi, # default username
+        'ACTINIA_PASSWORD': actinia-gdi, # default username
         'ACTINIA_VERSION': v3,
         'ACTINIA_BASEURL': < host:port >,
         'ACTINIA_LOCATION': nc_spm_08,
@@ -62,3 +62,17 @@ Quick start
 
 6. Start the development server and visit http://127.0.0.1:8000/admin/
    to create an actinia user, location, and mapset (you'll need the Admin app enabled).) for geospatial computation and modeling with GRASS GIS.
+
+
+Documentation
+-------------
+
+1. Genearte the API Docs from the source code.
+
+.. code:: bash
+    sphinx-apidoc -f -o docs/source actina/
+
+2. Build the docs site
+
+.. code:: bash
+    sphinx-build -b html docs/source/ docs/build/html

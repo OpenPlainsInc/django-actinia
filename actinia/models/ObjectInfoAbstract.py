@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: ObjectInfoAbstract.py                                              #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Tue Jun 07 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,25 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+from django.db import models
+from django.contrib.auth.models import User
+from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
+from actinia.models.Organization import Organization
+from actinia.models.Team import Team
+
+
+class ObjectInfoAbstract(ObjectAuditAbstract):
+    """
+    Abstract class to add basic details to a database object
+    """
+
+    name = models.CharField(max_length=150, blank=False)
+    description = models.CharField(max_length=250, blank=True)
+    owner = models.ForeignKey(User, editable=True)
+    public = models.BooleanField(default=False)
+    organization = models.ForeignKey(Organization, editable=True)
+    teams = models.ManyToManyField(Team, editable=True)
+
+    class Meta:
+        abstract = True
