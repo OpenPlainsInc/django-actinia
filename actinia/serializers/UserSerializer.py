@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: ActiniaUser.py                                                     #
+# Filename: UserSerializer.py                                                  #
 # Project: OpenPlains                                                          #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Wednesday June 8th 2022                                        #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -30,69 +30,16 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import User
-from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
-from actinia.models.fields import ActiniaRoleEnumField
+from rest_framework import serializers
+from actinia.models.ActiniaUser import ActiniaUser
 
 
-class ActiniaUser(ObjectAuditAbstract):
-    """
-    Custom user class to manage actinia user.
-    """
-
-    actinia_username = models.CharField(max_length=50, blank=False, unique=True)
-    actinia_role = ActiniaRoleEnumField()
-    user = models.ForeignKey(
-        User, related_name="actinia_users", on_delete=models.CASCADE
+class UserSerializer(serializers.ModelSerializer):
+    actinia = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=ActiniaUser.objects.all()
     )
-    password = models.CharField(max_length=128)
-    # password = # https://docs.djangoproject.com/en/4.0/topics/auth/passwords/#scrypt-usage
 
-    def _generateActiniaPassword(self):
-        """
-        Generate a password for managed actinia user.
-        """
-        new_password = BaseUserManager.make_random_password()
-        self.password = new_password
-
-    def generateActiniaToken(self):
-        """
-        Generate authorization token for user and store in Tokens
-        """
-        pass
-
-    def refreshActiniaToken(self):
-        """
-        Refresh users authentication token
-        """
-        pass
-
-    def locations(self):
-        """
-        Get a list of user's locations
-        """
-        pass
-
-    def teams(self):
-        """
-        Get a list of user's teams
-        """
-        pass
-
-    def projects(self):
-        """
-        Get a list of user's projects
-        """
-        pass
-
-    def grass_templates(self):
-        """
-        Get list of user's GRASS Templates
-        """
-        pass
-
-    def save(self, *args, **kwargs):
-        """Create a new actinia user"""
-        # Create a new Actinia user account
+    class Meta:
+        model = User
+        fields = ["id", "username", "actinia"]

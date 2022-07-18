@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Jun 08 2022                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -48,10 +48,12 @@ urlpatterns = [
     ## General (g)
     path(
         "g/locations/",
-        cache_page(60 * 15, key_prefix="grass_locations")(locations.gLocations),
+        cache_page(60 * 15, key_prefix="grass_locations")(
+            locations.LocationList.as_view()
+        ),
         name="ListLocations",
     ),
-    # path('g/locations/<str:location_name>', views.gLocation, name="Location"),
+    path("g/locations/<str:location_name>", locations.gLocations, name="Location"),
     # path('g/locations/<str:location_name>/info', cache_page(60 * 15)(views.gLocationInfo), name="LocationInfo"),
     # path('g/locations/<str:location_name>/mapsets', views.gMapsets, name="Mapsets"),
     # path('g/locations/<str:location_name>/mapsets/<str:mapset_name>', views.gMapset, name="Mapset"),
