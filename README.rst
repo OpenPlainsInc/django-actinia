@@ -2,6 +2,8 @@
 django-actinia
 =====
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7702949.svg)](https://doi.org/10.5281/zenodo.7702949)
+
 A Django package to utilize `Actinia <https://actinia.mundialis.de/>`__ REST API for GRASS GIS for distributed compuational analysis and modeling.
 
 Requirments
