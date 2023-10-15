@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc. Inc.                                           #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
