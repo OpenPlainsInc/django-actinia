@@ -30,10 +30,11 @@
 #                                                                              #
 ###############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class RolesEnum(models.TextChoices):
-    SUPERADMIN = "SU", "superadmin"
-    ADMIN = "AD", "admin"
-    USER = "US", "user"
-    GUEST = "GU", "guest"
+    SUPERADMIN = "SU", _("superadmin")
+    ADMIN = "AD", _("admin")
+    USER = "US", _("user")
+    GUEST = "GU", _("guest")

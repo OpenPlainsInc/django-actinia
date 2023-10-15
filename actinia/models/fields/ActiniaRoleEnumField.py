@@ -30,8 +30,9 @@
 #                                                                              #
 ###############################################################################
 
-from actinia.models.enums import RolesEnum
+from actinia.models.enums.RolesEnum import RolesEnum
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class ActiniaRoleEnumField(models.CharField):
@@ -40,5 +41,5 @@ class ActiniaRoleEnumField(models.CharField):
     """
 
     max_length = 2
-    choices = (RolesEnum.choices,)
+    choices = RolesEnum.choices
     default = RolesEnum.GUEST

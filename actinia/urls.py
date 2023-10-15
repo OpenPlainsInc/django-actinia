@@ -36,7 +36,7 @@ from rest_framework import routers
 from django.views.decorators.cache import cache_page
 
 
-from views.general import locations
+from actinia.views.general import locations
 
 # from views.raster import raster
 # from views import vector

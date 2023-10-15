@@ -32,8 +32,6 @@
 from django.db import models
 from actinia.models.ObjectInfoAbstract import ObjectInfoAbstract
 from actinia.models.Location import Location
-from actinia.models.ActiniaUser import ActiniaUser
-from actinia.models.Team import Team
 
 
 class Mapset(ObjectInfoAbstract):
@@ -56,11 +54,25 @@ class Mapset(ObjectInfoAbstract):
         The 'Location' instance the mapset belongs to.
     """
 
-    location = models.ForeignKey(Location, editable=False, on_delete=models.CASCADE)
+    location = models.ForeignKey(
+        Location, editable=False, on_delete=models.CASCADE, related_name="mapsets"
+    )
 
     class Meta:
-        contraints = [
+        constraints = [
             models.UniqueConstraint(
                 fields=["name", "location", "owner"], name="unique_mapset"
             )
         ]
+
+    def layers_count():
+        """
+        Returns the number of layers in the mapset
+        """
+        pass
+
+    def layers(datatype=None):
+        """
+        Returns the layers in the mapset
+        """
+        pass

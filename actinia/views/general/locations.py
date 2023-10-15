@@ -30,7 +30,7 @@
 #                                                                              #
 ###############################################################################
 
-from html5lib import serialize
+# from html5lib import serialize
 import requests
 import actinia.utils as acp
 from django.http import JsonResponse

@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2022 OpenPlains                                                #
+# Copyright (c) 2023 OpenPlains                                                #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -80,3 +80,6 @@ def asyncResourceStatus(user_id, resource_id):
         }
 
         return async_to_sync(channel_layer.group_send)(resource_group, response_message)
+
+
+#

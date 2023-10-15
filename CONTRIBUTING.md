@@ -36,6 +36,19 @@ To improve code quality install pre-commit to perform precommit checks before pu
 (venv) $ pre-commit install
 ```
 
+### Build Package
+
+```bash
+# Build
+python setup.py sdist
+
+# Install
+python -m pip install --user django-actinia/dist/django-actinia-0.0.1a0.tar.gz
+
+# Uninstall
+python -m pip uninstall django-actinia
+```
+
 ### Testing
 
 To run tests against a particular `python` and `django` version installed inside your virtual environment, you may use:

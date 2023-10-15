@@ -34,7 +34,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
 from actinia.models.Organization import Organization
-from actinia.models.Team import Team
 
 
 class ObjectInfoAbstract(ObjectAuditAbstract):
@@ -44,10 +43,11 @@ class ObjectInfoAbstract(ObjectAuditAbstract):
 
     name = models.CharField(max_length=150, blank=False)
     description = models.CharField(max_length=250, blank=True)
-    owner = models.ForeignKey(User, editable=True)
+    owner = models.ForeignKey(User, editable=True, on_delete=models.CASCADE)
     public = models.BooleanField(default=False)
-    organization = models.ForeignKey(Organization, editable=True)
-    teams = models.ManyToManyField(Team, editable=True)
+    organization = models.ForeignKey(
+        Organization, editable=True, on_delete=models.CASCADE
+    )
 
     class Meta:
         abstract = True

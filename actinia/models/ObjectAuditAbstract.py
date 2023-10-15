@@ -40,9 +40,9 @@ class ObjectAuditAbstract(models.Model):
     """
 
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
-    created_by = models.ForeignKey(User, editable=False)
+    created_by = models.ForeignKey(User, editable=False, on_delete=models.SET_NULL)
     updated_on = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(User)
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL)
 
     class Meta:
         abstract = True

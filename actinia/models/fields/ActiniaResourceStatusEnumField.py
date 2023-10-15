@@ -30,7 +30,7 @@
 #                                                                              #
 ###############################################################################
 
-from actinia.models.enums import ResourceStatusEnum
+from actinia.models.enums.ResponseStatusEnum import ResourceStatusEnum
 from django.db import models
 
 

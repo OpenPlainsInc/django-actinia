@@ -33,7 +33,6 @@
 from django.db import models
 from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
 from actinia.models.ActiniaUser import ActiniaUser
-from actinia.models.Mapset import Mapset
 
 
 class Location(ObjectAuditAbstract):
@@ -62,12 +61,12 @@ class Location(ObjectAuditAbstract):
 
     epsg = models.CharField(max_length=8, blank=False)
 
-    def mapsets(self):
-        """Return mapsets for this location"""
-        return Mapset.objects.get(location=self)
+    # def mapsets(self):
+    #     """Return mapsets for this location"""
+    #     return Mapset.objects.get(location=self)
 
     class Meta:
-        contraints = [
+        constraints = [
             models.UniqueConstraint(
                 fields=["location_name", "epsg", "owner", "team", "organization"],
                 name="unique_location",

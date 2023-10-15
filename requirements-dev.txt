@@ -17,3 +17,6 @@ pyparsing>=3.0.8
 Werkzeug>=2.1.1
 pygments>=2.12
 pystac>=1.6.1
+environ>=1.0
+daphne>=3.0.2
+django-cors-headers>=3.8.0

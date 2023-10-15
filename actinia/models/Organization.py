@@ -50,18 +50,16 @@ class Organization(ObjectAuditAbstract):
         The user who is the owner of the organization.
     """
 
-    organization_id = models.BigAutoField(primary_key=True)
+    organization_id = models.BigAutoField(primary_key=True, unique=True)
     organization_name = models.CharField(max_length=50, blank=False, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     # members =
     # teams =
 
     class Meta:
-        contraints = [
-            models.UniqueConstraint(
-                fields=["organization_id"], name="unique_organization_id"
-            )
-        ]
+        db_table = "organization"
+        verbose_name = "Organization"
+        verbose_name_plural = "Organizations"
 
     def members(self):
         """

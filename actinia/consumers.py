@@ -81,7 +81,7 @@ class ActiniaResourceConsumer(AsyncWebsocketConsumer):
         self.resource_name = self.scope["url_route"]["kwargs"]["resource_name"]
         print("ActiniaResourceConsumer: Resource Name: ", self.resource_name)
 
-        self.resource_group_name = "savana_%s" % self.resource_name
+        self.resource_group_name = "actinia_%s" % self.resource_name
         print(
             "ActiniaResourceConsumer: Resource Group Name: ", self.resource_group_name
         )
