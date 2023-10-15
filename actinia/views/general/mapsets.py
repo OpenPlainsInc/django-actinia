@@ -1,6 +1,6 @@
 ###############################################################################
 # Filename: mapsets.py                                                         #
-# Project: OpenPlains                                                          #
+# Project: django-actinia                                                          #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2022 OpenPlains                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                                #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #

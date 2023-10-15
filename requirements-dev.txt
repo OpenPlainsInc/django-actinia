@@ -20,3 +20,4 @@ pystac>=1.6.1
 environ>=1.0
 daphne>=3.0.2
 django-cors-headers>=3.8.0
+actinia-python-client @ https://github.com/actinia-org/actinia-python-client/releases/download/0.3.0/actinia_python_client-0.3.0-py3-none-any.whl

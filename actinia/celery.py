@@ -10,7 +10,7 @@
 # # -----                                                                        #
 # # License: GPLv3                                                               #
 # #                                                                              #
-# # Copyright (c) 2022 TomorrowNow                                               #
+# # Copyright (c) 2023 OpenPlains Inc.                                               #
 # #                                                                              #
 # # TomorrowNow is an open-source geospatial participartory modeling platform    #
 # # to enable stakeholder engagment in socio-environmental decision-makeing.     #
