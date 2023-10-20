@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: Location.py                                                        #
-# Project: django-actinia                                                      #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,11 +31,12 @@
 ###############################################################################
 
 from django.db import models
-from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
-from actinia.models.ActiniaUser import ActiniaUser
+from .Team import Team
+from .ObjectAuditAbstract import ObjectAuditAbstract
+from .ObjectInfoAbstract import ObjectInfoAbstract
 
 
-class Location(ObjectAuditAbstract):
+class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     """
     Class representing GRASS locations avaliable in Actinia
 
@@ -60,15 +61,15 @@ class Location(ObjectAuditAbstract):
     """
 
     epsg = models.CharField(max_length=8, blank=False)
+    teams = models.ManyToManyField(Team, editable=True)
 
-    # def mapsets(self):
-    #     """Return mapsets for this location"""
-    #     return Mapset.objects.get(location=self)
+    def __str__(self):
+        return self.name
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["location_name", "epsg", "owner", "team", "organization"],
+                fields=["name", "epsg", "owner", "organization"],
                 name="unique_location",
             )
         ]

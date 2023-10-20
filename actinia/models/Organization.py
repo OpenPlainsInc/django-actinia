@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: Organization.py                                                    #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,8 +30,8 @@
 #                                                                              #
 ###############################################################################
 from django.db import models
-from django.contrib.auth.models import User
-from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
+from .ObjectAuditAbstract import ObjectAuditAbstract
+from uuid import uuid4
 
 
 class Organization(ObjectAuditAbstract):
@@ -42,17 +42,16 @@ class Organization(ObjectAuditAbstract):
     ----------
     id : int
         The default object id
-    organization_id : str
-        Unique hash identifier for the organization.
     organization_name : str
         The name of the organization.
     owner : int
         The user who is the owner of the organization.
     """
 
-    organization_id = models.BigAutoField(primary_key=True, unique=True)
-    organization_name = models.CharField(max_length=50, blank=False, unique=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, blank=False, unique=True)
+    owner = models.ForeignKey(
+        "auth.User", on_delete=models.CASCADE, related_name="organization_owner"
+    )
     # members =
     # teams =
 

@@ -1,16 +1,16 @@
 ###############################################################################
-# Filename: UserSerializer.py                                                  #
+# Filename: test_Mapset.py                                                     #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Wednesday June 8th 2022                                        #
+# File Created: Friday October 20th 2023                                       #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Fri Oct 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,16 +30,22 @@
 #                                                                              #
 ###############################################################################
 
-from django.contrib.auth.models import User
-from rest_framework import serializers
-from actinia.models import ActiniaUser
+
+from django.test import TestCase
+from actinia.models import Mapset, Location
 
 
-class UserSerializer(serializers.ModelSerializer):
-    actinia = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=ActiniaUser.objects.all()
-    )
+class MapsetModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Set up non-modified objects used by all test methods
+        location = Location.objects.create(name="Test Location")
+        Mapset.objects.create(name="Test Mapset", location=location)
 
-    class Meta:
-        model = User
-        fields = ["id", "username", "actinia"]
+    def test_layers_count(self):
+        mapset = Mapset.objects.get(id=1)
+        self.assertEqual(mapset.layers_count(), 0)
+
+    def test_layers(self):
+        mapset = Mapset.objects.get(id=1)
+        self.assertQuerysetEqual(mapset.layers(), [])

@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: Token.py                                                           #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,9 +33,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from tomlkit import datetime
-from actinia.models.ActiniaUser import ActiniaUser
-from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
+from actinia.models import ActiniaUser, ObjectAuditAbstract
 from actinia.models.enums import TokenTypeEnum
 
 
@@ -45,7 +43,9 @@ class Token(ObjectAuditAbstract):
     """
 
     token = models.CharField(max_length=255, blank=False, unique=True, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        "auth.User", on_delete=models.CASCADE, related_name="tokens"
+    )
     actinia_user = models.ForeignKey(ActiniaUser, on_delete=models.CASCADE)
     expires = models.DateTimeField()
     token_type = models.CharField(

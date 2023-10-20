@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: ObjectInfoAbstract.py                                              #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Fri Oct 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,22 +31,28 @@
 ###############################################################################
 
 from django.db import models
-from django.contrib.auth.models import User
-from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
-from actinia.models.Organization import Organization
+from django.conf import settings
+from actinia.models import Organization
 
 
-class ObjectInfoAbstract(ObjectAuditAbstract):
+class ObjectInfoAbstract(models.Model):
     """
     Abstract class to add basic details to a database object
     """
 
     name = models.CharField(max_length=150, blank=False)
     description = models.CharField(max_length=250, blank=True)
-    owner = models.ForeignKey(User, editable=True, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, editable=True, on_delete=models.CASCADE
+    )
     public = models.BooleanField(default=False)
     organization = models.ForeignKey(
-        Organization, editable=True, on_delete=models.CASCADE
+        "organization",
+        editable=True,
+        on_delete=models.CASCADE,
+        related_name="%(class)s_organization",
+        null=True,
+        blank=True,
     )
 
     class Meta:

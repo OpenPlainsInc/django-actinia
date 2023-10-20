@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: ActiniaRoleEnumField.py                                            #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,7 +30,7 @@
 #                                                                              #
 ###############################################################################
 
-from actinia.models.enums.RolesEnum import RolesEnum
+from actinia.models.enums import RolesEnum
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 

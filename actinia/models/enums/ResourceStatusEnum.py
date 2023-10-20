@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: ResourceStatusEnum.py                                              #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Jun 10 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,7 +33,7 @@ from django.db import models
 
 
 class ResourceStatusEnum(models.TextChoices):
-    ACCPECTED = "AC", "accepted"
+    ACCEPTED = "AC", "accepted"
     RUNNING = "RN", "running"
     FINISHED = "FN", "finished"
     TERMINATED = "TM", "terminated"

@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: test_settings.py                                                   #
-# Project: django-actinia                                                      #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Fri Oct 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -86,8 +86,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_gis",
-    "guardian",
     "django_filters",
+    "django_extensions",
 ]
 
 
@@ -136,6 +136,7 @@ if DEBUG:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[:-1] + "1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
+AUTH_USER_MODEL = "auth.User"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8005",
@@ -242,14 +243,14 @@ DATABASES = {
         "HOST": env("POSTGRES_HOST"),
         "PORT": env("POSTGRES_PORT"),
     },
-    "actinia": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": env("ACTINIA_POSTGRES_DBNAME"),
-        "USER": env("ACTINIA_POSTGRES_USER"),
-        "PASSWORD": env("ACTINIA_POSTGRES_PASSWORD"),
-        "HOST": env("POSTGRES_HOST"),
-        "PORT": env("POSTGRES_PORT"),
-    },
+    # "actinia": {
+    #     "ENGINE": "django.contrib.gis.db.backends.postgis",
+    #     "NAME": env("ACTINIA_POSTGRES_DBNAME"),
+    #     "USER": env("ACTINIA_POSTGRES_USER"),
+    #     "PASSWORD": env("ACTINIA_POSTGRES_PASSWORD"),
+    #     "HOST": env("POSTGRES_HOST"),
+    #     "PORT": env("POSTGRES_PORT"),
+    # },
 }
 
 # CACHES

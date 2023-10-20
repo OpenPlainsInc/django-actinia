@@ -1,16 +1,16 @@
 ###############################################################################
-# Filename: UserSerializer.py                                                  #
+# Filename: test_ActiniaUser.py                                                #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Wednesday June 8th 2022                                        #
+# File Created: Friday October 20th 2023                                       #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Fri Oct 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,16 +30,48 @@
 #                                                                              #
 ###############################################################################
 
+
+from django.test import TestCase
 from django.contrib.auth.models import User
-from rest_framework import serializers
 from actinia.models import ActiniaUser
 
 
-class UserSerializer(serializers.ModelSerializer):
-    actinia = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=ActiniaUser.objects.all()
-    )
+class ActiniaUserTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testuser", email="testuser@example.com", password="testpass"
+        )
+        self.actinia_user = ActiniaUser.objects.create(
+            actinia_username="testactiniauser",
+            actinia_role="admin",
+            user=self.user,
+            password="testpass",
+        )
 
-    class Meta:
-        model = User
-        fields = ["id", "username", "actinia"]
+    def test_actinia_user_str(self):
+        self.assertEqual(str(self.actinia_user), "testactiniauser")
+
+    def test_actinia_user_password(self):
+        self.assertNotEqual(self.actinia_user.password, "testpass")
+
+    def test_actinia_user_generate_token(self):
+        self.actinia_user.generateActiniaToken()
+        self.assertIsNotNone(self.actinia_user.token)
+
+    def test_actinia_user_refresh_token(self):
+        self.actinia_user.generateActiniaToken()
+        old_token = self.actinia_user.token
+        self.actinia_user.refreshActiniaToken()
+        self.assertNotEqual(self.actinia_user.token, old_token)
+
+    def test_actinia_user_locations(self):
+        self.assertEqual(self.actinia_user.locations(), [])
+
+    def test_actinia_user_teams(self):
+        self.assertEqual(self.actinia_user.teams(), [])
+
+    def test_actinia_user_projects(self):
+        self.assertEqual(self.actinia_user.projects(), [])
+
+    def test_actinia_user_grass_templates(self):
+        self.assertEqual(self.actinia_user.grass_templates(), [])

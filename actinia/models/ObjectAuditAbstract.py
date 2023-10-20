@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: ObjectAuditAbstract.py                                             #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,7 +31,6 @@
 ###############################################################################
 
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class ObjectAuditAbstract(models.Model):
@@ -40,9 +39,21 @@ class ObjectAuditAbstract(models.Model):
     """
 
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
-    created_by = models.ForeignKey(User, editable=False, on_delete=models.SET_NULL)
+    created_by = models.ForeignKey(
+        "auth.User",
+        editable=False,
+        on_delete=models.SET_NULL,
+        related_name="%(class)s_created_by",
+        null=True,
+    )
     updated_on = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL)
+    updated_by = models.ForeignKey(
+        "auth.User",
+        on_delete=models.SET_NULL,
+        related_name="%(class)s_updated_by",
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         abstract = True

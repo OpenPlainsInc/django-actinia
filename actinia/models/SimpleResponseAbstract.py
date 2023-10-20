@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: SimpleResponseModel.py                                             #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,8 +33,8 @@
 from django.db import models
 
 from actinia.models.enums import ResponseStatusEnum
-from actinia.models.fields import ActiniaResourceStatusEnumField
-from actinia.models.fields import ActiniaResponseStatusEnumField
+from .fields.ActiniaResourceStatusEnumField import ActiniaResourceStatusEnumField
+from .fields.ActiniaResponseStatusEnumField import ActiniaResponseStatusEnumField
 
 
 class SimpleResponseAbstract(models.Model):

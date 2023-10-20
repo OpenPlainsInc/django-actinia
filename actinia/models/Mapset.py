@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: Mapset.py                                                          #
-# Project: django-actinia                                                      #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,11 +31,12 @@
 ###############################################################################
 
 from django.db import models
-from actinia.models.ObjectInfoAbstract import ObjectInfoAbstract
-from actinia.models.Location import Location
+from .Location import Location
+from .ObjectInfoAbstract import ObjectInfoAbstract
+from .ObjectAuditAbstract import ObjectAuditAbstract
 
 
-class Mapset(ObjectInfoAbstract):
+class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
     """
     Class representing GRASS mapsets avaliable in Actinia
 

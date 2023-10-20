@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: ActiniaResourceStatusEnumField.py                                  #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,7 +30,7 @@
 #                                                                              #
 ###############################################################################
 
-from actinia.models.enums.ResponseStatusEnum import ResourceStatusEnum
+from actinia.models.enums import ResourceStatusEnum
 from django.db import models
 
 
@@ -41,4 +41,4 @@ class ActiniaResourceStatusEnumField(models.CharField):
 
     max_length = 2
     choices = (ResourceStatusEnum.choices,)
-    default = ResourceStatusEnum.ACCPECTED
+    default = ResourceStatusEnum.ACCEPTED

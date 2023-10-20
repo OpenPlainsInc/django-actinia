@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: locations.py                                                       #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Jun 08 2022                                               #
+# Last Modified: Wed Oct 18 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -34,9 +34,10 @@
 import requests
 import actinia.utils as acp
 from django.http import JsonResponse
-from actinia.models.Location import Location
-from actinia.serializers.LocationSerializer import LocationSerializer
-from actinia.serializers.LocationResponseSerializer import LocationResponseSerializer
+from actinia.models import Location
+from actinia.serializers import LocationSerializer, LocationResponseSerializer
+
+# from actinia.serializers.LocationResponseSerializer import LocationResponseSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response

@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: ActiniaUser.py                                                     #
-# Project: django-actinia                                                      #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Jul 08 2022                                               #
+# Last Modified: Fri Oct 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,20 +32,25 @@
 
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import User
-from actinia.models.ObjectAuditAbstract import ObjectAuditAbstract
-from actinia.models.fields.ActiniaRoleEnumField import ActiniaRoleEnumField
+from .ObjectAuditAbstract import ObjectAuditAbstract
+from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField
 
 
 class ActiniaUser(ObjectAuditAbstract):
     """
     Custom user class to manage actinia user.
+
+    Attributes:
+        actinia_username (str): The username of the actinia user.
+        actinia_role (ActiniaRoleEnumField): The role of the actinia user.
+        user (ForeignKey): The related Django user object.
+        password (str): The password of the actinia user.
     """
 
     actinia_username = models.CharField(max_length=50, blank=False, unique=True)
     actinia_role = ActiniaRoleEnumField()
     user = models.ForeignKey(
-        User, related_name="actinia_users", on_delete=models.CASCADE
+        "auth.User", related_name="actinia_users", on_delete=models.CASCADE
     )
     password = models.CharField(max_length=128)
     # password = # https://docs.djangoproject.com/en/4.0/topics/auth/passwords/#scrypt-usage
@@ -94,13 +99,29 @@ class ActiniaUser(ObjectAuditAbstract):
         pass
 
     def save(self, *args, **kwargs):
-        """Create a new actinia user"""
+        """
+        Create a new actinia user.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         # Create a new Actinia user account
 
     def __str__(self):
+        """
+        Return the actinia username.
+
+        Returns:
+            str: The actinia username.
+        """
         return self.actinia_username
 
     class Meta:
+        """
+        Metadata for the ActiniaUser model.
+        """
+
         ordering = ["created_on"]
         verbose_name = "Actinia User"
         verbose_name_plural = "Actinia Users"
