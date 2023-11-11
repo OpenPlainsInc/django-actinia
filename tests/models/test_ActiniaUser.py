@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Oct 20 2023                                               #
+# Last Modified: Fri Nov 10 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -58,12 +58,6 @@ class ActiniaUserTestCase(TestCase):
         self.actinia_user.generateActiniaToken()
         self.assertIsNotNone(self.actinia_user.token)
 
-    def test_actinia_user_refresh_token(self):
-        self.actinia_user.generateActiniaToken()
-        old_token = self.actinia_user.token
-        self.actinia_user.refreshActiniaToken()
-        self.assertNotEqual(self.actinia_user.token, old_token)
-
     def test_actinia_user_locations(self):
         self.assertEqual(self.actinia_user.locations(), [])
 
@@ -75,3 +69,16 @@ class ActiniaUserTestCase(TestCase):
 
     def test_actinia_user_grass_templates(self):
         self.assertEqual(self.actinia_user.grass_templates(), [])
+
+    def test_actinia_user_create(self):
+        self.actinia_user.create()
+        self.assertIsNotNone(self.actinia_user.actinia_username)
+        self.assertIsNotNone(self.actinia_user.password)
+        self.assertIsNotNone(self.actinia_user.user)
+        self.assertIsNotNone(self.actinia_user.actinia_role)
+        self.assertIsNotNone(self.actinia_user.token)
+        self.assertIsNotNone(self.actinia_user.__actinia_client)
+        self.assertIsNotNone(self.actinia_user.locations())
+        self.assertIsNotNone(self.actinia_user.teams())
+        self.assertIsNotNone(self.actinia_user.projects())
+        self.assertIsNotNone(self.actinia_user.grass_templates())

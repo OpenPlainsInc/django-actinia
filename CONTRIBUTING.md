@@ -19,9 +19,6 @@ $ source venv/bin/activate
 # install dependencies
 (venv) $ pip install Django -r requirements-dev.txt
 
-# for accessing the GUI portion of the test application
-(venv) $ export DJANGO_EXTENSIONS_DATABASE_NAME="db.sqlite3"    # you may change if you want to use any other database
-# start the development server
 (venv) $ python manage.py runserver
 ```
 
@@ -60,6 +57,11 @@ To run tests against a particular `python` and `django` version installed inside
 ```
 
 To run tests against all supported `python` and `django` versions, you may run:
+
+Docker Test
+```
+docker compose --env-file .test.env --file docker-compose-test.yml up
+```
 
 ```bash
 # install dependency

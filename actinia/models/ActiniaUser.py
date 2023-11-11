@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Oct 20 2023                                               #
+# Last Modified: Fri Nov 10 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,10 +30,43 @@
 #                                                                              #
 ###############################################################################
 
+import os
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
 from .ObjectAuditAbstract import ObjectAuditAbstract
 from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField
+from .enums import RolesEnum
+from django.conf import settings
+from actinia import Actinia
+from requests.auth import HTTPBasicAuth
+from enum import Enum, unique
+import requests
+import json
+import Location
+import Mapset
+import Token
+
+# Actinia Super User Connection to create new users.
+# Should make this role an admin
+ACTINIA_SETTINGS = settings.ACTINIA
+actinia_super_auth = HTTPBasicAuth(
+    ACTINIA_SETTINGS["ACTINIA_USER"], ACTINIA_SETTINGS["ACTINIA_PASSWORD"]
+)
+actina_super_client = Actinia(
+    os.path.join("http://", ACTINIA_SETTINGS["ACTINIA_BASEURL"]),
+    ACTINIA_SETTINGS["ACTINIA_VERSION"],
+)
+actina_super_client.set_authentication(
+    ACTINIA_SETTINGS["ACTINIA_USER"], ACTINIA_SETTINGS["ACTINIA_PASSWORD"]
+)
+
+
+@unique
+class USER_TASK(Enum):
+    USERS = "users"
+    TOKEN = "token"
+    API_KEY = "api_key"
+    API_LOG = "api_log"
 
 
 class ActiniaUser(ObjectAuditAbstract):
@@ -47,56 +80,109 @@ class ActiniaUser(ObjectAuditAbstract):
         password (str): The password of the actinia user.
     """
 
+    __actinia_auth = None
     actinia_username = models.CharField(max_length=50, blank=False, unique=True)
     actinia_role = ActiniaRoleEnumField()
     user = models.ForeignKey(
         "auth.User", related_name="actinia_users", on_delete=models.CASCADE
     )
     password = models.CharField(max_length=128)
-    # password = # https://docs.djangoproject.com/en/4.0/topics/auth/passwords/#scrypt-usage
 
-    def _generateActiniaPassword(self):
+    def _auth(self):
+        auth = HTTPBasicAuth(self.actinia_username, self.password)
+        return auth
+
+    def __base_url():
+        # TODO: Add this full url to setting and enforce https
+        ACTINIA_URL = os.path.join(
+            "http://",
+            ACTINIA_SETTINGS["ACTINIA_BASEURL"],
+            "api",
+            ACTINIA_SETTINGS["ACTINIA_VERSION"],
+        )
+        return ACTINIA_URL
+
+    def __create_actinia_client(self):
+        # TODO: Add this full url to setting and enforce https
+        actinia_client = Actinia(
+            os.path.join("http://", ACTINIA_SETTINGS["ACTINIA_BASEURL"]),
+            ACTINIA_SETTINGS["ACTINIA_VERSION"],
+        )
+        actinia_client.set_authentication(self.actinia_username, self.password)
+        self.__actinia_client = actinia_client
+        return actinia_client
+
+    def __actinia_user_request_url(self, task, user_id=None):
+        """
+        Provides the url to an Actinia mapset resource.
+
+        Parameters
+        ----------
+        actinia_url : str
+            The base url to actinia server
+        user_id : str
+            The GRASS location name
+            route: /locations/{location_name}/mapsets
+
+        Returns
+        -------
+        base_url : str
+            Return the url scheme for the mapset request
+        """
+        base_url = f"{self.__base_url()}/{task}/"
+        if user_id is not None:
+            base_url = f"{base_url}/{user_id}"
+
+        return base_url
+
+    def actinia_version(self):
+        """
+        Get the version of the actinia instance.
+        """
+        return self.__actinia_client.get_version()
+
+    def __generate_actinia_password(self):
         """
         Generate a password for managed actinia user.
         """
         new_password = BaseUserManager.make_random_password()
         self.password = new_password
+        return self.password
 
-    def generateActiniaToken(self):
+    def generate_actinia_token(self):
         """
         Generate authorization token for user and store in Tokens
         """
-        pass
+        base_url = self.__base_url()
+        Token.generate_actinia_token(base_url, self, api_key=True, expiration_time=None)
 
-    def refreshActiniaToken(self):
+    def __populate_locations_mapsets(self, locations):
         """
-        Refresh users authentication token
-        """
-        pass
+        Populates Location objects from the locations list.
 
-    def locations(self):
+        Args:
+            locations (list): A list of locations.
         """
-        Get a list of user's locations
-        """
-        pass
+        location_models = [
+            Location(owner=self, name=location["name"], epsg=location["epsg"])
+            for location in locations
+        ]
 
-    def teams(self):
-        """
-        Get a list of user's teams
-        """
-        pass
+        Location.objects.bulk_create(location_models)
 
-    def projects(self):
-        """
-        Get a list of user's projects
-        """
-        pass
+        for loc, loc_model in zip(locations, location_models):
+            mapsets = loc.mapsets
+            mapset_models = [
+                Mapset(
+                    name=mapset.name,
+                    description="",
+                    owner=self.owner,
+                    location=loc_model,
+                )
+                for mapset in mapsets
+            ]
 
-    def grass_templates(self):
-        """
-        Get list of user's GRASS Templates
-        """
-        pass
+        Mapset.objects.bulk_create(mapset_models)
 
     def save(self, *args, **kwargs):
         """
@@ -106,7 +192,49 @@ class ActiniaUser(ObjectAuditAbstract):
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-        # Create a new Actinia user account
+
+    def __create_actinia_user(self):
+        password = self.__generate_actinia_password()
+        data = {"group": RolesEnum.USER, "password": password}
+
+        url = self.__actinia_user_request_url(USER_TASK.USERS, self.actinia_username)
+
+        try:
+            response = requests.post(
+                url,
+                auth=actinia_super_auth,
+                json=json.parse(data),
+                headers={"content-type": "application/json; charset=utf-8"},
+            )
+            if response.status_code != 200:
+                raise Exception(
+                    f"Failed to make post request to {url}: {response.status_code}"
+                )
+        except Exception as e:
+            print(e)
+            raise
+
+        client = self.__create_actinia_client()
+        return client
+
+    def create(self, epsg=3358):
+
+        # Create new Actinia user
+        actinia_client = self.__create_actinia_user()
+
+        # Create defaut user location object
+        location = actinia_client.create_location(self.actinia_username, epsg)
+
+        # Create Mapset objects
+        # TODO: Give Option to change default mapset name
+        try:
+            location.create_mapset("default")
+        except Exception as e:
+            print("Defautl mapset failed to be created: ", e)
+
+        # Population users avaliable locations and mapsets
+        locations = actinia_client.get_locations()
+        self.__populate_locations_mapsets(locations)
 
     def __str__(self):
         """

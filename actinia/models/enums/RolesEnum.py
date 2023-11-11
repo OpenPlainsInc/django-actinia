@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: RolesEnum.py                                                       #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Fri Nov 10 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -34,6 +34,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class RolesEnum(models.TextChoices):
+    """
+    Enum class representing the different roles a user can have in the system.
+    """
+
     SUPERADMIN = "SU", _("superadmin")
     ADMIN = "AD", _("admin")
     USER = "US", _("user")

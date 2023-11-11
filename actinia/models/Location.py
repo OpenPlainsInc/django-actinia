@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Fri Nov 10 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -61,7 +61,7 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     """
 
     epsg = models.CharField(max_length=8, blank=False)
-    teams = models.ManyToManyField(Team, editable=True)
+    teams = models.ManyToManyField(Team, editable=True, blank=True)
 
     def __str__(self):
         return self.name
