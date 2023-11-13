@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -34,7 +34,6 @@ from django.db import models
 from .Location import Location
 from .ObjectInfoAbstract import ObjectInfoAbstract
 from .ObjectAuditAbstract import ObjectAuditAbstract
-import Team
 
 
 class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
@@ -51,13 +50,10 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
         The EPSG code of the location
     owner : User
         The user who owns the mapset
-    teams : Team
-        The teams that have access to the mapset.
     location : Location
         The 'Location' instance the mapset belongs to.
     """
 
-    teams = models.ManyToManyField(Team, editable=True, blank=True)
     location = models.ForeignKey(
         Location, editable=False, on_delete=models.CASCADE, related_name="mapsets"
     )

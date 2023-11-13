@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -60,9 +60,6 @@ class ActiniaUserTestCase(TestCase):
 
     def test_actinia_user_locations(self):
         self.assertEqual(self.actinia_user.locations(), [])
-
-    def test_actinia_user_teams(self):
-        self.assertEqual(self.actinia_user.teams(), [])
 
     def test_actinia_user_projects(self):
         self.assertEqual(self.actinia_user.projects(), [])

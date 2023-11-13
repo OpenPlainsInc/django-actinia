@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -41,8 +41,6 @@ from .Location import Location
 from .Mapset import Mapset
 from .ObjectAuditAbstract import ObjectAuditAbstract
 from .ObjectInfoAbstract import ObjectInfoAbstract
-from .Organization import Organization
 from .SimpleResponseAbstract import SimpleResponseAbstract
-from .Team import Team
 from .Token import Token
 from .TokenResponseModel import TokenResponseModel

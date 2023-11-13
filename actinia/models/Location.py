@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,7 +31,6 @@
 ###############################################################################
 
 from django.db import models
-from .Team import Team
 from .ObjectAuditAbstract import ObjectAuditAbstract
 from .ObjectInfoAbstract import ObjectInfoAbstract
 
@@ -52,16 +51,11 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
         The user who owns the mapset
     epsg : str
         The EPSG code of the location
-    organization : Organization
-        The organization the location belongs to
-    teams : Team
-        The teams that have access to the location
     public : bool
         Set true if location is publicly avaliable to all users.
     """
 
     epsg = models.CharField(max_length=8, blank=False)
-    teams = models.ManyToManyField(Team, editable=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -69,7 +63,7 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["name", "epsg", "owner", "organization"],
+                fields=["name", "epsg", "owner"],
                 name="unique_location",
             )
         ]

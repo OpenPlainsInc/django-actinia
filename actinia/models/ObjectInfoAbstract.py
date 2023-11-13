@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Oct 20 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,7 +32,6 @@
 
 from django.db import models
 from django.conf import settings
-from actinia.models import Organization
 
 
 class ObjectInfoAbstract(models.Model):
@@ -46,14 +45,6 @@ class ObjectInfoAbstract(models.Model):
         settings.AUTH_USER_MODEL, editable=True, on_delete=models.CASCADE
     )
     public = models.BooleanField(default=False)
-    organization = models.ForeignKey(
-        "organization",
-        editable=True,
-        on_delete=models.CASCADE,
-        related_name="%(class)s_organization",
-        null=True,
-        blank=True,
-    )
 
     class Meta:
         abstract = True
