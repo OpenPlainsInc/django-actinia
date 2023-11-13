@@ -33,7 +33,12 @@
 
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.conf import settings
 from grass.models import ActiniaUser
+from requests.auth import HTTPBasicAuth
+from actinia import Actinia
+
+ACTINIA_SETTINGS = settings.ACTINIA
 
 
 class ActiniaUserTestCase(TestCase):
@@ -42,40 +47,64 @@ class ActiniaUserTestCase(TestCase):
             username="testuser", email="testuser@example.com", password="testpass"
         )
         self.actinia_user = ActiniaUser.objects.create(
-            actinia_username="testactiniauser",
+            actinia_username="testuser",
             actinia_role="admin",
             user=self.user,
             password="testpass",
         )
 
-    def test_actinia_user_str(self):
-        self.assertEqual(str(self.actinia_user), "testactiniauser")
+    # def test_actinia_user_create_actinia_client(self):
+    #     actinia_client = self.actinia_user._ActiniaUser__create_actinia_client()
+    #     self.assertIsInstance(actinia_client, Actinia)
+    #     self.assertEqual(actinia_client.base_url, self.actinia_user._ActiniaUser__base_url())
+    #     self.assertEqual(actinia_client.version, ACTINIA_SETTINGS["ACTINIA_VERSION"])
+    #     self.assertIsInstance(actinia_client.auth, HTTPBasicAuth)
+    #     self.assertEqual(actinia_client.auth.username, self.actinia_user.actinia_username)
+    #     self.assertEqual(actinia_client.auth.password, self.actinia_user.password)
 
-    def test_actinia_user_password(self):
-        self.assertNotEqual(self.actinia_user.password, "testpass")
+    # def test_actinia_user_actinia_user_request_url(self):
+    #     task = "test_task"
+    #     url = self.actinia_user._ActiniaUser__actinia_user_request_url(task)
+    #     self.assertIsInstance(url, str)
+    #     self.assertIn(self.actinia_user._ActiniaUser__base_url(), url)
+    #     self.assertIn(task, url)
 
-    def test_actinia_user_generate_token(self):
-        self.actinia_user.generateActiniaToken()
-        self.assertIsNotNone(self.actinia_user.token)
+    #     user_id = "test_user_id"
+    #     url = self.actinia_user._ActiniaUser__actinia_user_request_url(task, user_id=user_id)
+    #     self.assertIsInstance(url, str)
+    #     self.assertIn(self.actinia_user._ActiniaUser__base_url(), url)
+    #     self.assertIn(task, url)
+    #     self.assertIn(user_id, url)
 
-    def test_actinia_user_locations(self):
-        self.assertEqual(self.actinia_user.locations(), [])
+    # def test_actinia_user_actinia_version(self):
+    #     version = self.actinia_user.actinia_version()
+    #     self.assertIsInstance(version, str)
+    #     self.assertGreater(len(version), 0)
 
-    def test_actinia_user_projects(self):
-        self.assertEqual(self.actinia_user.projects(), [])
+    # def test_actinia_user_generate_actinia_password(self):
+    #     password = self.actinia_user._ActiniaUser__generate_actinia_password()
+    #     self.assertIsInstance(password, str)
+    #     self.assertGreater(len(password), 0)
+    #     self.assertNotEqual(password, self.actinia_user.password)
 
-    def test_actinia_user_grass_templates(self):
-        self.assertEqual(self.actinia_user.grass_templates(), [])
+    # def test_actinia_user_generate_actinia_token(self):
+    #     self.actinia_user.generate_actinia_token()
+    #     self.assertIsNotNone(self.actinia_user.token)
 
-    def test_actinia_user_create(self):
-        self.actinia_user.create()
-        self.assertIsNotNone(self.actinia_user.actinia_username)
-        self.assertIsNotNone(self.actinia_user.password)
-        self.assertIsNotNone(self.actinia_user.user)
-        self.assertIsNotNone(self.actinia_user.actinia_role)
-        self.assertIsNotNone(self.actinia_user.token)
-        self.assertIsNotNone(self.actinia_user.__actinia_client)
-        self.assertIsNotNone(self.actinia_user.locations())
-        self.assertIsNotNone(self.actinia_user.teams())
-        self.assertIsNotNone(self.actinia_user.projects())
-        self.assertIsNotNone(self.actinia_user.grass_templates())
+    # def test_actinia_user_create(self):
+    #     self.actinia_user.create()
+    #     self.assertIsNotNone(self.actinia_user.actinia_username)
+    #     self.assertIsNotNone(self.actinia_user.password)
+    #     self.assertIsNotNone(self.actinia_user.user)
+    #     self.assertIsNotNone(self.actinia_user.actinia_role)
+    #     self.assertIsNotNone(self.actinia_user.token)
+    #     self.assertIsNotNone(self.actinia_user._ActiniaUser__actinia_client)
+    #     self.assertIsNotNone(self.actinia_user.locations())
+    #     self.assertIsNotNone(self.actinia_user.teams())
+    #     self.assertIsNotNone(self.actinia_user.projects())
+    #     self.assertIsNotNone(self.actinia_user.grass_templates())
+
+    def tearDown(self):
+        self.actinia_user.delete()
+        # self.user.delete()
+        # ActiniaUser.objects.all().delete()

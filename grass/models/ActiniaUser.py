@@ -33,6 +33,7 @@
 import os
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
+from django.utils.crypto import get_random_string
 from .ObjectAuditAbstract import ObjectAuditAbstract
 from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField
 from .enums import RolesEnum
@@ -46,20 +47,7 @@ from .Location import Location
 from .Mapset import Mapset
 from .Token import Token
 
-
-# Actinia Super User Connection to create new users.
-# Should make this role an admin
 ACTINIA_SETTINGS = settings.ACTINIA
-actinia_super_auth = HTTPBasicAuth(
-    ACTINIA_SETTINGS["ACTINIA_USER"], ACTINIA_SETTINGS["ACTINIA_PASSWORD"]
-)
-actina_super_client = Actinia(
-    os.path.join("http://", ACTINIA_SETTINGS["ACTINIA_BASEURL"]),
-    ACTINIA_SETTINGS["ACTINIA_VERSION"],
-)
-actina_super_client.set_authentication(
-    ACTINIA_SETTINGS["ACTINIA_USER"], ACTINIA_SETTINGS["ACTINIA_PASSWORD"]
-)
 
 
 @unique
@@ -81,6 +69,21 @@ class ActiniaUser(ObjectAuditAbstract):
         password (str): The password of the actinia user.
     """
 
+    # Actinia Super User Connection to create new users.
+    # Should make this role an admin
+    __actinia_super_auth = HTTPBasicAuth(
+        ACTINIA_SETTINGS["ACTINIA_USER"], ACTINIA_SETTINGS["ACTINIA_PASSWORD"]
+    )
+    __actina_super_client = Actinia(
+        os.path.join("http://", ACTINIA_SETTINGS["ACTINIA_BASEURL"]),
+        ACTINIA_SETTINGS["ACTINIA_VERSION"],
+    )
+    __actina_super_client.set_authentication(
+        ACTINIA_SETTINGS["ACTINIA_USER"], ACTINIA_SETTINGS["ACTINIA_PASSWORD"]
+    )
+
+    __actinia_client = None
+
     actinia_username = models.CharField(max_length=50, blank=False, unique=True)
     actinia_role = ActiniaRoleEnumField()
     user = models.ForeignKey(
@@ -92,7 +95,7 @@ class ActiniaUser(ObjectAuditAbstract):
         auth = HTTPBasicAuth(self.actinia_username, self.password)
         return auth
 
-    def __base_url():
+    def __base_url(self):
         # TODO: Add this full url to setting and enforce https
         ACTINIA_URL = os.path.join(
             "http://",
@@ -108,8 +111,14 @@ class ActiniaUser(ObjectAuditAbstract):
             os.path.join("http://", ACTINIA_SETTINGS["ACTINIA_BASEURL"]),
             ACTINIA_SETTINGS["ACTINIA_VERSION"],
         )
-        actinia_client.set_authentication(self.actinia_username, self.password)
-        self.__actinia_client = actinia_client
+        try:
+
+            actinia_client.set_authentication(self.actinia_username, self.password)
+            self.__actinia_client = actinia_client
+        except Exception as e:
+            print(
+                f"Failed to create actinia client: {e}: p: {self.password}, u: {self.actinia_username}"
+            )
         return actinia_client
 
     def __actinia_user_request_url(self, task, user_id=None):
@@ -129,7 +138,7 @@ class ActiniaUser(ObjectAuditAbstract):
         base_url : str
             Return the url scheme for the mapset request
         """
-        base_url = f"{self.__base_url()}/{task}/"
+        base_url = f"{self.__base_url()}/{task}"
         if user_id is not None:
             base_url = f"{base_url}/{user_id}"
 
@@ -139,13 +148,17 @@ class ActiniaUser(ObjectAuditAbstract):
         """
         Get the version of the actinia instance.
         """
+        if self.__actinia_client is None:
+            raise Exception(
+                f"Actinia User is not authenticated: {self.actinia_username}"
+            )
         return self.__actinia_client.get_version()
 
     def __generate_actinia_password(self):
         """
         Generate a password for managed actinia user.
         """
-        new_password = BaseUserManager.make_random_password()
+        new_password = get_random_string(23)
         self.password = new_password
         return self.password
 
@@ -194,28 +207,56 @@ class ActiniaUser(ObjectAuditAbstract):
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
+        super().save(*args, **kwargs)
 
     def __create_actinia_user(self):
         password = self.__generate_actinia_password()
-        data = {"group": RolesEnum.USER, "password": password}
+        query_params = {"group": RolesEnum.USER.label, "password": password}
 
-        url = self.__actinia_user_request_url(USER_TASK.USERS, self.actinia_username)
+        url = self.__actinia_user_request_url(
+            USER_TASK.USERS.value, self.actinia_username
+        )
 
         try:
             response = requests.post(
                 url,
-                auth=actinia_super_auth,
-                json=json.parse(data),
+                auth=self.__actinia_super_auth,
+                params=query_params,
                 headers={"content-type": "application/json; charset=utf-8"},
             )
-            if response.status_code != 200:
+            if response.status_code != 201:
                 raise Exception(
-                    f"Failed to make post request to {url}: {response.status_code}"
+                    f"Failed to make post request to {url}: {response.status_code}, response: {response.json()}"
                 )
         except Exception as e:
             print(e)
             raise
+        print(
+            f"Actinia User {self.actinia_username} created in group: {query_params['group']}"
+        )
+        client = self.__create_actinia_client()
+        return client
 
+    def __delete_actinia_user(self):
+
+        url = self.__actinia_user_request_url(
+            USER_TASK.USERS.value, self.actinia_username
+        )
+
+        try:
+            response = requests.delete(
+                url,
+                auth=self.__actinia_super_auth,
+                headers={"content-type": "application/json; charset=utf-8"},
+            )
+            if response.status_code != 200:
+                raise Exception(
+                    f"Failed to make post request to {url}: {response.status_code}, response: {response.json()}"
+                )
+        except Exception as e:
+            print(e)
+            raise
+        print(f"{response.json()}")
         client = self.__create_actinia_client()
         return client
 
@@ -237,6 +278,13 @@ class ActiniaUser(ObjectAuditAbstract):
         # Population users avaliable locations and mapsets
         locations = actinia_client.get_locations()
         self.__populate_locations_mapsets(locations)
+
+    def delete(self, *args, **kwargs):
+        # Make a DELETE request to the other API
+        self.__delete_actinia_user()
+
+        # Call the superclass's delete method to delete the ActiniaUser instance
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         """

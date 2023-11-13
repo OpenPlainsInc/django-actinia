@@ -48,3 +48,12 @@ class Region(models.Model):
     depths = models.FloatField()
     cells = models.FloatField()
     cells3 = models.FloatField()
+
+    def __str__(self):
+        """
+        Return the region projection.
+
+        Returns:
+            str: The actinia projection.
+        """
+        return self.projection

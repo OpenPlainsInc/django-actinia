@@ -34,6 +34,9 @@ from django.db import models
 from .Location import Location
 from .ObjectInfoAbstract import ObjectInfoAbstract
 from .ObjectAuditAbstract import ObjectAuditAbstract
+from django.contrib.auth import get_user_model
+
+ActiniaUser = get_user_model()
 
 
 class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
@@ -52,11 +55,14 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
         The user who owns the mapset
     location : Location
         The 'Location' instance the mapset belongs to.
+    users : models.ManyToManyField
+        The users who have access to the mapset.
     """
 
     location = models.ForeignKey(
         Location, editable=False, on_delete=models.CASCADE, related_name="mapsets"
     )
+    users = models.ManyToManyField(ActiniaUser, related_name="mapsets")
 
     class Meta:
         constraints = [
@@ -65,7 +71,7 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
             )
         ]
 
-    def layers_count():
+    def layers_count(type=None):
         """
         Returns the number of layers in the mapset
         """

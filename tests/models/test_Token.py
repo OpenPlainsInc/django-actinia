@@ -46,16 +46,13 @@ class TokenModelTest(TestCase):
         cls.user = User.objects.create_user(
             username="testuser", email="testuser@example.com", password="testpass"
         )
+
         cls.actinia_user = ActiniaUser.objects.create(
-            username="testuser", password="testpass"
-        )
-        cls.token = Token.objects.create(
-            token="testtoken",
+            actinia_username="testuser",
+            actinia_role="admin",
             user=cls.user,
-            actinia_user=cls.actinia_user,
-            expires=timezone.now() + timezone.timedelta(days=1),
-            token_type=TokenTypeEnum.USER,
-        )
+            password="testpass",
+        ).save()
 
     def test_is_expired_with_future_date(self):
         """
