@@ -51,8 +51,8 @@ services:
 
   django-redis-cache:
     image: redis:5.0.4-alpine
-    # volumes:
-    #   - ./django_redis_cache:/data
+    volumes:
+      - ./redis_config:/data/
     environment:
       - REDIS_PASS_FILE=/data/.redis
     command: [
