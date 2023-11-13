@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: ObjectAuditAbstract.py                                             #
+# Filename: TokenResponseModel.py                                              #
 # Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,30 +30,15 @@
 #                                                                              #
 ###############################################################################
 
+
 from django.db import models
+from grass.models import SimpleResponseAbstract, Token
 
 
-class ObjectAuditAbstract(models.Model):
+class TokenResponseModel(SimpleResponseAbstract):
     """
-    Abstract class to audit the history of database objects
+    Custom user class to manage actinia user.
     """
 
-    created_on = models.DateTimeField(auto_now_add=True, editable=False)
-    created_by = models.ForeignKey(
-        "auth.User",
-        editable=False,
-        on_delete=models.SET_NULL,
-        related_name="%(class)s_created_by",
-        null=True,
-    )
-    updated_on = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(
-        "auth.User",
-        on_delete=models.SET_NULL,
-        related_name="%(class)s_updated_by",
-        null=True,
-        blank=True,
-    )
-
-    class Meta:
-        abstract = True
+    actinia_username = models.CharField(max_length=50, blank=False, unique=True)
+    token = models.ForeignKey(Token, on_delete=models.CASCADE)

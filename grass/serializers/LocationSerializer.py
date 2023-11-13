@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: ActiniaResourceStatusEnumField.py                                  #
+# Filename: LocationSerializer.py                                              #
 # Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,15 +30,30 @@
 #                                                                              #
 ###############################################################################
 
-from actinia.models.enums import ResourceStatusEnum
-from django.db import models
+from rest_framework import serializers
+from grass.models import Location
 
 
-class ActiniaResourceStatusEnumField(models.CharField):
-    """
-    Custom model field for actinia user roles
-    """
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ["id", "location_name", "epsg"]
 
-    max_length = 2
-    choices = (ResourceStatusEnum.choices,)
-    default = ResourceStatusEnum.ACCEPTED
+    def create(self, validated_data):
+        """
+        Create and return a new 'Location' instance, given the validated data.
+
+        Parameters
+        ----------
+        validated_data : OrderedDict
+            Dict containing validated data.
+
+        Returns
+        -------
+        Location
+            New validated 'Location' instance.
+        """
+        return Location.object.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        pass

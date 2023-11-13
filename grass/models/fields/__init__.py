@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: test_Mapset.py                                                     #
+# Filename: __init__.py                                                        #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Friday October 20th 2023                                       #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2023 OpenPlains Inc.                                                #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -29,23 +29,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-
-
-from django.test import TestCase
-from grass.models import Mapset, Location
-
-
-class MapsetModelTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        # Set up non-modified objects used by all test methods
-        location = Location.objects.create(name="Test Location")
-        Mapset.objects.create(name="Test Mapset", location=location)
-
-    def test_layers_count(self):
-        mapset = Mapset.objects.get(id=1)
-        self.assertEqual(mapset.layers_count(), 0)
-
-    def test_layers(self):
-        mapset = Mapset.objects.get(id=1)
-        self.assertQuerysetEqual(mapset.layers(), [])
+# from .ActiniaResourceStatusEnumField import ActiniaResourceStatusEnumField
+# from .ActiniaResponseStatusEnumField import ActiniaResponseStatusEnumField
+# from .ActiniaRoleEnumField import ActiniaRoleEnumField

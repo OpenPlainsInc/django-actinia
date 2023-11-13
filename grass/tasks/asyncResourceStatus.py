@@ -1,5 +1,5 @@
 from celery import shared_task
-import actinia.utils as acp
+import grass.utils as acp
 
 # from actinia import *
 import requests

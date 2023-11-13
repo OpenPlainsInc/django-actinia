@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,10 +33,10 @@
 
 from django.test import TestCase
 from django.utils import timezone
-from actinia.models import Token
+from grass.models import Token
 from django.contrib.auth.models import User
-from actinia.models import ActiniaUser
-from actinia.models.enums import TokenTypeEnum
+from grass.models import ActiniaUser
+from grass.models.enums import TokenTypeEnum
 
 
 class TokenModelTest(TestCase):

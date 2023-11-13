@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,10 +32,10 @@
 
 # from html5lib import serialize
 import requests
-import actinia.utils as acp
+import grass.utils as acp
 from django.http import JsonResponse
-from actinia.models import Location
-from actinia.serializers import LocationSerializer, LocationResponseSerializer
+from grass.models import Location
+from grass.serializers import LocationSerializer, LocationResponseSerializer
 
 # from actinia.serializers.LocationResponseSerializer import LocationResponseSerializer
 from django.http import Http404

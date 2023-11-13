@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,10 +31,10 @@
 ###############################################################################
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
-from actinia.models import ActiniaUser, ObjectAuditAbstract
-from actinia.models.enums import TokenTypeEnum
+from django.conf import settings
+from .ObjectAuditAbstract import ObjectAuditAbstract
+from grass.models.enums import TokenTypeEnum
 from enum import Enum, unique
 import requests
 import json
@@ -65,10 +65,13 @@ class Token(ObjectAuditAbstract):
 
     token = models.CharField(max_length=255, blank=False, unique=True, editable=False)
     user = models.ForeignKey(
-        "auth.User", on_delete=models.CASCADE, related_name="tokens"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tokens"
     )
     actinia_user = models.ForeignKey(
-        ActiniaUser, on_delete=models.CASCADE, null=True, related_name="actinia_tokens"
+        "grass.ActiniaUser",
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="actinia_tokens",
     )
     expires = models.DateTimeField(null=True)
     token_type = models.CharField(
@@ -124,7 +127,7 @@ class Token(ObjectAuditAbstract):
 
             token = response.text
             user = actinia_user.user
-            cls(
+            new_token = cls(
                 token=token,
                 token_type=TokenTypeEnum.ACTINIA,
                 api_key=api_key,
@@ -132,6 +135,7 @@ class Token(ObjectAuditAbstract):
                 actinia_user=actinia_user,
                 user=user,
             )
+            new_token.save()
 
         except Exception as e:
             print(e)

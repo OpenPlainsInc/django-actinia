@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: apps.py                                                            #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,6 +29,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-# from .ActiniaResourceStatusEnumField import ActiniaResourceStatusEnumField
-# from .ActiniaResponseStatusEnumField import ActiniaResponseStatusEnumField
-# from .ActiniaRoleEnumField import ActiniaRoleEnumField
+
+from django.apps import AppConfig
+
+
+class GrassConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "grass"
+
+    def ready(self):
+        # Import celery app now that Django is mostly ready.
+        # This initializes Celery and autodiscovers tasks
+        import grass.celery

@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: TokenResponseModel.py                                              #
+# Filename: UserSerializer.py                                                  #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Wednesday June 8th 2022                                        #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,16 +30,16 @@
 #                                                                              #
 ###############################################################################
 
+from django.contrib.auth.models import User
+from rest_framework import serializers
+from grass.models import ActiniaUser
 
-from django.db import models
-from actinia.models import SimpleResponseAbstract
-from actinia.models.Token import Token
 
+class UserSerializer(serializers.ModelSerializer):
+    actinia = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=ActiniaUser.objects.all()
+    )
 
-class TokenResponseModel(SimpleResponseAbstract):
-    """
-    Custom user class to manage actinia user.
-    """
-
-    actinia_username = models.CharField(max_length=50, blank=False, unique=True)
-    token = models.ForeignKey(Token, on_delete=models.CASCADE)
+    class Meta:
+        model = User
+        fields = ["id", "username", "actinia"]

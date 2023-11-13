@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: urls.py                                                            #
-# Project: django-actinia                                                      #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Jun 08 2022                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,13 +36,13 @@ from rest_framework import routers
 from django.views.decorators.cache import cache_page
 
 
-from actinia.views.general import locations
+from grass.views.general import locations
 
 # from views.raster import raster
 # from views import vector
 # from views import imagery
 
-app_name = "actinia"
+app_name = "grass"
 
 urlpatterns = [
     ## General (g)

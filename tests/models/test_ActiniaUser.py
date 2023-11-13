@@ -33,7 +33,7 @@
 
 from django.test import TestCase
 from django.contrib.auth.models import User
-from actinia.models import ActiniaUser
+from grass.models import ActiniaUser
 
 
 class ActiniaUserTestCase(TestCase):

@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: ActiniaResponseStatusField.py                                      #
+# Filename: ObjectAuditAbstract.py                                             #
 # Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,15 +30,31 @@
 #                                                                              #
 ###############################################################################
 
-from actinia.models.enums import ResponseStatusEnum
 from django.db import models
+from django.conf import settings
 
 
-class ActiniaResponseStatusEnumField(models.CharField):
+class ObjectAuditAbstract(models.Model):
     """
-    Custom model field for actinia user roles
+    Abstract class to audit the history of database objects
     """
 
-    max_length = 2
-    choices = (ResponseStatusEnum.choices,)
-    default = ResponseStatusEnum.SUCCESS
+    created_on = models.DateTimeField(auto_now_add=True, editable=False)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        editable=False,
+        on_delete=models.SET_NULL,
+        related_name="%(class)s_created_by",
+        null=True,
+    )
+    updated_on = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="%(class)s_updated_by",
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        abstract = True

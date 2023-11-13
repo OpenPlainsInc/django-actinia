@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: UserSerializer.py                                                  #
+# Filename: ActiniaRoleEnumField.py                                            #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Wednesday June 8th 2022                                        #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,16 +30,16 @@
 #                                                                              #
 ###############################################################################
 
-from django.contrib.auth.models import User
-from rest_framework import serializers
-from actinia.models import ActiniaUser
+from grass.models.enums import RolesEnum
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
-class UserSerializer(serializers.ModelSerializer):
-    actinia = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=ActiniaUser.objects.all()
-    )
+class ActiniaRoleEnumField(models.CharField):
+    """
+    Custom model field for actinia user roles
+    """
 
-    class Meta:
-        model = User
-        fields = ["id", "username", "actinia"]
+    max_length = 2
+    choices = RolesEnum.choices
+    default = RolesEnum.GUEST

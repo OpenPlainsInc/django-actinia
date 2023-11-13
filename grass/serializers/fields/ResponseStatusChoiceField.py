@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: ActiniaRoleEnumField.py                                            #
+# Filename: ResponseStatusField.py                                             #
 # Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,16 +30,15 @@
 #                                                                              #
 ###############################################################################
 
-from actinia.models.enums import RolesEnum
-from django.db import models
-from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
+from grass.models.enums.ResponseStatusEnum import ResponseStatusEnum
 
 
-class ActiniaRoleEnumField(models.CharField):
+class ResponseStatusChoiceField(serializers.ChoiceField):
     """
-    Custom model field for actinia user roles
+    Custom serializer to handle Actinia response status json responses.
     """
 
-    max_length = 2
-    choices = RolesEnum.choices
-    default = RolesEnum.GUEST
+    choices = ResponseStatusEnum.choices
+    default = ResponseStatusEnum.SUCCESS
+    allow_blank = False

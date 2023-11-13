@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -42,9 +42,10 @@ from requests.auth import HTTPBasicAuth
 from enum import Enum, unique
 import requests
 import json
-import Location
-import Mapset
-import Token
+from .Location import Location
+from .Mapset import Mapset
+from .Token import Token
+
 
 # Actinia Super User Connection to create new users.
 # Should make this role an admin
@@ -80,11 +81,10 @@ class ActiniaUser(ObjectAuditAbstract):
         password (str): The password of the actinia user.
     """
 
-    __actinia_auth = None
     actinia_username = models.CharField(max_length=50, blank=False, unique=True)
     actinia_role = ActiniaRoleEnumField()
     user = models.ForeignKey(
-        "auth.User", related_name="actinia_users", on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL, related_name="actinia_users", on_delete=models.CASCADE
     )
     password = models.CharField(max_length=128)
 
@@ -154,7 +154,9 @@ class ActiniaUser(ObjectAuditAbstract):
         Generate authorization token for user and store in Tokens
         """
         base_url = self.__base_url()
-        Token.generate_actinia_token(base_url, self, api_key=True, expiration_time=None)
+        Token.generate_actinia_token(
+            base_url=base_url, actinia_user=self, api_key=True, expiration_time=None
+        )
 
     def __populate_locations_mapsets(self, locations):
         """

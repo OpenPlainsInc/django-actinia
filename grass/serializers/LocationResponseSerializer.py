@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,7 +31,7 @@
 ###############################################################################
 
 from rest_framework import serializers
-from actinia.models import Location
+from grass.models import Location
 from .fields import StringListField, ResponseStatusChoiceField
 
 

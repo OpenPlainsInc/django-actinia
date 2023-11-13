@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: apps.py                                                            #
-# Project: django-actinia                                                          #
-# File Created: Monday June 6th 2022                                           #
+# Filename: ResourceStatusChoiceField.py                                       #
+# Project: OpenPlains Inc.                                                     #
+# File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,14 +30,15 @@
 #                                                                              #
 ###############################################################################
 
-from django.apps import AppConfig
+from rest_framework import serializers
+from grass.models.enums.ResourceStatusEnum import ResourceStatusEnum
 
 
-class ActiniaConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
-    name = "actinia"
+class ResourceStatusChoiceField(serializers.ChoiceField):
+    """
+    Custom serializer to handle Actinia resource response statuses.
+    """
 
-    def ready(self):
-        # Import celery app now that Django is mostly ready.
-        # This initializes Celery and autodiscovers tasks
-        import actinia.celery
+    choices = ResourceStatusEnum.choices
+    default = ResourceStatusEnum.ACCEPTED
+    allow_blank = False

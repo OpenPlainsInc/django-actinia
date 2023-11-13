@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -75,7 +75,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "daphne",
     "channels",
-    "actinia",
+    "grass",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -206,7 +206,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-ROOT_URLCONF = "actinia.urls"
+ROOT_URLCONF = "grass.urls"
 
 TEMPLATES = [
     {
@@ -277,6 +277,7 @@ ACTINIA = {
     "ACTINIA_BASEURL": env("ACTINIA_BASEURL"),
     "ACTINIA_LOCATION": env("ACTINIA_LOCATION"),
     "ACTINIA_MAPSET": env("ACTINIA_MAPSET"),
+    "ACTINIA_SWAGGER_URL": env("ACTINIA_SWAGGER_URL"),
 }
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

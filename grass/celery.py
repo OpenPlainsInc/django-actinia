@@ -1,19 +1,19 @@
 ###############################################################################
-# Filename: LocationSerializer.py                                              #
+# Filename: celery.py                                                          #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Monday March 28th 2022                                         #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                               #
 #                                                                              #
-# django-actinia is an open-source django app that allows for with             #
-# the Actinia REST API for GRASS GIS for distributed computational tasks.      #
+# TomorrowNow is an open-source geospatial participartory modeling platform    #
+# to enable stakeholder engagment in socio-environmental decision-makeing.     #
 #                                                                              #
 # This program is free software: you can redistribute it and/or modify         #
 # it under the terms of the GNU General Public License as published by         #
@@ -30,30 +30,22 @@
 #                                                                              #
 ###############################################################################
 
-from rest_framework import serializers
-from actinia.models import Location
+# Used this blog post to get started
+# https://www.caktusgroup.com/blog/2021/08/11/using-celery-scheduling-tasks/
+import os
+from celery import Celery
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_settings")
 
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = ["id", "location_name", "epsg"]
+# Create default Celery app
+app = Celery("api")
 
-    def create(self, validated_data):
-        """
-        Create and return a new 'Location' instance, given the validated data.
+# namespace='CELERY' means all celery-related configuration keys
+# should be uppercased and have a `CELERY_` prefix in Django settings.
+# https://docs.celeryproject.org/en/stable/userguide/configuration.html
+app.config_from_object("django.conf:settings", namespace="CELERY")
 
-        Parameters
-        ----------
-        validated_data : OrderedDict
-            Dict containing validated data.
-
-        Returns
-        -------
-        Location
-            New validated 'Location' instance.
-        """
-        return Location.object.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        pass
+# When we use the following in Django, it loads all the <appname>.tasks
+# files and registers any tasks it finds in them. We can import the
+# tasks files some other way if we prefer.
+app.autodiscover_tasks()

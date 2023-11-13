@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
-from actinia.models import Location
+from grass.models import Location
 
 # from django.contrib.auth.models import User
 from django.db import transaction

@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: consumers.py                                                       #
-# Project: django-actinia                                                      #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Sunday March 27th 2022                                         #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu May 19 2022                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,8 +32,8 @@
 
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from actinia import tasks
-from actinia import utils as acp
+from grass import tasks
+from grass import utils as acp
 from django.contrib.gis.gdal import GDALRaster
 import os
 
