@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: Mapset.py                                                          #
+# Filename: ActiniaUser.py                                                     #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Tuesday November 14th 2023                                     #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Tue Nov 14 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,52 +30,32 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from .Location import Location
-from .ObjectInfoAbstract import ObjectInfoAbstract
-from .ObjectAuditAbstract import ObjectAuditAbstract
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .ActiniaUserService import ActiniaUserService, USER_TASK
 
 
-class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
-    """
-    Class representing GRASS mapsets avaliable in Actinia
+class ActiniaUserView(APIView):
+    def get(self, request, task, format=None):
+        service = ActiniaUserService()
+        task = USER_TASK(task)
 
-    Attributes
-    ----------
-    id : BigAutoField
-        Auto generated Primary key of response
-    name : str
-        The name of the GRASS mapset
-    description: str
-        The EPSG code of the location
-    owner : User
-        The user who owns the mapset
-    location : Location
-        The 'Location' instance the mapset belongs to.
-    users : models.ManyToManyField
-        The users who have access to the mapset.
-    """
-
-    location = models.ForeignKey(
-        Location, editable=False, on_delete=models.CASCADE, related_name="mapsets"
-    )
-    users = models.ManyToManyField("grass.ActiniaUser", related_name="mapsets")
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "location", "owner"], name="unique_mapset"
+        if task == USER_TASK.USERS:
+            # Call the method to get users
+            data = service.get_users()
+        elif task == USER_TASK.TOKEN:
+            # Call the method to get token
+            data = service.get_token()
+        elif task == USER_TASK.API_KEY:
+            # Call the method to get API key
+            data = service.get_api_key()
+        elif task == USER_TASK.API_LOG:
+            # Call the method to get API log
+            data = service.get_api_log()
+        else:
+            return Response(
+                {"error": "Invalid task"}, status=status.HTTP_400_BAD_REQUEST
             )
-        ]
 
-    def layers_count(type=None):
-        """
-        Returns the number of layers in the mapset
-        """
-        pass
-
-    def layers(datatype=None):
-        """
-        Returns the layers in the mapset
-        """
-        pass
+        return Response(data)

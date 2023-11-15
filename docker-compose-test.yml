@@ -13,16 +13,17 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   actinia-core:
-    image: mundialis/actinia-core:4.11.0
-
-    # volumes:
-    #   - ./actinia-core-data/grassdb:/actinia_core/grassdb:Z
-    #   - ./actinia-core-data/userdata:/actinia_core/userdata
-    #   - ./actinia/pgpass:/mnt/pgpass
-    #   - ./actinia-core-data/geodata_dir:/mnt/geodata
-    #   - ./actinia-core-data/workspace/temp_db:/actinia_core/workspace/temp_db
-    #   - ./actinia-core-data/workspace/tmp:/actinia_core/workspace/tmp
-    #   - ./actinia-core-data/resources:/actinia_core/resources:Z
+    build:
+        context: ./actinia
+        dockerfile: Dockerfile
+    volumes:
+      - ./actinia-core-data/grassdb:/actinia_core/grassdb:Z
+      - ./actinia-core-data/userdata:/actinia_core/userdata
+      - ./actinia-core-data/pgpass:/mnt/pgpass:Z
+      - ./actinia-core-data/geodata_dir:/mnt/geodata:Z
+      - ./actinia-core-data/workspace/temp_db:/actinia_core/workspace/temp_db
+      - ./actinia-core-data/workspace/tmp:/actinia_core/workspace/tmp
+      - ./actinia-core-data/resources:/actinia_core/resources
 
       # - *services-volume
     restart: always

@@ -56,6 +56,7 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     """
 
     epsg = models.CharField(max_length=8, blank=False)
+    users = models.ManyToManyField("grass.ActiniaUser", related_name="locations")
 
     def __str__(self):
         return self.name
