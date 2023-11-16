@@ -1,5 +1,5 @@
 ###############################################################################
-# Filename: test_settings.py                                                   #
+# Filename: settings.py                                                   #
 # Project: OpenPlains Inc.                                                     #
 # File Created: Tuesday June 7th 2022                                          #
 # Author: Corey White (smortopahri@gmail.com)                                  #
@@ -56,7 +56,7 @@ env = environ.Env(
     DEBUG=(bool, True)
 )
 # Initialise environment variables
-environ.Env.read_env(os.path.join(".test.env"))
+environ.Env.read_env(os.path.join(BASE_DIR, ".test.env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -137,6 +137,7 @@ if DEBUG:
 AUTH_USER_MODEL = "auth.User"
 
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8005",
     "http://actinia-core:8088",
 ]
 CORS_ORIGIN_ALLOW_ALL = True
@@ -194,8 +195,6 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://192.168.1.242:3000",
     "http://192.168.1.242:8005",
-    "http://localhost:3000",
-    "http://localhost:7000",
 ]
 
 
@@ -364,5 +363,16 @@ CELERY_BROKER_URL = (
 CELERY_RESULT_BACKEND = (
     f'redis://{env("REDIS_USER")}:{env("REDIS_PASSWORD")}@django-redis-cache:6370/1'
 )
+
+# CELERY_TIMEZONE = "America/New_York"
+
+IPYTHON_KERNEL_DISPLAY_NAME = "Django Shell-Plus"
+
+# extra things to import in notebook
+
+SHELL_PLUS_POST_IMPORTS = [
+    # ("module1.submodule", ("func1", "func2", "class1", "etc")),
+    # ("module2.submodule", ("func1", "func2", "class1", "etc"))
+]
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"  # only use in development

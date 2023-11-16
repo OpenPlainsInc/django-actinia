@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Wed Nov 15 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,13 +31,19 @@
 ###############################################################################
 
 from django.apps import AppConfig
+import os
 
 
 class GrassConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "grass"
 
-    def ready(self):
-        # Import celery app now that Django is mostly ready.
-        # This initializes Celery and autodiscovers tasks
-        import grass.celery
+    class GrassConfig(AppConfig):
+        default_auto_field = "django.db.models.BigAutoField"
+        name = "grass"
+
+        def ready(self):
+            if os.environ.get("DJANGO_SETTINGS_MODULE") == "test_app.settings":
+                import test_app.celery
+            else:
+                import api.celery

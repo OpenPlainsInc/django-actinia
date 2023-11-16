@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: routing.py                                                         #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Jun 07 2022                                               #
+# Last Modified: Wed Nov 15 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,11 +31,11 @@
 ###############################################################################
 
 from django.urls import re_path
-from consumers import ActiniaResourceConsumer
+from .consumers import ActiniaResourceConsumer
 
 websocket_urlpatterns = [
     re_path(
-        r"ws/actinia/resource/(?P<resource_name>\w+)/$",
+        r"ws/api/resource/(?P<resource_name>\w+)/$",
         ActiniaResourceConsumer.as_asgi(),
     )
 ]

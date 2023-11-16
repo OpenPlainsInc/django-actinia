@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Wed Nov 15 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -37,6 +37,7 @@ from django.views.decorators.cache import cache_page
 
 
 from grass.views.general import locations
+from grass.views.ActiniaUserView import ActiniaUserView
 
 # from views.raster import raster
 # from views import vector
@@ -45,15 +46,17 @@ from grass.views.general import locations
 app_name = "grass"
 
 urlpatterns = [
+    path("users/", ActiniaUserView.as_view(), name="users"),
+    path("api-log/<str:user_id>/", ActiniaUserView.as_view(), name="api-log"),
     ## General (g)
-    path(
-        "g/locations/",
-        cache_page(60 * 15, key_prefix="grass_locations")(
-            locations.LocationList.as_view()
-        ),
-        name="ListLocations",
-    ),
-    path("g/locations/<str:location_name>", locations.gLocations, name="Location"),
+    # path(
+    #     "g/locations/",
+    #     cache_page(60 * 15, key_prefix="grass_locations")(
+    #         locations.LocationList.as_view()
+    #     ),
+    #     name="ListLocations",
+    # ),
+    # path("g/locations/<str:location_name>", locations.gLocations, name="Location"),
     # path('g/locations/<str:location_name>/info', cache_page(60 * 15)(views.gLocationInfo), name="LocationInfo"),
     # path('g/locations/<str:location_name>/mapsets', views.gMapsets, name="Mapsets"),
     # path('g/locations/<str:location_name>/mapsets/<str:mapset_name>', views.gMapset, name="Mapset"),
@@ -73,9 +76,6 @@ urlpatterns = [
     # path('r/locations/<str:location_name>/mapsets/<str:mapset_name>/raster_layers/<str:raster_name>/area_stats_univar_async', cache_page(60 * 15)(views.rRenderImage), name="area_stats_univar_async"),
     # path('r/locations/<str:location_name>/mapsets/<str:mapset_name>/raster_layers/<str:raster_name>/area_stats_univar_sync', cache_page(60 * 15)(views.rRenderImage), name="area_stats_univar_sync"),
     # path('r/resource/<str:raster_name>/stream/<str:resource_id>', views.streamCOG, name="rStreamOCG"),
-    # path('r', views.ping, name='r'),
-    # path('r3', views.ping, name='r3'),
-    # path('v', views.ping, name='v'),
     # path('v/locations/<str:location_name>/mapsets/<str:mapset_name>/vector_layers/<str:vector_name>', cache_page(60 * 15)(views.vInfo), name="vInfo"),
     # path('v/locations/<str:location_name>/mapsets/<str:mapset_name>/vector_layers/<str:vector_name>/render', cache_page(60 * 15)(views.vRenderImage), name="renderVector"),
     # path('v/locations/<str:location_name>/mapsets/<str:mapset_name>/vector_layers/<str:vector_name>/sampling_async', cache_page(60 * 15)(views.rColors), name="vSamplingAsync"),

@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: Location.py                                                        #
+# Filename: UserListResponseSerializer.py                                      #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Wednesday November 15th 2023                                   #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -30,43 +30,11 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from .ObjectAuditAbstract import ObjectAuditAbstract
-from .ObjectInfoAbstract import ObjectInfoAbstract
+from rest_framework import serializers
 
 
-class Location(ObjectAuditAbstract, ObjectInfoAbstract):
-    """
-    Class representing GRASS locations avaliable in Actinia
-
-    Attributes
-    ----------
-    id : BigAutoField
-        Auto generated Primary key of response
-    name : str
-        The name of the GRASS mapset
-    description: str
-        The EPSG code of the location
-    owner : User
-        The user who owns the mapset
-    epsg : str
-        The EPSG code of the location
-    public : bool
-        Set true if location is publicly avaliable to all users.
-    """
-
-    epsg = models.CharField(max_length=8, blank=False)
-    actinia_users = models.ManyToManyField(
-        "grass.ActiniaUser", related_name="locations"
+class UserListResponseSerializer(serializers.Serializer):
+    status = serializers.CharField(help_text="The status of the request")
+    user_list = serializers.ListField(
+        child=serializers.CharField(), help_text="The names of all users"
     )
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "epsg", "owner"],
-                name="unique_location",
-            )
-        ]

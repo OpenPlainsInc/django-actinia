@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Wed Nov 15 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,16 +30,10 @@
 #                                                                              #
 ###############################################################################
 
-from django.contrib.auth.models import User
 from rest_framework import serializers
-from grass.models import ActiniaUser
 
 
 class UserSerializer(serializers.ModelSerializer):
-    actinia = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=ActiniaUser.objects.all()
-    )
-
     class Meta:
-        model = User
-        fields = ["id", "username", "actinia"]
+        model = "auth.User"
+        fields = ["id", "username", "email", "first_name", "last_name"]

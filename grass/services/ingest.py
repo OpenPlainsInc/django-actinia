@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: Location.py                                                        #
+# Filename: ingest.py                                                          #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Monday November 13th 2023                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Nov 15 2023                                               #
+# Last Modified: Mon Nov 13 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,43 +30,42 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from .ObjectAuditAbstract import ObjectAuditAbstract
-from .ObjectInfoAbstract import ObjectInfoAbstract
+import requests
+from django.conf import settings
+
+ACTINIA_SETTINGS = settings.ACTINIA
 
 
-class Location(ObjectAuditAbstract, ObjectInfoAbstract):
-    """
-    Class representing GRASS locations avaliable in Actinia
+class Ingest:
+    def __init__(self):
+        self.ingest_url = ACTINIA_SETTINGS["ACTINIA_SWAGGER_URL"]
+        self.model_definitions = {}
+        self.path_definitions = {}
 
-    Attributes
-    ----------
-    id : BigAutoField
-        Auto generated Primary key of response
-    name : str
-        The name of the GRASS mapset
-    description: str
-        The EPSG code of the location
-    owner : User
-        The user who owns the mapset
-    epsg : str
-        The EPSG code of the location
-    public : bool
-        Set true if location is publicly avaliable to all users.
-    """
+    def create_models(self, model_definitions):
+        pass
 
-    epsg = models.CharField(max_length=8, blank=False)
-    actinia_users = models.ManyToManyField(
-        "grass.ActiniaUser", related_name="locations"
-    )
+    def create_views(self, paths):
+        for path in paths:
+            for method in paths[path]:
+                print("Ingesting {} {}".format(method, path))
 
-    def __str__(self):
-        return self.name
+    def create_routes(self, path_definitions):
+        pass
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "epsg", "owner"],
-                name="unique_location",
-            )
-        ]
+    def ingest_api(self):
+        r = requests.get(self.ingest_url)
+        if r.status_code == 200:
+            swagger = r.json()
+            self.path_definitions = swagger["paths"]
+            self.model_definitions = swagger["definitions"]
+            self.create_models(self.model_definitions)
+            self.create_views(self.path_definitions)
+            self.create_routes(self.path_definitions)
+        else:
+            raise Exception("Could not ingest api from {}".format(self.ingest_url))
+
+
+def __main__():
+    ingest = Ingest()
+    ingest.ingest_api()

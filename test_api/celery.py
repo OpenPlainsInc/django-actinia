@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: Location.py                                                        #
+# Filename: celery.py                                                          #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Monday March 28th 2022                                         #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,10 +10,10 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2022 TomorrowNow                                               #
 #                                                                              #
-# django-actinia is an open-source django app that allows for with             #
-# the Actinia REST API for GRASS GIS for distributed computational tasks.      #
+# TomorrowNow is an open-source geospatial participartory modeling platform    #
+# to enable stakeholder engagment in socio-environmental decision-makeing.     #
 #                                                                              #
 # This program is free software: you can redistribute it and/or modify         #
 # it under the terms of the GNU General Public License as published by         #
@@ -30,43 +30,22 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from .ObjectAuditAbstract import ObjectAuditAbstract
-from .ObjectInfoAbstract import ObjectInfoAbstract
+# Used this blog post to get started
+# https://www.caktusgroup.com/blog/2021/08/11/using-celery-scheduling-tasks/
+import os
+from celery import Celery
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_api.settings")
 
-class Location(ObjectAuditAbstract, ObjectInfoAbstract):
-    """
-    Class representing GRASS locations avaliable in Actinia
+# Create default Celery app
+app = Celery("test_api")
 
-    Attributes
-    ----------
-    id : BigAutoField
-        Auto generated Primary key of response
-    name : str
-        The name of the GRASS mapset
-    description: str
-        The EPSG code of the location
-    owner : User
-        The user who owns the mapset
-    epsg : str
-        The EPSG code of the location
-    public : bool
-        Set true if location is publicly avaliable to all users.
-    """
+# namespace='CELERY' means all celery-related configuration keys
+# should be uppercased and have a `CELERY_` prefix in Django settings.
+# https://docs.celeryproject.org/en/stable/userguide/configuration.html
+app.config_from_object("django.conf:settings", namespace="CELERY")
 
-    epsg = models.CharField(max_length=8, blank=False)
-    actinia_users = models.ManyToManyField(
-        "grass.ActiniaUser", related_name="locations"
-    )
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "epsg", "owner"],
-                name="unique_location",
-            )
-        ]
+# When we use the following in Django, it loads all the <appname>.tasks
+# files and registers any tasks it finds in them. We can import the
+# tasks files some other way if we prefer.
+app.autodiscover_tasks()

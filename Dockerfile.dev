@@ -1,0 +1,47 @@
+FROM python:3.10.8-bullseye
+# FROM osgeo/grass-gis:releasebranch_8_3-debian as grass
+WORKDIR /code
+LABEL authors="Corey White"
+LABEL maintainer="corey.white@openplains.com"
+
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
+        # build-essential \
+        libssl-dev \
+        libffi-dev \
+        # python3-dev \
+        # python3-wheel \
+        # python3-setuptools \
+        # python3.10 \
+        # python3-pip \
+        binutils \
+        libgdal-dev \
+        libgeos-dev \
+        libproj-dev \
+        geoip-database \
+        postgis
+
+# RUN ln -sf /usr/local/grass `grass --config path`
+# RUN pip install --upgrade pip six grass-session --ignore-installed six
+# actinia importer installation
+# RUN grass --tmp-location EPSG:4326 --exec g.extension extension=importer url=https://github.com/actinia-org/importer
+
+# actinia exporter installation
+# RUN grass --tmp-location EPSG:4326 --exec g.extension extension=exporter url=https://github.com/actinia-org/exporter
+
+# ace (actinia command execution) tool
+# RUN grass --tmp-location EPSG:4326 --exec g.extension extension=ace url=https://github.com/actinia-org/ace
+
+
+
+COPY requirements-dev.txt /code/requirements.txt
+RUN pip install -r /code/requirements.txt
+RUN pip install git+https://github.com/tomorrownow/actinia_openapi_python_client.git
+
+# # Build
+# RUN python setup.py sdist
+
+# # Install
+# RUN python -m pip install --user django-actinia/dist/django-grass-0.0.1a0.tar.gz

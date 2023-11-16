@@ -1,19 +1,19 @@
 ###############################################################################
-# Filename: celery.py                                                          #
+# Filename: UserInfoResponseSerializer.py                                      #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Monday March 28th 2022                                         #
+# File Created: Wednesday November 15th 2023                                   #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Wed Nov 15 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                               #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
-# TomorrowNow is an open-source geospatial participartory modeling platform    #
-# to enable stakeholder engagment in socio-environmental decision-makeing.     #
+# django-actinia is an open-source django app that allows for with             #
+# the Actinia REST API for GRASS GIS for distributed computational tasks.      #
 #                                                                              #
 # This program is free software: you can redistribute it and/or modify         #
 # it under the terms of the GNU General Public License as published by         #
@@ -30,22 +30,14 @@
 #                                                                              #
 ###############################################################################
 
-# Used this blog post to get started
-# https://www.caktusgroup.com/blog/2021/08/11/using-celery-scheduling-tasks/
-import os
-from celery import Celery
+from rest_framework import serializers
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_settings")
 
-# Create default Celery app
-app = Celery("api")
-
-# namespace='CELERY' means all celery-related configuration keys
-# should be uppercased and have a `CELERY_` prefix in Django settings.
-# https://docs.celeryproject.org/en/stable/userguide/configuration.html
-app.config_from_object("django.conf:settings", namespace="CELERY")
-
-# When we use the following in Django, it loads all the <appname>.tasks
-# files and registers any tasks it finds in them. We can import the
-# tasks files some other way if we prefer.
-app.autodiscover_tasks()
+class UserInfoResponseModelSerializer(serializers.Serializer):
+    status = serializers.CharField()
+    user_id = serializers.CharField(required=False, allow_null=True)
+    user_role = serializers.CharField(required=False, allow_null=True)
+    user_group = serializers.CharField(required=False, allow_null=True)
+    permissions = serializers.DictField(
+        child=serializers.CharField(), required=False, allow_null=True
+    )

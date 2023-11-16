@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: Location.py                                                        #
+# Filename: APILogSerializer.py                                                #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Wednesday November 15th 2023                                   #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -30,43 +30,18 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from .ObjectAuditAbstract import ObjectAuditAbstract
-from .ObjectInfoAbstract import ObjectInfoAbstract
+from rest_framework import serializers
 
 
-class Location(ObjectAuditAbstract, ObjectInfoAbstract):
-    """
-    Class representing GRASS locations avaliable in Actinia
-
-    Attributes
-    ----------
-    id : BigAutoField
-        Auto generated Primary key of response
-    name : str
-        The name of the GRASS mapset
-    description: str
-        The EPSG code of the location
-    owner : User
-        The user who owns the mapset
-    epsg : str
-        The EPSG code of the location
-    public : bool
-        Set true if location is publicly avaliable to all users.
-    """
-
-    epsg = models.CharField(max_length=8, blank=False)
-    actinia_users = models.ManyToManyField(
-        "grass.ActiniaUser", related_name="locations"
-    )
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "epsg", "owner"],
-                name="unique_location",
-            )
-        ]
+class APILogSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    user_id = serializers.IntegerField()
+    task_id = serializers.CharField()
+    status = serializers.CharField()
+    created_at = serializers.DateTimeField()
+    updated_at = serializers.DateTimeField()
+    started_at = serializers.DateTimeField()
+    finished_at = serializers.DateTimeField()
+    inputs = serializers.DictField()
+    outputs = serializers.DictField()
+    message = serializers.CharField()

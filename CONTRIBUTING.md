@@ -52,6 +52,10 @@ Start the test server:
 
 ```bash
 docker compose --env-file .test.env --file docker-compose-test.yml up
+
+# or run to rebuild the images
+docker compose --env-file .test.env --file docker-compose-test.yml up
+
 ```
 
 To run tests against a particular `python` and `django` version installed inside your virtual environment, you may use:

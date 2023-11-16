@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Nov 14 2023                                               #
+# Last Modified: Wed Nov 15 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -44,6 +44,10 @@ from actinia_openapi_python_client.rest import ApiException
 from rest_framework import serializers
 from django.http import JsonResponse
 from grass.models import Location, Mapset
+from grass.serializers import APILogSerializer, UserListResponseSerializer
+from actinia_openapi_python_client.models.user_list_response_model import (
+    UserListResponseModel,
+)
 
 ACTINIA_SETTINGS = settings.ACTINIA
 
@@ -87,7 +91,9 @@ def __populate_locations_mapsets(self, locations):
 
 
 class ActiniaUserService:
-    configuration = actinia_openapi_python_client.Configuration(host="http://localhost")
+    configuration = actinia_openapi_python_client.Configuration(
+        host=ACTINIA_SETTINGS["ACTINIA_BASEURL"]
+    )
 
     configuration = actinia_openapi_python_client.Configuration(
         username=ACTINIA_SETTINGS["ACTINIA_USER"],
@@ -160,6 +166,25 @@ class ActiniaUserService:
 
         print(f"Actinia User {username} created in group: {query_params['group']}")
         return True
+
+    def get_actinia_users(self):
+        configuration = actinia_openapi_python_client.Configuration(
+            host=ACTINIA_SETTINGS["ACTINIA_BASEURL"]
+        )
+
+        configuration = actinia_openapi_python_client.Configuration(
+            username=ACTINIA_SETTINGS["ACTINIA_USER"],
+            password=ACTINIA_SETTINGS["ACTINIA_PASSWORD"],
+        )
+
+        with actinia_openapi_python_client.ApiClient(configuration) as api_client:
+            api_instance = actinia_openapi_python_client.UserManagementApi(api_client)
+            try:
+                api_response = api_instance.users_get()
+                serializer = UserListResponseSerializer(api_response)
+                return JsonResponse(serializer.data)
+            except ApiException as e:
+                return JsonResponse({"error": str(e)}, status=400)
 
     def get_actinia_user_account(self, username):
         """
@@ -247,6 +272,26 @@ class ActiniaUserService:
         """
         pass
 
+    def get_api_log(request, user_id):
+        configuration = actinia_openapi_python_client.Configuration(
+            host=ACTINIA_SETTINGS["ACTINIA_BASEURL"]
+        )
+
+        configuration = actinia_openapi_python_client.Configuration(
+            username=ACTINIA_SETTINGS["ACTINIA_USER"],
+            password=ACTINIA_SETTINGS["ACTINIA_PASSWORD"],
+        )
+
+        with actinia_openapi_python_client.ApiClient(configuration) as api_client:
+            api_instance = actinia_openapi_python_client.APILogApi(api_client)
+
+            try:
+                api_response = api_instance.api_log_user_id_get(user_id)
+                serializer = APILogSerializer(api_response)
+                return JsonResponse(serializer.data)
+            except ApiException as e:
+                return JsonResponse({"error": str(e)}, status=400)
+
 
 class ApiKeySerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -255,7 +300,9 @@ class ApiKeySerializer(serializers.Serializer):
 
 
 def get_api_key(request, user_id):
-    configuration = actinia_openapi_python_client.Configuration(host="http://localhost")
+    configuration = actinia_openapi_python_client.Configuration(
+        host=ACTINIA_SETTINGS["ACTINIA_BASEURL"]
+    )
 
     configuration = actinia_openapi_python_client.Configuration(
         username=ACTINIA_SETTINGS["ACTINIA_USER"],
@@ -268,39 +315,6 @@ def get_api_key(request, user_id):
         try:
             api_response = api_instance.api_key_user_id_get(user_id)
             serializer = ApiKeySerializer(api_response)
-            return JsonResponse(serializer.data)
-        except ApiException as e:
-            return JsonResponse({"error": str(e)}, status=400)
-
-
-class APILogSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    user_id = serializers.IntegerField()
-    task_id = serializers.CharField()
-    status = serializers.CharField()
-    created_at = serializers.DateTimeField()
-    updated_at = serializers.DateTimeField()
-    started_at = serializers.DateTimeField()
-    finished_at = serializers.DateTimeField()
-    inputs = serializers.DictField()
-    outputs = serializers.DictField()
-    message = serializers.CharField()
-
-
-def get_api_log(request, user_id):
-    configuration = actinia_openapi_python_client.Configuration(host="http://localhost")
-
-    configuration = actinia_openapi_python_client.Configuration(
-        username=ACTINIA_SETTINGS["ACTINIA_USER"],
-        password=ACTINIA_SETTINGS["ACTINIA_PASSWORD"],
-    )
-
-    with actinia_openapi_python_client.ApiClient(configuration) as api_client:
-        api_instance = actinia_openapi_python_client.APILogApi(api_client)
-
-        try:
-            api_response = api_instance.api_log_user_id_get(user_id)
-            serializer = APILogSerializer(api_response)
             return JsonResponse(serializer.data)
         except ApiException as e:
             return JsonResponse({"error": str(e)}, status=400)
