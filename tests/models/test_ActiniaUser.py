@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Nov 14 2023                                               #
+# Last Modified: Fri Nov 17 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -46,7 +46,6 @@ import time
 ACTINIA_SETTINGS = settings.ACTINIA
 
 ACTINIA_URL = os.path.join(
-    "http://",
     ACTINIA_SETTINGS["ACTINIA_BASEURL"],
     "api",
     ACTINIA_SETTINGS["ACTINIA_VERSION"],
@@ -58,21 +57,19 @@ class ActiniaUserTestCase(TestCase):
     def setUpTestData(cls):
         # Set up non-modified objects used by all test methods
         cls.user = User.objects.create_user(
-            username="testuser", email="testuser@example.com", password="testpass"
+            username="actiniatestuser",
+            email="testuser@example.com",
+            password="testpass",
         )
 
-        cls.actinia_user = ActiniaUser.objects.create_actinia_user(
-            # actinia_username="testuser",
-            actinia_role="admin",
-            user=cls.user,
-        )
+        cls.actinia_user = ActiniaUser.create_actinia_user(cls.user, "admin")
 
     def test_actinia_user_str(self):
-        self.assertEqual(str(self.actinia_user), "testuser")
+        self.assertEqual(str(self.actinia_user), "actiniatestuser")
 
     # Test that the ActiniaUser object is created correctly
     def test_actinia_user_create(self):
-        self.assertEqual(self.actinia_user.actinia_username, "testuser")
+        self.assertEqual(self.actinia_user.actinia_username, "actiniatestuser")
         self.assertEqual(self.actinia_user.actinia_role, "admin")
         self.assertEqual(self.actinia_user.user, self.user)
         time.sleep(5)
@@ -149,5 +146,6 @@ class ActiniaUserTestCase(TestCase):
     @classmethod
     def tearDownClass(cls):
         # Clean up any resources that were created in the setUpTestData() classmethod or by the test methods
-        cls.actinia_user.delete()
+        # cls.actinia_user.objects.delete()
+        ActiniaUser.objects.delete_actinia_user(cls.actinia_user)
         cls.user.delete()

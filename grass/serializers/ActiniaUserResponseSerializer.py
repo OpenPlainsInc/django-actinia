@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: ActiniaUser.py                                                     #
+# Filename: ActiniaUserResponseSerializer.py                                   #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday November 14th 2023                                     #
+# File Created: Friday November 17th 2023                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -30,32 +30,23 @@
 #                                                                              #
 ###############################################################################
 
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from grass.services.ActiniaUserService import ActiniaUserService, USER_TASK
+from rest_framework import serializers
+from grass.serializers.ActiniaUserLocationSerializer import (
+    ActiniaUserLocationSerializer,
+)
+from grass.models import ActiniaUser
 
 
-# class ActiniaUserView(APIView):
-#     def get(self, request, task, format=None):
-#         service = ActiniaUserService()
-#         task = USER_TASK(task)
+class ActiniaUserResponseSerializer(serializers.Serializer):
+    """
+    Serializer for ActiniaUserResponse objects.
+    """
 
-#         if task == USER_TASK.USERS:
-#             # Call the method to get users
-#             data = service.get_users()
-#         elif task == USER_TASK.TOKEN:
-#             # Call the method to get token
-#             data = service.get_token()
-#         elif task == USER_TASK.API_KEY:
-#             # Call the method to get API key
-#             data = service.get_api_key()
-#         elif task == USER_TASK.API_LOG:
-#             # Call the method to get API log
-#             data = service.get_api_log()
-#         else:
-#             return Response(
-#                 {"error": "Invalid task"}, status=status.HTTP_400_BAD_REQUEST
-#             )
+    id = serializers.IntegerField()
+    user_id = serializers.IntegerField()
+    locations = ActiniaUserLocationSerializer(many=True, read_only=True)
+    modules = serializers.JSONField()
 
-#         return Response(data)
+    class Meta:
+        model = ActiniaUser
+        fields = ["id", "user_id", "locations", "modules"]

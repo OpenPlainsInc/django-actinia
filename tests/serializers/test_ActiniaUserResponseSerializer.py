@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: ActiniaUser.py                                                     #
+# Filename: test_ActiniaUserResponseSerializer.py                              #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday November 14th 2023                                     #
+# File Created: Friday November 17th 2023                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -30,32 +30,48 @@
 #                                                                              #
 ###############################################################################
 
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from grass.services.ActiniaUserService import ActiniaUserService, USER_TASK
+
+from django.test import TestCase
+from grass.models import ActiniaUser
+from .serializers import ActiniaUserResponseSerializer
 
 
-# class ActiniaUserView(APIView):
-#     def get(self, request, task, format=None):
-#         service = ActiniaUserService()
-#         task = USER_TASK(task)
+class ActiniaUserResponseSerializerTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Set up non-modified objects used by all test methods
+        cls.actinia_user = ActiniaUser.objects.create(
+            actinia_username="testuser", actinia_role="admin", user_id=1
+        )
+        cls.serializer_data = {
+            "id": cls.actinia_user.id,
+            "user_id": cls.actinia_user.user_id,
+            "locations": [],
+            "modules": {},
+        }
+        cls.serializer = ActiniaUserResponseSerializer(instance=cls.actinia_user)
 
-#         if task == USER_TASK.USERS:
-#             # Call the method to get users
-#             data = service.get_users()
-#         elif task == USER_TASK.TOKEN:
-#             # Call the method to get token
-#             data = service.get_token()
-#         elif task == USER_TASK.API_KEY:
-#             # Call the method to get API key
-#             data = service.get_api_key()
-#         elif task == USER_TASK.API_LOG:
-#             # Call the method to get API log
-#             data = service.get_api_log()
-#         else:
-#             return Response(
-#                 {"error": "Invalid task"}, status=status.HTTP_400_BAD_REQUEST
-#             )
+    def test_serializer_fields(self):
+        self.assertEqual(
+            set(self.serializer_data.keys()), set(self.serializer.data.keys())
+        )
 
-#         return Response(data)
+    def test_serializer_data(self):
+        self.assertEqual(self.serializer_data, self.serializer.data)
+
+    def test_serializer_valid(self):
+        self.assertTrue(self.serializer.is_valid())
+
+    def test_serializer_save(self):
+        serializer = ActiniaUserResponseSerializer(data=self.serializer_data)
+        self.assertTrue(serializer.is_valid())
+        actinia_user = serializer.save()
+        self.assertIsInstance(actinia_user, ActiniaUser)
+        self.assertEqual(actinia_user.actinia_username, "testuser")
+        self.assertEqual(actinia_user.actinia_role, "admin")
+        self.assertEqual(actinia_user.user_id, 1)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Clean up any resources that were created in the setUpTestData() classmethod or by the test methods
+        cls.actinia_user.delete()

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Nov 15 2023                                               #
+# Last Modified: Fri Nov 17 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -37,17 +37,28 @@ from django.views.decorators.cache import cache_page
 
 
 from grass.views.general import locations
-from grass.views.ActiniaUserView import ActiniaUserView
+
+# from grass.views.ActiniaUserView import ActiniaUserView
+from grass.views.ActiniaUserViewSet import ActiniaUserViewSet
 
 # from views.raster import raster
 # from views import vector
 # from views import imagery
 
+
+from rest_framework.routers import DefaultRouter
+
 app_name = "grass"
 
+router = DefaultRouter()
+router.register(
+    r"actinia-user/(?P<task>\w+)", ActiniaUserViewSet, basename="actinia-user"
+)
+
 urlpatterns = [
-    path("users/", ActiniaUserView.as_view(), name="users"),
-    path("api-log/<str:user_id>/", ActiniaUserView.as_view(), name="api-log"),
+    path("", include(router.urls)),
+    # path("users/", ActiniaUserView.as_view(), name="users"),
+    # path("api-log/<str:user_id>/", ActiniaUserView.as_view(), name="api-log"),
     ## General (g)
     # path(
     #     "g/locations/",

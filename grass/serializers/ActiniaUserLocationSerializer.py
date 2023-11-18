@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: ActiniaUser.py                                                     #
+# Filename: ActiniaUserLocationSerializer.py                                   #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday November 14th 2023                                     #
+# File Created: Friday November 17th 2023                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -30,32 +30,22 @@
 #                                                                              #
 ###############################################################################
 
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from grass.services.ActiniaUserService import ActiniaUserService, USER_TASK
+from rest_framework import serializers
+
+# from grass.serializers import ActiniaUserLocationSerializer
+from grass.models import Location
 
 
-# class ActiniaUserView(APIView):
-#     def get(self, request, task, format=None):
-#         service = ActiniaUserService()
-#         task = USER_TASK(task)
+class ActiniaUserLocationSerializer(serializers.Serializer):
+    """
+    Serializer for ActiniaUserLocation model.
+    """
 
-#         if task == USER_TASK.USERS:
-#             # Call the method to get users
-#             data = service.get_users()
-#         elif task == USER_TASK.TOKEN:
-#             # Call the method to get token
-#             data = service.get_token()
-#         elif task == USER_TASK.API_KEY:
-#             # Call the method to get API key
-#             data = service.get_api_key()
-#         elif task == USER_TASK.API_LOG:
-#             # Call the method to get API log
-#             data = service.get_api_log()
-#         else:
-#             return Response(
-#                 {"error": "Invalid task"}, status=status.HTTP_400_BAD_REQUEST
-#             )
+    id = serializers.IntegerField()
+    location_name = serializers.CharField()
+    epsg = serializers.IntegerField()
+    mapsets = serializers.ListField(child=serializers.CharField())
 
-#         return Response(data)
+    class Meta:
+        model = Location
+        fields = ["id", "location_name", "epsg", "mapsets"]

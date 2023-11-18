@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Nov 15 2023                                               #
+# Last Modified: Fri Nov 17 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,12 +32,26 @@
 
 from rest_framework import serializers
 
+from actinia_openapi_python_client.models.user_info_response_model_permissions import (
+    UserInfoResponseModelPermissions,
+)
+
+
+class UserInfoResponseModelPermissionsSerializer(serializers.Serializer):
+    cell_limit = serializers.IntegerField(required=False, allow_null=True)
+    process_num_limit = serializers.IntegerField(required=False, allow_null=True)
+    process_time_limit = serializers.CharField(required=False, allow_null=True)
+    accessible_datasets = serializers.JSONField(required=False, allow_null=True)
+    accessible_modules = serializers.ListField(
+        child=serializers.CharField(), required=False, allow_null=True
+    )
+
 
 class UserInfoResponseModelSerializer(serializers.Serializer):
     status = serializers.CharField()
     user_id = serializers.CharField(required=False, allow_null=True)
     user_role = serializers.CharField(required=False, allow_null=True)
     user_group = serializers.CharField(required=False, allow_null=True)
-    permissions = serializers.DictField(
-        child=serializers.CharField(), required=False, allow_null=True
+    permissions = UserInfoResponseModelPermissionsSerializer(
+        required=False, allow_null=True
     )
