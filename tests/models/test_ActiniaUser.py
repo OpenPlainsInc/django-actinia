@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Mon Nov 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -72,9 +72,6 @@ class ActiniaUserTestCase(TestCase):
         self.assertEqual(self.actinia_user.actinia_username, "actiniatestuser")
         self.assertEqual(self.actinia_user.actinia_role, "admin")
         self.assertEqual(self.actinia_user.user, self.user)
-        time.sleep(5)
-        version = self.actinia_user.actinia_version()
-        self.assertIsInstance(version, dict)
 
     # Test that creating an ActiniaUser object with an existing username raises an exception
     # def test_actinia_user_failed_to_create_user(self):

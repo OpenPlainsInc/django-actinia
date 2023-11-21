@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: ActiniaUserResponseSerializer.py                                   #
+# Filename: __init__.py                                                        #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Friday November 17th 2023                                      #
+# File Created: Monday November 20th 2023                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -29,30 +29,3 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-
-from rest_framework import serializers
-from grass.serializers.ActiniaUserLocationSerializer import (
-    ActiniaUserLocationSerializer,
-)
-from grass.models.ActiniaUser import ActiniaUser
-
-
-class ActiniaUserResponseSerializer(serializers.Serializer):
-    """
-    Serializer for ActiniaUserResponse objects.
-    """
-
-    id = serializers.IntegerField()
-    user_id = serializers.IntegerField()
-    actinia_username = serializers.CharField()
-    actinia_role = serializers.CharField()
-    locations = ActiniaUserLocationSerializer(many=True, read_only=True)
-    # modules = serializers.JSONField()
-
-    class Meta:
-        model = ActiniaUser
-        fields = ["id", "actinia_username", "actinia_role", "user_id", "locations"]
-
-    def create(self, validated_data):
-        data = ActiniaUser(**validated_data)
-        return data

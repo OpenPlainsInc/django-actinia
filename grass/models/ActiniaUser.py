@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Mon Nov 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -106,7 +106,7 @@ class ActiniaUser(ObjectAuditAbstract):
         settings.AUTH_USER_MODEL, related_name="actinia_users", on_delete=models.CASCADE
     )
     password = models.CharField(max_length=128)
-    # objects = ActiniaUserManager()
+    objects = ActiniaUserManager()
 
     def save(self, *args, **kwargs):
         """

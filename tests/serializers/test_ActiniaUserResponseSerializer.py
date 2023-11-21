@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Mon Nov 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,24 +30,32 @@
 #                                                                              #
 ###############################################################################
 
-
+from django.contrib.auth.models import User
 from django.test import TestCase
-from grass.models import ActiniaUser
-from .serializers import ActiniaUserResponseSerializer
+from grass.models.ActiniaUser import ActiniaUser
+from grass.serializers.ActiniaUserResponseSerializer import (
+    ActiniaUserResponseSerializer,
+)
 
 
 class ActiniaUserResponseSerializerTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Set up non-modified objects used by all test methods
-        cls.actinia_user = ActiniaUser.objects.create(
-            actinia_username="testuser", actinia_role="admin", user_id=1
+        cls.user = User.objects.create_user(
+            username="actiniatestuser",
+            email="testuser@example.com",
+            password="testpass",
         )
+
+        cls.actinia_user = ActiniaUser.create_actinia_user(cls.user, "admin")
         cls.serializer_data = {
             "id": cls.actinia_user.id,
             "user_id": cls.actinia_user.user_id,
+            "actinia_username": cls.user.username,
             "locations": [],
-            "modules": {},
+            "actinia_role": cls.actinia_user.actinia_role
+            # "modules": {},
         }
         cls.serializer = ActiniaUserResponseSerializer(instance=cls.actinia_user)
 
@@ -60,16 +68,17 @@ class ActiniaUserResponseSerializerTestCase(TestCase):
         self.assertEqual(self.serializer_data, self.serializer.data)
 
     def test_serializer_valid(self):
-        self.assertTrue(self.serializer.is_valid())
+        serializer = ActiniaUserResponseSerializer(data=self.serializer_data)
+        self.assertTrue(serializer.is_valid())
 
     def test_serializer_save(self):
         serializer = ActiniaUserResponseSerializer(data=self.serializer_data)
         self.assertTrue(serializer.is_valid())
         actinia_user = serializer.save()
         self.assertIsInstance(actinia_user, ActiniaUser)
-        self.assertEqual(actinia_user.actinia_username, "testuser")
+        self.assertEqual(actinia_user.actinia_username, "actiniatestuser")
         self.assertEqual(actinia_user.actinia_role, "admin")
-        self.assertEqual(actinia_user.user_id, 1)
+        self.assertEqual(actinia_user.user_id, 2)
 
     @classmethod
     def tearDownClass(cls):
