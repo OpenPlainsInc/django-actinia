@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: test_ActiniaUserResponseSerializer.py                              #
+# Filename: ProcessingResponse.py                                              #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Friday November 17th 2023                                      #
+# File Created: Tuesday November 21st 2023                                     #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -29,58 +29,3 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-
-from django.contrib.auth.models import User
-from django.test import TestCase
-from grass.models.ActiniaUser import ActiniaUser
-from grass.serializers.ActiniaUserResponseSerializer import (
-    ActiniaUserResponseSerializer,
-)
-
-
-class ActiniaUserResponseSerializerTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        # Set up non-modified objects used by all test methods
-        cls.user = User.objects.create_user(
-            username="actiniatestuser",
-            email="testuser@example.com",
-            password="testpass",
-        )
-
-        cls.actinia_user = ActiniaUser.create_actinia_user(cls.user, "admin")
-        cls.serializer_data = {
-            "id": cls.actinia_user.id,
-            "user_id": cls.actinia_user.user_id,
-            "actinia_username": cls.user.username,
-            "locations": [],
-            "actinia_role": cls.actinia_user.actinia_role,
-            # "modules": {}
-        }
-        cls.serializer = ActiniaUserResponseSerializer(instance=cls.actinia_user)
-
-    def test_serializer_fields(self):
-        self.assertEqual(
-            set(self.serializer_data.keys()), set(self.serializer.data.keys())
-        )
-
-    def test_serializer_data(self):
-        self.assertEqual(self.serializer_data, self.serializer.data)
-
-    def test_serializer_valid(self):
-        serializer = ActiniaUserResponseSerializer(data=self.serializer_data)
-        self.assertTrue(serializer.is_valid())
-
-    def test_serializer_save(self):
-        serializer = ActiniaUserResponseSerializer(data=self.serializer_data)
-        self.assertTrue(serializer.is_valid())
-        actinia_user = serializer.save()
-        self.assertIsInstance(actinia_user, ActiniaUser)
-        self.assertEqual(actinia_user.actinia_username, "actiniatestuser")
-        self.assertEqual(actinia_user.actinia_role, "admin")
-        self.assertEqual(actinia_user.user_id, 2)
-
-    @classmethod
-    def tearDownClass(cls):
-        # Clean up any resources that were created in the setUpTestData() classmethod or by the test methods
-        cls.actinia_user.delete()

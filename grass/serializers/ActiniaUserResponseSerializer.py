@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 20 2023                                               #
+# Last Modified: Tue Nov 21 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -51,7 +51,15 @@ class ActiniaUserResponseSerializer(serializers.Serializer):
 
     class Meta:
         model = ActiniaUser
-        fields = ["id", "actinia_username", "actinia_role", "user_id", "locations"]
+        fields = [
+            "id",
+            "actinia_username",
+            "actinia_role",
+            "user_id",
+            "locations",
+            "created_on",
+            "updated_on",
+        ]
 
     def create(self, validated_data):
         data = ActiniaUser(**validated_data)
