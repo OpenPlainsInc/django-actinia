@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Nov 21 2023                                               #
+# Last Modified: Mon Nov 27 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -199,6 +199,7 @@ class ProjectService:
         except ApiException as e:
             return JsonResponse({"error": str(e)}, status=400)
 
+    @transaction.atomic
     def delete_project(self, project_name):
         """
         Delete a project (Location) for the user

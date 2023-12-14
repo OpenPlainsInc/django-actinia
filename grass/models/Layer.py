@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: admin.py                                                           #
+# Filename: Layer.py                                                           #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Monday November 27th 2023                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,47 +30,30 @@
 #                                                                              #
 ###############################################################################
 
-from django.contrib import admin
-
-from .models import ActiniaUser, Location, Mapset, Region, Token
-
-
-class LocationInline(admin.TabularInline):
-    model = Location
-    extra = 0
+from django.db import models
+from .ObjectAuditAbstract import ObjectAuditAbstract
+from .ObjectInfoAbstract import ObjectInfoAbstract
+from .Mapset import Mapset
+from .fields.LayerTypeEnumField import LayerTypeEnumField
 
 
-class MapsetInline(admin.TabularInline):
-    model = Mapset
-    extra = 0
+class Layer(ObjectAuditAbstract, ObjectInfoAbstract):
+    """
+    GRASS Layer class
+    """
 
-
-class ActiniaUserAdmin(admin.ModelAdmin):
-    list_display = ("actinia_username", "actinia_role", "user", "locations")
-    list_filter = ("actinia_username", "actinia_role", "user")
-
-    # inlines = [LocationInline]
-
-
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ("name", "description", "owner", "epsg", "public")
-    list_filter = ("name", "description", "owner", "epsg", "public")
-
-    # inlines = [MapsetInline]
-
-
-class MapsetAdmin(admin.ModelAdmin):
-    list_display = ("name", "description", "owner", "location")
-    list_filter = ("name", "description", "owner", "location")
-
-    # inlines = [LocationInline]
-
-
-class TokenAdmin(admin.ModelAdmin):
-    list_display = ("token", "actinia_user", "expires", "user", "api_key")
-
-
-admin.site.register(ActiniaUser, ActiniaUserAdmin)
-admin.site.register(Location, LocationAdmin)
-admin.site.register(Mapset, MapsetAdmin)
-admin.site.register(Token, TokenAdmin)
+    mutable = models.BooleanField(default=False)
+    mapsets = models.ManyToManyField("grass.Mapset", related_name="mapsets")
+    layer_type = LayerTypeEnumField()
+    size = models.CharField()  # KB
+    eres = models.FloatField()
+    wres = models.FloatField()
+    stac_asset = models.URLField()
+    # bbox = models.Geojson()
+    # spacial_resolution = # Create Spatial Resolution Field
+    # temporal_extent = # Create Temporal Extent Field
+    # categories = # Create Class
+    # color_scheme = # Create Color Scheme
+    # metadata = # Create Metadata class
+    # permissions = (READ, WRITE, UPDATE, DELETE)
+    # protocols =  (WebSocket, WebHook, WebRTC)
