@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: LayerTypeEnum.py                                                   #
+# Filename: DataTypeEnum.py                                                    #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Monday November 27th 2023                                      #
+# File Created: Wednesday December 27th 2023                                   #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -34,14 +34,32 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class LayerTypeEnum(models.TextChoices):
+class DataTypeEnum(models.TextChoices):
     """
     Enum class representing the different layer types.
     """
 
-    RASTER = "RS", _("raster")
-    RASTER_3D = "R3", _("raster_3d")
-    VECTOR = "VE", _("vector")
-    STDR = "ST", _("stdr")
-    STAC = "SC", _("stac")
     TABULAR = "TA", _("tabular")
+    CSV = "CS", _("csv")
+    JSON = "JS", _("json")
+    KML = "KM", _("kml")
+    WMS = "WM", _("wms")
+    WFS = "WF", _("wfs")
+    PBF = "PB", _("pbf")
+    GEOPACKAGE = "GP", _("geopackage")
+    GEOTIFF = "GT", _("geotiff")
+    NETCDF = "NC", _("netcdf")
+    HDF5 = "HD", _("hdf5")
+    HDF4 = "HF", _("hdf4")
+    HDF = "H4", _("hdf")
+    COG = "CG", _("cog")
+    GEOJSON = "GJ", _("geojson")
+    GEOPARQUET = "GQ", _("geoparquet")
+    FLATGEOBUF = "FG", _("flatgeobuf")
+    GPKG = "GK", _("gpkg")
+    LAS = "LA", _("las")
+    LAZ = "LZ", _("laz")
+    XYZ = "XY", _("xyz")
+    gltf = "GL", _("gltf")
+    glb = "GB", _("glb")
+    OBJ = "OB", _("obj")

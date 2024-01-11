@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 27 2023                                               #
+# Last Modified: Wed Dec 27 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -35,7 +35,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class ActiniaRoleEnumField(models.CharField):
+class LayerTypeEnumField(models.CharField):
     """
     Custom model field for GRASS layer types
     """
