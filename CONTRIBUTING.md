@@ -48,6 +48,18 @@ python -m pip uninstall django-actinia
 
 ### Testing
 
+Start the test server:
+
+```bash
+docker compose --env-file .test.env --file docker-compose-test.yml up
+
+# or run to rebuild the images
+docker compose --env-file .test.env --file docker-compose-test.yml up
+
+# Run tests
+docker compose --env-file .test.env --file docker-compose-test.yml run api python manage.py test
+```
+
 To run tests against a particular `python` and `django` version installed inside your virtual environment, you may use:
 
 ```bash
@@ -57,11 +69,6 @@ To run tests against a particular `python` and `django` version installed inside
 ```
 
 To run tests against all supported `python` and `django` versions, you may run:
-
-Docker Test
-```
-docker compose --env-file .test.env --file docker-compose-test.yml up
-```
 
 ```bash
 # install dependency

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Nov 20 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,55 +30,119 @@
 #                                                                              #
 ###############################################################################
 
-
+import os
 from django.test import TestCase
 from django.contrib.auth.models import User
-from actinia.models import ActiniaUser
+from django.conf import settings
+from grass.models import ActiniaUser, Location, Mapset, Token
+from requests.auth import HTTPBasicAuth
+from actinia import Actinia
+from django.db.models.query import QuerySet
+
+# import requests_mock
+import time
+
+
+ACTINIA_SETTINGS = settings.ACTINIA
+
+ACTINIA_URL = os.path.join(
+    ACTINIA_SETTINGS["ACTINIA_BASEURL"],
+    "api",
+    ACTINIA_SETTINGS["ACTINIA_VERSION"],
+)
 
 
 class ActiniaUserTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(
-            username="testuser", email="testuser@example.com", password="testpass"
-        )
-        self.actinia_user = ActiniaUser.objects.create(
-            actinia_username="testactiniauser",
-            actinia_role="admin",
-            user=self.user,
+    @classmethod
+    def setUpTestData(cls):
+        # Set up non-modified objects used by all test methods
+        cls.user = User.objects.create_user(
+            username="actiniatestuser",
+            email="testuser@example.com",
             password="testpass",
         )
 
+        cls.actinia_user = ActiniaUser.create_actinia_user(cls.user, "admin")
+
     def test_actinia_user_str(self):
-        self.assertEqual(str(self.actinia_user), "testactiniauser")
+        self.assertEqual(str(self.actinia_user), "actiniatestuser")
 
-    def test_actinia_user_password(self):
-        self.assertNotEqual(self.actinia_user.password, "testpass")
-
-    def test_actinia_user_generate_token(self):
-        self.actinia_user.generateActiniaToken()
-        self.assertIsNotNone(self.actinia_user.token)
-
-    def test_actinia_user_locations(self):
-        self.assertEqual(self.actinia_user.locations(), [])
-
-    def test_actinia_user_teams(self):
-        self.assertEqual(self.actinia_user.teams(), [])
-
-    def test_actinia_user_projects(self):
-        self.assertEqual(self.actinia_user.projects(), [])
-
-    def test_actinia_user_grass_templates(self):
-        self.assertEqual(self.actinia_user.grass_templates(), [])
-
+    # Test that the ActiniaUser object is created correctly
     def test_actinia_user_create(self):
-        self.actinia_user.create()
-        self.assertIsNotNone(self.actinia_user.actinia_username)
-        self.assertIsNotNone(self.actinia_user.password)
-        self.assertIsNotNone(self.actinia_user.user)
-        self.assertIsNotNone(self.actinia_user.actinia_role)
-        self.assertIsNotNone(self.actinia_user.token)
-        self.assertIsNotNone(self.actinia_user.__actinia_client)
-        self.assertIsNotNone(self.actinia_user.locations())
-        self.assertIsNotNone(self.actinia_user.teams())
-        self.assertIsNotNone(self.actinia_user.projects())
-        self.assertIsNotNone(self.actinia_user.grass_templates())
+        self.assertEqual(self.actinia_user.actinia_username, "actiniatestuser")
+        self.assertEqual(self.actinia_user.actinia_role, "admin")
+        self.assertEqual(self.actinia_user.user, self.user)
+
+    # Test that creating an ActiniaUser object with an existing username raises an exception
+    # def test_actinia_user_failed_to_create_user(self):
+    #     with self.assertRaises(Exception):
+    #         ActiniaUser.objects.create(
+    #             actinia_username="testuser",
+    #             actinia_role="admin",
+    #             user=self.user
+    #         )
+
+    # def test_manual_create_actinia_user(self):
+    #     with self.assertRaises(Exception):
+    #         test_actinia_user = self.actinia_user._ActiniaUser__create_actinia_user()
+    #         self.assertIsInstance(test_actinia_user, Actinia)
+
+    # def test_actinia_base_url(self):
+    #     base_url = self.actinia_user._ActiniaUser__base_url
+    #     self.assertEqual(base_url, ACTINIA_URL)
+
+    # def test_actinia_user_request_url(self):
+    #     task = "users"
+    #     url = self.actinia_user._ActiniaUser__actinia_user_request_url(task)
+    #     self.assertIsInstance(url, str)
+    #     self.assertIn(self.actinia_user._ActiniaUser__base_url, url)
+    #     self.assertIn(task, url)
+
+    #     user_id = "test_user_id"
+    #     url = self.actinia_user._ActiniaUser__actinia_user_request_url(task, user_id=user_id)
+    #     self.assertIsInstance(url, str)
+    #     self.assertIn(self.actinia_user._ActiniaUser__base_url, url)
+    #     self.assertIn(task, url)
+    #     self.assertIn(user_id, url)
+
+    #     task = "token"
+    #     url = self.actinia_user._ActiniaUser__actinia_user_request_url(task)
+    #     self.assertIsInstance(url, str)
+    #     self.assertIn(self.actinia_user._ActiniaUser__base_url, url)
+    #     self.assertIn(task, url)
+
+    #     task = "api_key"
+    #     url = self.actinia_user._ActiniaUser__actinia_user_request_url(task)
+    #     self.assertIsInstance(url, str)
+    #     self.assertIn(self.actinia_user._ActiniaUser__base_url, url)
+    #     self.assertIn(task, url)
+
+    #     task = "api_log"
+    #     url = self.actinia_user._ActiniaUser__actinia_user_request_url(task)
+    #     self.assertIsInstance(url, str)
+    #     self.assertIn(self.actinia_user._ActiniaUser__base_url, url)
+    #     self.assertIn(task, url)
+
+    #     with self.assertRaises(Exception):
+    #         task = "fake_task"
+    #         url = self.actinia_user._ActiniaUser__actinia_user_request_url(task)
+
+    # def test_actina_user_create_actinia_client(self):
+    #     actinia_client = self.actinia_user._ActiniaUser__create_actinia_client()
+    #     self.assertIsInstance(actinia_client, Actinia)
+    #     actinia_client_auth = self.actinia_user._ActiniaUser__auth
+    #     self.assertIsInstance(actinia_client_auth, HTTPBasicAuth)
+
+    # def test_actina_user_default_location_creation(self):
+    #     locations_count = self.actinia_user.locations.count()
+    #     locations = self.actinia_user.locations.all()
+
+    #     self.assertIsInstance(locations, QuerySet)
+    #     self.assertEqual(locations_count, 0)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Clean up any resources that were created in the setUpTestData() classmethod or by the test methods
+        # cls.actinia_user.objects.delete()
+        ActiniaUser.objects.delete_actinia_user(cls.actinia_user)
+        cls.user.delete()

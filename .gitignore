@@ -131,3 +131,6 @@ dmypy.json
 .DS_Store
 # redis
 dump.rdb
+
+# actinia
+actinia-core-data/

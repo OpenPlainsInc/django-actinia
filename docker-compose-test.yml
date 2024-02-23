@@ -13,16 +13,17 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   actinia-core:
-    image: mundialis/actinia-core:4.11.0
-
-    # volumes:
-    #   - ./actinia-core-data/grassdb:/actinia_core/grassdb:Z
-    #   - ./actinia-core-data/userdata:/actinia_core/userdata
-    #   - ./actinia/pgpass:/mnt/pgpass
-    #   - ./actinia-core-data/geodata_dir:/mnt/geodata
-    #   - ./actinia-core-data/workspace/temp_db:/actinia_core/workspace/temp_db
-    #   - ./actinia-core-data/workspace/tmp:/actinia_core/workspace/tmp
-    #   - ./actinia-core-data/resources:/actinia_core/resources:Z
+    build:
+        context: ./actinia
+        dockerfile: Dockerfile
+    volumes:
+      - ./actinia-core-data/grassdb:/actinia_core/grassdb:Z
+      - ./actinia-core-data/userdata:/actinia_core/userdata
+      - ./actinia-core-data/pgpass:/mnt/pgpass:Z
+      - ./actinia-core-data/geodata_dir:/mnt/geodata:Z
+      - ./actinia-core-data/workspace/temp_db:/actinia_core/workspace/temp_db
+      - ./actinia-core-data/workspace/tmp:/actinia_core/workspace/tmp
+      - ./actinia-core-data/resources:/actinia_core/resources
 
       # - *services-volume
     restart: always
@@ -51,46 +52,43 @@ services:
 
   django-redis-cache:
     image: redis:5.0.4-alpine
-    # volumes:
-    #   - ./django_redis_cache:/data
+    volumes:
+      - ./redis_config:/data/
     environment:
       - REDIS_PASS_FILE=/data/.redis
     command: [
       "sh", "-c",
       '
       docker-entrypoint.sh
-      "/data/redis.conf"
+      "/data/django-redis.conf"
       --requirepass "$$(cat $$REDIS_PASS_FILE)"
       '
     ]
     ports:
         - "6370:6370"
 
-  # api:
-  #   build:
-  #     context: ./openplains_api
-  #   command: bash -c "python manage.py runserver 0.0.0.0:8005"
-  #   volumes:
-  #     - ./openplains_api:/code
-  #     - ./actinia-core-data/resources:/actinia_core/resources:Z
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+    command: bash -c "python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./:/code
 
-  #   ports:
-  #     - "8005:8005"
-  #     - "8010:8010"
-  #   depends_on:
-  #     - db
-  #     - actinia-core
-  #     - django-redis-cache
+    ports:
+      - "8000:8000"
+      - "8010:8010"
+    depends_on:
+      - db
+      - actinia-core
+      - django-redis-cache
 
-  # celery_worker:
-  #   build:
-  #     context: ./openplains_api
-  #   command: celery -A api.celery worker --loglevel=INFO
-  #   volumes:
-  #     - ./openplains_api:/code
-  #   env_file:
-  #     - ./openplains_api/api/.env
-  #   depends_on:
-  #     - redis
-  #     - db
-  #     - api
+  celery_worker:
+    build:
+      dockerfile: Dockerfile.dev
+    command: celery -A test_api.celery worker --loglevel=INFO
+    volumes:
+      - ./:/code
+    depends_on:
+      - redis
+      - db
+      - api

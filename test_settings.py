@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Fri Nov 17 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -46,6 +46,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import environ
 import os
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,7 +76,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "daphne",
     "channels",
-    "actinia",
+    "grass",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -88,10 +89,32 @@ INSTALLED_APPS = [
     "rest_framework_gis",
     "django_filters",
     "django_extensions",
+    "debug_toolbar",
 ]
 
 
-# do not set a custom user because django-actinia is reuseable accross many apps.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": env("DJANGO_LOG_LEVEL"),
+            "propagate": True,
+        },
+    },
+}
+
+logging.config.dictConfig(LOGGING)
 
 
 REST_FRAMEWORK = {
@@ -111,10 +134,7 @@ REST_FRAMEWORK = {
 }
 
 # Add Later
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",  # default
-    "guardian.backends.ObjectPermissionBackend",
-)
+AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)  # default
 
 
 MIDDLEWARE = [
@@ -139,12 +159,7 @@ if DEBUG:
 AUTH_USER_MODEL = "auth.User"
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8005",
     "http://actinia-core:8088",
-    "http://localhost:3000",
-    "http://localhost:5000",
-    "http://192.168.1.242:3000",
-    "http://localhost:7000",
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -206,12 +221,12 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-ROOT_URLCONF = "actinia.urls"
+ROOT_URLCONF = "test_api.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "test_api" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -224,17 +239,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "api.wsgi.application"
+WSGI_APPLICATION = "test_api.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": env("POSTGRES_DBNAME"),
@@ -277,6 +288,7 @@ ACTINIA = {
     "ACTINIA_BASEURL": env("ACTINIA_BASEURL"),
     "ACTINIA_LOCATION": env("ACTINIA_LOCATION"),
     "ACTINIA_MAPSET": env("ACTINIA_MAPSET"),
+    "ACTINIA_SWAGGER_URL": env("ACTINIA_SWAGGER_URL"),
 }
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -353,7 +365,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Channels
 # Running in Redis database 5
-ASGI_APPLICATION = "api.asgi.application"
+ASGI_APPLICATION = "test_api.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
@@ -374,16 +386,5 @@ CELERY_BROKER_URL = (
 CELERY_RESULT_BACKEND = (
     f'redis://{env("REDIS_USER")}:{env("REDIS_PASSWORD")}@django-redis-cache:6370/1'
 )
-
-# CELERY_TIMEZONE = "America/New_York"
-
-IPYTHON_KERNEL_DISPLAY_NAME = "Django Shell-Plus"
-
-# extra things to import in notebook
-
-SHELL_PLUS_POST_IMPORTS = [
-    # ("module1.submodule", ("func1", "func2", "class1", "etc")),
-    # ("module2.submodule", ("func1", "func2", "class1", "etc"))
-]
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"  # only use in development
