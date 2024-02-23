@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Thu Jan 11 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,18 +31,17 @@
 ###############################################################################
 
 from rest_framework import serializers
-from . import (
-    MapsetInfoModelSerializer,
-    ProgressInfoModelSerializer,
-    UrlModelSerializer,
-    ApiInfoModelSerializer,
-    ProcessLogModelSerializer,
-    GrassModuleSerializer,
-    ExceptionTracebackModelSerializer,
-)
+
+from .MapsetInfoModelSerializer import MapsetInfoModelSerializer
+from .ProgressInfoModelSerializer import ProgressInfoModelSerializer
+from .UrlModelSerializer import UrlModelSerializer
+from .ApiInfoModelSerializer import ApiInfoModelSerializer
+from .ProcessLogModelSerializer import ProcessLogModelSerializer
+from .GrassModuleSerializer import GrassModuleSerializer
+from .ExceptionTracebackModelSerializer import ExceptionTracebackModelSerializer
 
 
-class MapsetInfoResponseModelSerializer(serializers.Serializer):
+class MapsetInfoResponseSerializer(serializers.Serializer):
     """
     Serializer for MapsetInfoResponseModel.
 

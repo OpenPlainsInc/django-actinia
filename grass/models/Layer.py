@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 27 2023                                               #
+# Last Modified: Wed Dec 27 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -43,13 +43,15 @@ class Layer(ObjectAuditAbstract, ObjectInfoAbstract):
     """
 
     mutable = models.BooleanField(default=False)
-    mapsets = models.ManyToManyField("grass.Mapset", related_name="mapsets")
+    mapsets = models.ManyToManyField("grass.Mapset", related_name="layers")
+    users = models.ManyToManyField("grass.User", related_name="layers")
     layer_type = LayerTypeEnumField()
     size = models.CharField()  # KB
     eres = models.FloatField()
     wres = models.FloatField()
     stac_asset = models.URLField()
-    # bbox = models.Geojson()
+    thumbnail = models.URLField()
+    bbox = models.GeojsonField()
     # spacial_resolution = # Create Spatial Resolution Field
     # temporal_extent = # Create Temporal Extent Field
     # categories = # Create Class

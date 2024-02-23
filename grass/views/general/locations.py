@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Thu Jan 11 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -42,65 +42,101 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import AllowAny
 
 
-def gLocations(request):
+# def gLocations(request):
+#     """
+#     Gets List of Users Avaliable Locations
+#     Actinia Route
+#     GET /locations
+#     """
+#     if request.method == "GET":
+#         url = f"{acp.baseUrl()}/locations"
+#         r = requests.get(url, auth=acp.auth())
+#         print(f"Request URL: {url}")
+#         serializer = LocationResponseSerializer(r.json())
+#         return Response(serializer.data)
+#     # TODO - Set up proper error handling and reponse messages
+#     return JsonResponse({"error": "gLocations View: Fix Me"})
+
+
+# class LocationList(APIView):
+#     """
+#     List all of the users locations or create a new location.
+#     """
+
+
+#     def get(self, request, format=None):
+#         locations = Location.object.all()
+#         serializer = LocationSerializer(locations, many=True)
+#         return Response(serializer.data)
+
+#     def post(self, request, format=None):
+#         serializer = LocationSerializer(request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class LocationDetail(APIView):
+#     """Retrieve, update or delete a location instance."""
+
+#     def get_object(self, location_id):
+#         try:
+#             return Location.objects.get(id=location_id)
+#         except Location.DoesNotExist:
+#             raise Http404
+
+#     def get(self, request, location_id, format=None):
+#         location = self.get_object(location_id)
+#         serializer = LocationSerializer(location)
+#         return Response(serializer.data)
+
+#     def put(self, request, location_id, format=None):
+#         location = self.get_object(location_id)
+#         serializer = LocationSerializer(location, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     def delete(self, request, location_id, format=None):
+#         location = self.get_object(location_id)
+#         location.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LocationViewSet(viewsets.ViewSet):
     """
-    Gets List of Users Avaliable Locations
-    Actinia Route
-    GET /locations
+    List all locations,
+    or create a new location.
     """
-    if request.method == "GET":
-        url = f"{acp.baseUrl()}/locations"
-        r = requests.get(url, auth=acp.auth())
-        print(f"Request URL: {url}")
-        serializer = LocationResponseSerializer(r.json())
+
+    permission_classes = [AllowAny]
+
+    def list(self, request):
+        queryset = Location.objects.all()
+        serializer = LocationSerializer(queryset, many=True)
         return Response(serializer.data)
-    # TODO - Set up proper error handling and reponse messages
-    return JsonResponse({"error": "gLocations View: Fix Me"})
 
+    def create(self, request):
+        pass
 
-class LocationList(APIView):
-    """
-    List all of the users locations or create a new location.
-    """
-
-    def get(self, request, format=None):
-        locations = Location.object.all()
-        serializer = LocationSerializer(locations, many=True)
+    def retrieve(self, request, pk=None):
+        queryset = Location.objects.all()
+        location = get_object_or_404(queryset, pk=pk)
+        serializer = LocationResponseSerializer(location)
         return Response(serializer.data)
 
-    def post(self, request, format=None):
-        serializer = LocationSerializer(request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def update(self, request, pk=None):
+        pass
 
+    def partial_update(self, request, pk=None):
+        pass
 
-class LocationDetail(APIView):
-    """Retrieve, update or delete a location instance."""
-
-    def get_object(self, location_id):
-        try:
-            return Location.objects.get(id=location_id)
-        except Location.DoesNotExist:
-            raise Http404
-
-    def get(self, request, location_id, format=None):
-        location = self.get_object(location_id)
-        serializer = LocationSerializer(location)
-        return Response(serializer.data)
-
-    def put(self, request, location_id, format=None):
-        location = self.get_object(location_id)
-        serializer = LocationSerializer(location, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, location_id, format=None):
-        location = self.get_object(location_id)
-        location.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def destroy(self, request, pk=None):
+        pass

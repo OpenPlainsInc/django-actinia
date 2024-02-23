@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: ObjectInfoAbstract.py                                              #
+# Filename: MapsetResponseSerializer.py                                        #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Thursday January 11th 2024                                     #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,28 +30,16 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from django.conf import settings
-from django.utils.text import slugify
+from rest_framework import serializers
 
 
-class ObjectInfoAbstract(models.Model):
-    """
-    Abstract class to add basic details to a database object
-    """
-
-    name = models.CharField(max_length=150, blank=False)
-    description = models.CharField(max_length=250, blank=True)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, editable=True, on_delete=models.CASCADE
-    )
-    public = models.BooleanField(default=False)
-    slug = models.SlugField(max_length=150, blank=True, editable=False, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)  # assuming 'name' is a field in your model
-        super().save(*args, **kwargs)
-
-    class Meta:
-        abstract = True
+class MapsetResponseModelSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    bounding_box = serializers.CharField()  # bbox in WGS84 geojson format
+    size = serializers.IntegerField()  # in bytes
+    lock_status = serializers.BooleanField()
+    num_raster_layers = serializers.IntegerField()
+    num_vector_layers = serializers.IntegerField()
+    description = serializers.CharField()
+    created_date = serializers.DateTimeField()
+    last_edited_date = serializers.DateTimeField()

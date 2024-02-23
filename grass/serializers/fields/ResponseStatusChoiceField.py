@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Thu Jan 11 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -39,6 +39,7 @@ class ResponseStatusChoiceField(serializers.ChoiceField):
     Custom serializer to handle Actinia response status json responses.
     """
 
-    choices = ResponseStatusEnum.choices
-    default = ResponseStatusEnum.SUCCESS
-    allow_blank = False
+    def __init__(self, **kwargs):
+        kwargs["choices"] = ResponseStatusEnum.choices
+        kwargs["allow_blank"] = False
+        super().__init__(**kwargs)

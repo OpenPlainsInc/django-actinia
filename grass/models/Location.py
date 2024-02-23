@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Nov 15 2023                                               #
+# Last Modified: Fri Jan 12 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,6 +33,7 @@
 from django.db import models
 from .ObjectAuditAbstract import ObjectAuditAbstract
 from .ObjectInfoAbstract import ObjectInfoAbstract
+from grass.services.ProjectService import ProjectService
 
 
 class Location(ObjectAuditAbstract, ObjectInfoAbstract):
@@ -53,6 +54,7 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
         The EPSG code of the location
     public : bool
         Set true if location is publicly avaliable to all users.
+    slug : str
     """
 
     epsg = models.CharField(max_length=8, blank=False)
@@ -70,3 +72,37 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
                 name="unique_location",
             )
         ]
+
+    def save(self, *args, **kwargs):
+        """
+        Create a new actinia user.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def create_project(cls, user, actinia_user, project_name, description, epsg=3358):
+        """
+        Create a new actinia project (location).
+
+        Args:
+            user (User): The Django user object.
+            epsg (int): The EPSG code to use for the default location.
+
+        Returns:
+            ActiniaUser: The new actinia user.
+        """
+        project_service = ProjectService()
+
+        project = project_service.create_project(
+            user=user,
+            actinia_user=actinia_user,
+            project_name=project_name,
+            project_description=description,
+            project_epsg=epsg,
+        )
+
+        return project

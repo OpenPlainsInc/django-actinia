@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 20 2023                                               #
+# Last Modified: Fri Jan 12 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -134,7 +134,7 @@ class ActiniaUser(ObjectAuditAbstract):
         return self.actinia_username
 
     @classmethod
-    def create_actinia_user(cls, user, actinia_role, epsg=3358):
+    def create_actinia_user(cls, user, actinia_role):
         """
         Create a new actinia user.
 

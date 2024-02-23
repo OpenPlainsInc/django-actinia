@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: ObjectInfoAbstract.py                                              #
+# Filename: ActiniaWebhookFinishedReceiver.py                                  #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Wednesday December 27th 2023                                   #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
+# Last Modified: Wed Dec 27 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,28 +30,39 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from django.conf import settings
-from django.utils.text import slugify
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from grass.serializers.ProcessingResponseSerializer import ProcessingResponseSerializer
 
 
-class ObjectInfoAbstract(models.Model):
-    """
-    Abstract class to add basic details to a database object
-    """
+class ActiniaWebhookFinishedReceiver(APIView):
+    def post(self, request, *args, **kwargs):
+        # Handle incoming webhook payload here
+        payload = request.data
 
-    name = models.CharField(max_length=150, blank=False)
-    description = models.CharField(max_length=250, blank=True)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, editable=True, on_delete=models.CASCADE
-    )
-    public = models.BooleanField(default=False)
-    slug = models.SlugField(max_length=150, blank=True, editable=False, unique=True)
+        # Process the payload (e.g., save to database, trigger actions)
+        # ...
+        serializer = ProcessingResponseSerializer(data=payload)
+        if serializer.is_valid():
+            # Syncroniztion events
+            # * Create a new actinia user
+            # * Create a new actinia location
+            # * Create a new actinia mapset
+            # * Add a new actinia layer to mapset
+            # * Update a layer in mapset
+            # * Update a mapset
+            # * Update a location
+            # * Delete a layer from mapset
+            # * Delete a mapset
+            # * Delete a location
+            # * Delete a user
+            # * Execute a process
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)  # assuming 'name' is a field in your model
-        super().save(*args, **kwargs)
-
-    class Meta:
-        abstract = True
+            # serializer.save()
+            return Response(
+                {"message": "Webhook received successfully"}, status=status.HTTP_200_OK
+            )
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

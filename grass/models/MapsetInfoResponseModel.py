@@ -1,11 +1,11 @@
 ###############################################################################
-# Filename: ObjectInfoAbstract.py                                              #
+# Filename: MapsetInfoResponseModel.py                                         #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Tuesday December 19th 2023                                     #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
+# Last Modified: Wed Dec 27 2023                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,27 +31,40 @@
 ###############################################################################
 
 from django.db import models
-from django.conf import settings
-from django.utils.text import slugify
+from .Location import Location
+from .ObjectInfoAbstract import ObjectInfoAbstract
+from .Mapset import Mapset
 
 
-class ObjectInfoAbstract(models.Model):
+class MapsetInfoResponse(Mapset):
     """
-    Abstract class to add basic details to a database object
+    Class representing GRASS mapsets avaliable in Actinia
+
+    Attributes
+    ----------
+    id : BigAutoField
+        Auto generated Primary key of response
+    name : str
+        The name of the GRASS mapset
+    description: str
+        The EPSG code of the location
+    owner : User
+        The user who owns the mapset
+    location : Location
+        The 'Location' instance the mapset belongs to.
+    users : models.ManyToManyField
+        The users who have access to the mapset.
     """
 
-    name = models.CharField(max_length=150, blank=False)
-    description = models.CharField(max_length=250, blank=True)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, editable=True, on_delete=models.CASCADE
+    layers = models.ManyToManyField("Layer", related_name="mapsets")
+    region = models.ForeignKey(
+        "Region", on_delete=models.CASCADE, related_name="mapsets"
     )
-    public = models.BooleanField(default=False)
-    slug = models.SlugField(max_length=150, blank=True, editable=False, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)  # assuming 'name' is a field in your model
-        super().save(*args, **kwargs)
 
     class Meta:
-        abstract = True
+        verbose_name = "MapsetInfoResponse"
+        verbose_name_plural = "MapsetInfoResponses"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name

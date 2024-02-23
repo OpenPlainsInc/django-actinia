@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Nov 21 2023                                               #
+# Last Modified: Fri Jan 12 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -34,63 +34,30 @@ from actinia_openapi_python_client.models.processing_response_model import (
     ProcessingResponseModel,
 )
 from rest_framework import serializers
-
-# Properties
-# Name 	Type 	Description 	Notes
-# status 	str 	The status of the response
-# user_id 	str 	The id of the user that issued a request
-# resource_id 	str 	The unique resource id
-# queue 	str 	The name of the queue in which the job is queued 	[optional]
-# process_log 	List[ProcessLogModel] 	A list of ProcessLogModels 	[optional]
-# process_chain_list 	List[GrassModule] 	The list of GRASS modules that were used in the processing 	[optional]
-# process_results 	str 	An arbitrary class that stores the processing results 	[optional]
-# progress 	ProgressInfoModel 		[optional]
-# message 	str 	Message for the user, maybe status, finished or error message
-# exception 	ExceptionTracebackModel 		[optional]
-# accept_timestamp 	float 	The acceptance timestamp in seconds of the response
-# accept_datetime 	str 	The acceptance timestamp of the response in human readable format
-# timestamp 	float 	The current timestamp in seconds of the response
-# time_delta 	float 	The time delta of the processing in seconds 	[optional]
-# datetime 	str 	The current timestamp of the response in human readable format
-# http_code 	float 	The HTTP code of the response 	[optional]
-# urls 	UrlModel 		[optional]
-# api_info 	ApiInfoModel 		[optional]
+from .fields.ResourceStatusChoiceField import ResourceStatusChoiceField
 
 
-class ProcessingResponseSerializer(serializers.ModelSerializer):
+class ProcessingResponseSerializer(serializers.Serializer):
     """
     Serializer for ProcessingResponse objects.
     """
 
+    status = ResourceStatusChoiceField(required=True)
+    user_id = serializers.CharField(required=True)
+    resource_id = serializers.CharField(required=True)
+    queue = serializers.CharField(required=False)
     process_log = serializers.ListField(child=serializers.DictField(), required=False)
     process_chain_list = serializers.ListField(
         child=serializers.DictField(), required=False
     )
+    process_results = serializers.DictField(required=False)
     progress = serializers.DictField(required=False)
     exception = serializers.DictField(required=False)
+    accept_timestamp = serializers.IntegerField(required=False)
+    accept_datetime = serializers.CharField(required=False)
+    timestamp = serializers.IntegerField(required=False)
     time_delta = serializers.FloatField(required=False)
+    datetime = serializers.CharField(required=False)
+    http_code = serializers.IntegerField(required=False)
     urls = serializers.DictField(required=False)
     api_info = serializers.DictField(required=False)
-
-    class Meta:
-        model = ProcessingResponseModel
-        fields = [
-            "status",
-            "user_id",
-            "resource_id",
-            "queue",
-            "process_log",
-            "process_chain_list",
-            "process_results",
-            "progress",
-            "message",
-            "exception",
-            "accept_timestamp",
-            "accept_datetime",
-            "timestamp",
-            "time_delta",
-            "datetime",
-            "http_code",
-            "urls",
-            "api_info",
-        ]

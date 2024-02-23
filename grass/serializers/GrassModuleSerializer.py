@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Thu Jan 11 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,11 +31,9 @@
 ###############################################################################
 
 from rest_framework import serializers
-from . import (
-    InputParameterSerializer,
-    OutputParameterSerializer,
-    StdoutParserSerializer,
-)
+from .InputParameterSerializer import InputParameterSerializer
+from .OutputParameterSerializer import OutputParameterSerializer
+from .StdoutParserSerializer import StdoutParserSerializer
 
 
 class GrassModuleSerializer(serializers.Serializer):

@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: mapsets.py                                                         #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Thu Jan 11 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,3 +29,47 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
+
+# create an APIView for the Mapset model
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from grass.models.Mapset import Mapset
+from grass.serializers.MapsetResponseModelSerializer import (
+    MapsetResponseModelSerializer,
+)
+from grass.serializers.MapsetInfoModelSerializer import MapsetInfoModelSerializer
+from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import AllowAny
+
+
+class MapsetViewSet(viewsets.ViewSet):
+    """
+    List all Mapsets, or create a new Mapset.
+    """
+
+    permission_classes = [AllowAny]
+
+    def list(self, request):
+        queryset = Mapset.objects.all()
+        serializer = MapsetInfoModelSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        pass
+
+    def retrieve(self, request, pk=None):
+        queryset = Mapset.objects.all()
+        location = get_object_or_404(queryset, pk=pk)
+        serializer = MapsetInfoModelSerializer(location)
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass

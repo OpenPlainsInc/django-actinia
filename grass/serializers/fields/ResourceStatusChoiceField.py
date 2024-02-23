@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Thu Jan 11 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -37,8 +37,10 @@ from grass.models.enums.ResourceStatusEnum import ResourceStatusEnum
 class ResourceStatusChoiceField(serializers.ChoiceField):
     """
     Custom serializer to handle Actinia resource response statuses.
+    (accepted, running, finished, terminated, error)
     """
 
-    choices = ResourceStatusEnum.choices
-    default = ResourceStatusEnum.ACCEPTED
-    allow_blank = False
+    def __init__(self, **kwargs):
+        kwargs["choices"] = ResourceStatusEnum.choices
+        kwargs["allow_blank"] = False
+        super().__init__(**kwargs)
