@@ -9,7 +9,67 @@ To start development on this project, fork this repository and follow the follow
 ```bash
 # clone the forked repository
 $ git clone YOUR_FORKED_REPO_URL
+```
 
+* Enter the directory
+
+```bash
+cd django-actinia/
+```
+
+* Add main GRASS GIS repository as "upstream" (use HTTPS URL):
+
+```bash
+git remote add upstream https://github.com/tomorrownow/django-actinia.git
+```
+
+* Your remotes now should be "origin" which is your fork and "upstream" which
+  is this main GRASS GIS repository. You can confirm that using:
+
+```bash
+git remote -v
+```
+
+* You should see something like:
+
+```bash
+origin  git@github.com:your_GH_account/django-actinia.git (fetch)
+origin  git@github.com:your_GH_account/django-actinia.git (push)
+```
+
+For the following workflow, it is important that
+"upstream" points to the OSGeo/grass repository
+and "origin" to your fork
+(although generally, the naming is up to you).
+
+### Update before creating a feature branch
+
+* Make sure your are using the _main_ branch to create the new branch:
+
+```bash
+git checkout main
+```
+
+* Download updates from all branches from the _upstream_ remote:
+
+```bash
+git fetch upstream
+```
+
+* Update your local _main_ branch to match the _main_ branch
+  in the _upstream_ repository:
+
+```bash
+git rebase upstream/main
+```
+
+Notably, you should not make commits to your local main branch,
+so the above is then just a simple update (and no actual
+rebase or merge happens).
+
+## Set up your python env
+
+```bash
 # create a virtual environment
 $ python3 -m venv venv
 # activate the virtual environment
