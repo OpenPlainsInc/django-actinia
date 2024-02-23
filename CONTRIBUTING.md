@@ -67,6 +67,14 @@ Notably, you should not make commits to your local main branch,
 so the above is then just a simple update (and no actual
 rebase or merge happens).
 
+### Creating a new feature branch
+Now you have updated your local _main_ branch, you can create a festure branch based on it.
+* Create a new feature branch and switch to it
+
+```bash
+git checkout -b new-feature
+```
+
 ## Set up your python env
 
 ```bash
@@ -74,12 +82,6 @@ rebase or merge happens).
 $ python3 -m venv venv
 # activate the virtual environment
 $ source venv/bin/activate
-# install django-extensions in development mode
-(venv) $ pip install -e .
-# install dependencies
-(venv) $ pip install Django -r requirements-dev.txt
-
-(venv) $ python manage.py runserver
 ```
 
 ### Pre-Commit
@@ -91,6 +93,17 @@ To improve code quality install pre-commit to perform precommit checks before pu
 (venv) $ pip install pre-commit
 # Run pre-commit install to setup the git hook scripts
 (venv) $ pre-commit install
+```
+
+### Install Dependencies
+
+```bash
+# install django-extensions in development mode
+(venv) $ pip install -e .
+# install dependencies
+(venv) $ pip install Django -r requirements-dev.txt
+
+(venv) $ python manage.py runserver
 ```
 
 ### Build Package
