@@ -1,6 +1,7 @@
 services:
 
   db:
+    platform: linux/amd64
     image: postgis/postgis:13-3.2-alpine
     # volumes:
     #   - ./data/db:/var/lib/postgresql/data:Z
@@ -13,6 +14,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   actinia-core:
+    platform: linux/amd64
     build:
         context: ./actinia
         dockerfile: Dockerfile
