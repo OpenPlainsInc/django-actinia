@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Wed Mar 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -39,7 +39,7 @@ from grass.serializers import ActiniaUserResponseSerializer
 
 
 class ActiniaUserViewSet(viewsets.ModelViewSet):
-    queryset = ActiniaUser  # Replace None with your actual queryset
+    queryset = ActiniaUser.objects.all()  # Replace None with your actual queryset
     serializer_class = (
         ActiniaUserResponseSerializer  # Replace None with your actual serializer class
     )

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,6 +33,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+from django.utils.crypto import get_random_string
 
 
 class ObjectInfoAbstract(models.Model):
@@ -50,7 +51,13 @@ class ObjectInfoAbstract(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)  # assuming 'name' is a field in your model
+            original_slug = slugify(self.name)
+            unique_slug = original_slug
+            num = 1
+            while self.__class__.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{original_slug}-{get_random_string(4)}"
+                num += 1
+            self.slug = unique_slug
         super().save(*args, **kwargs)
 
     class Meta:

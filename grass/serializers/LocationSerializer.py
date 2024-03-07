@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -37,23 +37,5 @@ from grass.models import Location
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ["id", "location_name", "epsg", "mapsets"]
-
-    def create(self, validated_data):
-        """
-        Create and return a new 'Location' instance, given the validated data.
-
-        Parameters
-        ----------
-        validated_data : OrderedDict
-            Dict containing validated data.
-
-        Returns
-        -------
-        Location
-            New validated 'Location' instance.
-        """
-        return Location.object.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        pass
+        fields = "__all__"
+        read_only_fields = ("id", "created_at", "updated_at")

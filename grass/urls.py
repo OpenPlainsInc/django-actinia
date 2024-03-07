@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,7 +36,7 @@ from rest_framework import routers
 from django.views.decorators.cache import cache_page
 
 
-from grass.views.general import locations
+# from grass.views.general.locations import locations
 
 # from grass.views.ActiniaUserView import ActiniaUserView
 from grass.views.ActiniaUserViewSet import ActiniaUserViewSet
@@ -54,6 +54,11 @@ from rest_framework.routers import DefaultRouter
 app_name = "grass"
 
 router = DefaultRouter()
+router.register(
+    r"actinia-user",
+    ActiniaUserViewSet,
+    basename="actinia-user",
+)
 router.register(
     r"actinia-user/(?P<task>\w+)",
     ActiniaUserViewSet,

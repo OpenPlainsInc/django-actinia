@@ -1,18 +1,16 @@
-from django.test import TestCase
-
 ###############################################################################
-# Filename: test_ExceptionTracebackModelSerializer.py                          #
+# Filename: locations.py                                                       #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Sunday December 17th 2023                                      #
+# File Created: Thursday March 7th 2024                                        #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Mar 06 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -32,39 +30,35 @@ from django.test import TestCase
 #                                                                              #
 ###############################################################################
 
+from django.db.models.signals import pre_save, post_save, pre_delete
+from django.dispatch import receiver
+from grass.models import Location
+from grass.services import ProjectService
+from django.core.exceptions import ValidationError
 
-from grass.serializers.ExceptionTracebackModelSerializer import (
-    ExceptionTracebackModelSerializer,
-)
+
+@receiver(pre_save, sender=Location)
+def location_pre_save_created(sender, instance, created, **kwargs):
+    try:
+        project_service = ProjectService()
+        project_service.create_location(instance.name)
+    except Exception as e:
+        raise ValidationError(f"Failed to create location: {str(e)}")
 
 
-class ExceptionTracebackModelSerializerTestCase(TestCase):
-    def test_serializer_fields(self):
-        serializer = ExceptionTracebackModelSerializer()
-        fields = serializer.fields
+@receiver(post_save, sender=Location)
+def location_created(sender, instance, created, **kwargs):
+    if created:
+        # The code here will run after a Location instance is created
+        print(f"Location {instance.name} was created.")
 
-        assert "message" in fields
-        assert "type" in fields
-        assert "traceback" in fields
 
-    def test_serializer_valid_data(self):
-        data = {
-            "message": "Test message",
-            "type": "Test type",
-            "traceback": ["Line 1", "Line 2", "Line 3"],
-        }
-        serializer = ExceptionTracebackModelSerializer(data=data)
-
-        self.assertTrue(serializer.is_valid())
-        self.assertEqual(serializer.validated_data, data)
-
-    def test_serializer_invalid_data(self):
-        data = {
-            "message": "Test message",
-            "type": "Test type",
-            "traceback": "Invalid traceback",  # Should be a list
-        }
-        serializer = ExceptionTracebackModelSerializer(data=data)
-
-        self.assertFalse(serializer.is_valid())
-        self.assertIn("traceback", serializer.errors)
+@receiver(pre_delete, sender=Location)
+def location_deleted(sender, instance, **kwargs):
+    # The code here will run before a Location instance is deleted
+    print(f"Location {instance.name} is about to be deleted.")
+    try:
+        project_service = ProjectService()
+        project_service.delete_location(instance.name)
+    except Exception as e:
+        raise ValidationError(f"Failed to delete location: {str(e)}")

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Jan 12 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,7 +33,6 @@
 from django.db import models
 from .ObjectAuditAbstract import ObjectAuditAbstract
 from .ObjectInfoAbstract import ObjectInfoAbstract
-from grass.services.ProjectService import ProjectService
 
 
 class Location(ObjectAuditAbstract, ObjectInfoAbstract):
@@ -45,11 +44,11 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     id : BigAutoField
         Auto generated Primary key of response
     name : str
-        The name of the GRASS mapset
+        The name of the GRASS location
     description: str
         The EPSG code of the location
     owner : User
-        The user who owns the mapset
+        The user who owns the location
     epsg : str
         The EPSG code of the location
     public : bool
@@ -62,16 +61,7 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
         "grass.ActiniaUser", related_name="locations"
     )
 
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "epsg", "owner"],
-                name="unique_location",
-            )
-        ]
+    # objects = LocationManager()
 
     def save(self, *args, **kwargs):
         """
@@ -83,26 +73,15 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
         """
         super().save(*args, **kwargs)
 
-    @classmethod
-    def create_project(cls, user, actinia_user, project_name, description, epsg=3358):
-        """
-        Create a new actinia project (location).
+    def __str__(self):
+        return self.name
 
-        Args:
-            user (User): The Django user object.
-            epsg (int): The EPSG code to use for the default location.
-
-        Returns:
-            ActiniaUser: The new actinia user.
-        """
-        project_service = ProjectService()
-
-        project = project_service.create_project(
-            user=user,
-            actinia_user=actinia_user,
-            project_name=project_name,
-            project_description=description,
-            project_epsg=epsg,
-        )
-
-        return project
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "epsg", "owner"],
+                name="unique_location",
+            )
+        ]
+        ordering = ["-created_on"]
+        verbose_name = "Location"

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Jan 12 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,30 +30,39 @@
 #                                                                              #
 ###############################################################################
 
-import os
+# import os
 from typing import Any
 from django.db import models
-from django.contrib.auth.models import BaseUserManager
+
+# from django.contrib.auth.models import BaseUserManager
 from django.utils.crypto import get_random_string
 from .ObjectAuditAbstract import ObjectAuditAbstract
 from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField
-from .enums import RolesEnum
+
+# from .enums import RolesEnum
 from django.conf import settings
-from actinia import Actinia
-from requests.auth import HTTPBasicAuth
-from enum import Enum, unique
-import requests
-import json
-from .Location import Location
-from .Mapset import Mapset
-from .Token import Token
-from grass.services.ActiniaUserService import ActiniaUserService
+
+# from actinia import Actinia
+# from requests.auth import HTTPBasicAuth
+# from enum import Enum, unique
+# from .Location import Location
+# from .Mapset import Mapset
+# from .Token import Token
+from grass.services import ActiniaUserService
 
 ACTINIA_SETTINGS = settings.ACTINIA
 
 
 class ActiniaUserManager(models.Manager):
-    from grass.services.ActiniaUserService import ActiniaUserService
+    """
+    Manager class for ActiniaUser model.
+
+    This manager provides methods for creating and deleting ActiniaUser objects.
+
+    Attributes:
+        actinia_user_service (ActiniaUserService): An instance of the ActiniaUserService class.
+
+    """
 
     actinia_user_service = ActiniaUserService()
 
@@ -63,10 +72,12 @@ class ActiniaUserManager(models.Manager):
 
         Args:
             user (User): The Django user object.
+            actinia_role (str): The role of the actinia user.
             epsg (int): The EPSG code to use for the default location.
 
         Returns:
             ActiniaUser: The new actinia user.
+
         """
 
         actinia_username = user.username
@@ -85,7 +96,9 @@ class ActiniaUserManager(models.Manager):
 
         Args:
             actinia_user (ActiniaUser): The actinia user to delete.
+
         """
+
         self.actinia_user_service.delete_actinia_user(actinia_user)
 
 
@@ -110,17 +123,21 @@ class ActiniaUser(ObjectAuditAbstract):
 
     def save(self, *args, **kwargs):
         """
-        Create a new actinia user.
+        Save an actinia user. This could mean creating a new user or updating an existing one.
 
         Args:
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
+
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # Make a DELETE request to the other API
-        ActiniaUser.objects.delete_actinia_user(self)
+        try:
+            ActiniaUser.objects.delete_actinia_user(self)
+        except Exception as e:
+            print("Error deleting actinia user: ", e)
         # Call the superclass's delete method to delete the ActiniaUser instance
         super().delete(*args, **kwargs)
 
@@ -132,30 +149,6 @@ class ActiniaUser(ObjectAuditAbstract):
             str: The actinia username.
         """
         return self.actinia_username
-
-    @classmethod
-    def create_actinia_user(cls, user, actinia_role):
-        """
-        Create a new actinia user.
-
-        Args:
-            user (User): The Django user object.
-            epsg (int): The EPSG code to use for the default location.
-
-        Returns:
-            ActiniaUser: The new actinia user.
-        """
-        actinia_user_service = ActiniaUserService()
-
-        actinia_username = user.username
-        actinia_role = actinia_role
-        password = get_random_string(23)
-
-        actinia_user = actinia_user_service.create_actinia_user(
-            user=user, group=actinia_role, user_id=actinia_username, password=password
-        )
-
-        return actinia_user
 
     class Meta:
         """

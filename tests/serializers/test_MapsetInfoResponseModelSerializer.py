@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Wed Mar 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,15 +31,10 @@
 ###############################################################################
 
 from django.test import TestCase
-from grass.serializers.MapsetInfoResponseSerializer import (
-    MapsetInfoResponseModelSerializer,
-)
+from grass.serializers import MapsetInfoResponseSerializer
 
 
 class MapsetInfoResponseModelSerializerTest(TestCase):
-    def setUp(self):
-        self.serializer = MapsetInfoResponseModelSerializer()
-
     def test_valid_data(self):
         data = {
             "status": "success",
@@ -51,7 +46,7 @@ class MapsetInfoResponseModelSerializerTest(TestCase):
             "timestamp": 1234567890.0,
             "datetime": "2022-01-01 12:00:00",
         }
-        serialized_data = self.serializer(data=data)
+        serialized_data = MapsetInfoResponseSerializer(data=data)
         self.assertTrue(serialized_data.is_valid())
 
     def test_invalid_data(self):
@@ -65,7 +60,7 @@ class MapsetInfoResponseModelSerializerTest(TestCase):
             "timestamp": 1234567890.0,
             "datetime": "2022-01-01 12:00:00",
         }
-        serialized_data = self.serializer(data=data)
+        serialized_data = MapsetInfoResponseSerializer(data=data)
         self.assertFalse(serialized_data.is_valid())
 
     def test_optional_fields(self):
@@ -81,15 +76,38 @@ class MapsetInfoResponseModelSerializerTest(TestCase):
             "queue": "default",
             "process_log": [],
             "process_chain_list": [],
-            "process_results": {},
-            "progress": {},
-            "exception": {},
+            "process_results": {
+                "projection": "4326",
+                "region": {
+                    "w": 0.0,
+                    "s": 0.0,
+                    "e": 10.0,
+                    "n": 10.0,
+                },
+            },
+            "progress": {
+                "step": 1,
+                "num_of_steps": 10,
+                "sub_step": 2,
+                "num_sub_steps": 10,
+            },
+            "exception": {
+                "message": "Test message",
+                "type": "Test type",
+                "traceback": ["Line 1", "Line 2", "Line 3"],
+            },
             "time_delta": 10.0,
             "http_code": 200.0,
-            "urls": {},
-            "api_info": {},
+            "urls": {"status": "OK", "resources": ["https://path.com"]},
+            "api_info": {
+                "endpoint": "https://path.com",
+                "method": "GET",
+                "path": "/path",
+                "request_url": "https://path.com/path",
+                "post_url": "https://path.com/path",
+            },
         }
-        serialized_data = self.serializer(data=data)
+        serialized_data = MapsetInfoResponseSerializer(data=data)
         self.assertTrue(serialized_data.is_valid())
 
     def test_missing_required_fields(self):
@@ -102,5 +120,5 @@ class MapsetInfoResponseModelSerializerTest(TestCase):
             "timestamp": 1234567890.0,
             "datetime": "2022-01-01 12:00:00",
         }
-        serialized_data = self.serializer(data=data)
+        serialized_data = MapsetInfoResponseSerializer(data=data)
         self.assertFalse(serialized_data.is_valid())

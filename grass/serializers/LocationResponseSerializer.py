@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,9 +30,12 @@
 #                                                                              #
 ###############################################################################
 
+
 from rest_framework import serializers
-from grass.models import Location
-from .fields import StringListField, ResponseStatusChoiceField
+
+# from grass.models import Location
+from grass.serializers.fields import StringListField, ResponseStatusChoiceField
+from django.apps import apps
 
 
 class LocationResponseSerializer(serializers.Serializer):
@@ -68,7 +71,8 @@ class LocationResponseSerializer(serializers.Serializer):
         Location
             New validated 'Location' instance.
         """
-        return Location.object.create(**validated_data)
+        LocationModel = apps.get_model("grass", "Location")
+        return LocationModel.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         pass

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,113 +30,95 @@
 #                                                                              #
 ###############################################################################
 
-# from html5lib import serialize
-import requests
-import grass.utils as acp
-from django.http import JsonResponse
+from rest_framework import viewsets
+from rest_framework.permissions import AllowAny
 from grass.models import Location
-from grass.serializers import LocationSerializer, LocationResponseSerializer
-
-# from actinia.serializers.LocationResponseSerializer import LocationResponseSerializer
-from django.http import Http404
-from rest_framework.views import APIView
+from grass.serializers import LocationSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import viewsets
-from django.shortcuts import get_object_or_404
-from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action
 
 
-# def gLocations(request):
-#     """
-#     Gets List of Users Avaliable Locations
-#     Actinia Route
-#     GET /locations
-#     """
-#     if request.method == "GET":
-#         url = f"{acp.baseUrl()}/locations"
-#         r = requests.get(url, auth=acp.auth())
-#         print(f"Request URL: {url}")
-#         serializer = LocationResponseSerializer(r.json())
-#         return Response(serializer.data)
-#     # TODO - Set up proper error handling and reponse messages
-#     return JsonResponse({"error": "gLocations View: Fix Me"})
-
-
-# class LocationList(APIView):
-#     """
-#     List all of the users locations or create a new location.
-#     """
-
-
-#     def get(self, request, format=None):
-#         locations = Location.object.all()
-#         serializer = LocationSerializer(locations, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request, format=None):
-#         serializer = LocationSerializer(request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class LocationDetail(APIView):
-#     """Retrieve, update or delete a location instance."""
-
-#     def get_object(self, location_id):
-#         try:
-#             return Location.objects.get(id=location_id)
-#         except Location.DoesNotExist:
-#             raise Http404
-
-#     def get(self, request, location_id, format=None):
-#         location = self.get_object(location_id)
-#         serializer = LocationSerializer(location)
-#         return Response(serializer.data)
-
-#     def put(self, request, location_id, format=None):
-#         location = self.get_object(location_id)
-#         serializer = LocationSerializer(location, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def delete(self, request, location_id, format=None):
-#         location = self.get_object(location_id)
-#         location.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class LocationViewSet(viewsets.ViewSet):
+class LocationViewSet(viewsets.ModelViewSet):
     """
     List all locations,
     or create a new location.
     """
 
+    serializer_class = LocationSerializer
+    queryset = Location.objects.all()
     permission_classes = [AllowAny]
 
-    def list(self, request):
-        queryset = Location.objects.all()
-        serializer = LocationSerializer(queryset, many=True)
+    @action(detail=True, methods=["get"])
+    def custom_action(self, request, pk=None):
+        """
+        Custom action for retrieving a specific location.
+        """
+        location = self.get_object()
+        serializer = LocationSerializer(location)
         return Response(serializer.data)
 
     def create(self, request):
-        pass
-
-    def retrieve(self, request, pk=None):
-        queryset = Location.objects.all()
-        location = get_object_or_404(queryset, pk=pk)
-        serializer = LocationResponseSerializer(location)
-        return Response(serializer.data)
+        """
+        Create a new location.
+        """
+        serializer = LocationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk=None):
-        pass
+
+        """
+        Update a location.
+        """
+        location = self.get_object()
+        serializer = LocationSerializer(location, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def partial_update(self, request, pk=None):
-        pass
+        """
+        Partially update a location.
+        """
+        location = self.get_object()
+        serializer = LocationSerializer(location, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
-        pass
+        """
+        Delete a location.
+        """
+        location = self.get_object()
+        location.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    #     create a new location.
+    #     """
+    #     serializer = LocationSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.create(serializer.validated_data)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # def retrieve(self, request, pk=None):
+    #     queryset = Location.objects.all()
+    #     location = get_object_or_404(queryset, pk=pk)
+    #     serializer = LocationResponseSerializer(location)
+    #     return Response(serializer.data)
+
+    # def update(self, request, pk=None):
+    #     pass
+
+    # def partial_update(self, request, pk=None):
+    #     pass
+
+    # def destroy(self, request, pk=None):
+    #     pass

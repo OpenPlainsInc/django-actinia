@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Jan 12 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -47,13 +47,12 @@ from actinia_openapi_python_client.rest import ApiException
 
 # from rest_framework import serializers
 from django.http import JsonResponse
-from grass.models import Location
-from grass.serializers.LocationResponseSerializer import LocationResponseSerializer
+from grass.serializers import LocationResponseSerializer
 
 # from grass.serializers.UserListResponseSerializer import UserListResponseSerializer
-from grass.serializers.ProcessingResponseSerializer import ProcessingResponseSerializer
-from grass.serializers.MapsetInfoResponseSerializer import MapsetInfoResponseSerializer
-from grass.serializers.ActiniaSimpleResponseSerializer import ResourceStatusSerializer
+from grass.serializers import ProcessingResponseSerializer
+from grass.serializers import MapsetInfoResponseSerializer
+from grass.serializers import ResourceStatusSerializer
 
 from django.db import transaction
 from actinia_openapi_python_client.models.projection_info_model import (
@@ -106,7 +105,8 @@ ACTINIA_SETTINGS = settings.ACTINIA
 #         locations (list): A list of locations.
 #         mapsets (list): A list of mapsets.
 
-#     Returns:
+#     Returns:from grass.models import Location
+
 #         ActiniaUser: The actinia user.
 #     """
 #     locations = kwargs.get("locations")
@@ -176,6 +176,8 @@ class ProjectService:
         """
         Create a project (Location) for the user
         """
+        # from grass.models import Location
+
         try:
             epsg = ProjectionInfoModel(epsg=str(project_epsg))
             api_response = self.api_instance.locations_location_name_post(
@@ -183,16 +185,15 @@ class ProjectService:
             )
             serializer = ProcessingResponseSerializer(data=api_response.to_dict())
             if serializer.is_valid():
-                location = Location.objects.create(
-                    owner=user,
-                    name=project_name,
-                    description=project_description,
-                    epsg=project_epsg,
-                    actinia_users=[actinia_user],
-                )
-                print("Location: ", location)
+                # location = Location.objects.create(
+                #     owner=user,
+                #     name=project_name,
+                #     description=project_description,
+                #     epsg=project_epsg,
+                #     actinia_users=[actinia_user],
+                # )
                 self.logger.info(f"Location created: {project_name}")
-                return JsonResponse(serializer.data, status=201)
+                return serializer.data
         except ApiException as e:
             self.logger.error(f"Exception occurred during project creation: {e}")
             return JsonResponse({"error": str(e)}, status=400)

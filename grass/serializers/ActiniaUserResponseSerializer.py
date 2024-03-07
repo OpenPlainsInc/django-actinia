@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Nov 21 2023                                               #
+# Last Modified: Wed Mar 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,10 +31,8 @@
 ###############################################################################
 
 from rest_framework import serializers
-from grass.serializers.ActiniaUserLocationSerializer import (
-    ActiniaUserLocationSerializer,
-)
-from grass.models.ActiniaUser import ActiniaUser
+from grass.serializers import ActiniaUserLocationSerializer
+from grass.models import ActiniaUser
 
 
 class ActiniaUserResponseSerializer(serializers.Serializer):
@@ -50,7 +48,7 @@ class ActiniaUserResponseSerializer(serializers.Serializer):
     # modules = serializers.JSONField()
 
     class Meta:
-        model = ActiniaUser
+        model = "ActiniaUser"
         fields = [
             "id",
             "actinia_username",
@@ -61,6 +59,7 @@ class ActiniaUserResponseSerializer(serializers.Serializer):
             "updated_on",
         ]
 
-    def create(self, validated_data):
-        data = ActiniaUser(**validated_data)
-        return data
+    # def create(self, validated_data):
+
+    #     data = ActiniaUser.objects.create_actinia_user(**validated_data)
+    #     return data

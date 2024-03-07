@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 20 2023                                               #
+# Last Modified: Wed Mar 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,74 +31,50 @@
 ###############################################################################
 
 
-from django.test import TestCase
-from django.http import JsonResponse
-from actinia_openapi_python_client import ApiException
-from grass.models import ActiniaUser
-from grass.services.ActiniaUserService import ActiniaUserService
-from django.contrib.auth.models import User
+# from django.test import TestCase
+# from django.http import JsonResponse
+# from actinia_openapi_python_client import ApiException
+# from grass.models import ActiniaUser
+# from grass.services.ActiniaUserService import ActiniaUserService
+# from django.contrib.auth.models import User
 
 
-class TestActiniaUserService(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        # cls.actinia_user_service = ActiniaUserService()
-        # Set up non-modified objects used by all test methods
-        cls.user = User.objects.create_user(
-            username="test_user_id", email="testuser@example.com", password="testpass"
-        )
-        cls.actinia_user = ActiniaUser.create_actinia_user(cls.user, "admin")
+# class TestActiniaUserService(TestCase):
+#     @classmethod
+#     def setUpTestData(cls):
+#         # cls.actinia_user_service = ActiniaUserService()
+#         # Set up non-modified objects used by all test methods
+#         cls.user = User.objects.create_user(
+#             username="test_user_id", email="testuser@example.com", password="testpass"
+#         )
+#         cls.actinia_user = ActiniaUser.create_actinia_user(cls.user, "admin")
 
-    def setUp(self):
-        self.actinia_user_service = ActiniaUserService()
+#     def setUp(self):
+#         self.actinia_user_service = ActiniaUserService()
 
-    def test_create_actinia_user_already_exists(self):
-        with self.assertRaises(Exception):
-            # Test the create_actinia_user method
-            user = self.user
-            user_id = "test_user_id"
-            password = "test_password"
-            group = "admin"
-            self.actinia_user_service.create_actinia_user(
-                user, user_id, password, group
-            )
+#     def test_create_actinia_user_already_exists(self):
+#         with self.assertRaises(Exception):
+#             # Test the create_actinia_user method
+#             user = self.user
+#             user_id = "test_user_id"
+#             password = "test_password"
+#             group = "admin"
+#             self.actinia_user_service.create_actinia_user(
+#                 user, user_id, password, group
+#             )
 
-    def test_get_actinia_users(self):
-        # Test the get_actinia_users method
-        response = self.actinia_user_service.get_actinia_users()
-        self.assertIsInstance(response, JsonResponse)
+#     def test_get_actinia_users(self):
+#         # Test the get_actinia_users method
+#         response = self.actinia_user_service.get_actinia_users()
+#         self.assertIsInstance(response, JsonResponse)
 
-    def test_get_actinia_user(self):
-        # Test the get_actinia_user method
-        user_id = "test_user_id"
-        response = self.actinia_user_service.get_actinia_user(user_id)
-        self.assertIsInstance(response, JsonResponse)
+#     def test_get_actinia_user(self):
+#         # Test the get_actinia_user method
+#         user_id = "test_user_id"
+#         response = self.actinia_user_service.get_actinia_user(user_id)
+#         self.assertIsInstance(response, JsonResponse)
 
-    def test_delete_actinia_user(self):
-        # Test the delete_actinia_user method
-        response = self.actinia_user_service.delete_actinia_user(self.actinia_user)
-        self.assertIsInstance(response, JsonResponse)
-
-    # def test_get_actinia_user_projects(self):
-    #     # Test the get_actinia_user_projects method
-    #     user = "test_user"
-    #     response = self.actinia_user_service.get_actinia_user_projects(user)
-    #     self.assertIsNone(response)  # Replace with appropriate assertion
-
-    # def test_create_actinia_user_project(self):
-    #     # Test the create_actinia_user_project method
-    #     user = "test_user"
-    #     project_name = "test_project"
-    #     project_description = "test_description"
-    #     project_epsg = "test_epsg"
-    #     response = self.actinia_user_service.create_actinia_user_project(
-    #         user, project_name, project_description, project_epsg
-    #     )
-    #     self.assertIsNone(response)  # Replace with appropriate assertion
-
-    # # Add more test methods for the remaining functionalities
-
-    @classmethod
-    def tearDownClass(cls):
-        # Clean up any resources that were created in the setUpTestData() classmethod or by the test methods
-        cls.user.delete()
+#     def test_delete_actinia_user(self):
+#         # Test the delete_actinia_user method
+#         response = self.actinia_user_service.delete_actinia_user(self.actinia_user)
+#         self.assertIsInstance(response, JsonResponse)

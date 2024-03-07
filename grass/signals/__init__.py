@@ -1,18 +1,16 @@
-from django.test import TestCase
-
 ###############################################################################
-# Filename: test_ExceptionTracebackModelSerializer.py                          #
+# Filename: __init__.py                                                        #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Sunday December 17th 2023                                      #
+# File Created: Thursday March 7th 2024                                        #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Mar 06 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -31,40 +29,3 @@ from django.test import TestCase
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-
-
-from grass.serializers.ExceptionTracebackModelSerializer import (
-    ExceptionTracebackModelSerializer,
-)
-
-
-class ExceptionTracebackModelSerializerTestCase(TestCase):
-    def test_serializer_fields(self):
-        serializer = ExceptionTracebackModelSerializer()
-        fields = serializer.fields
-
-        assert "message" in fields
-        assert "type" in fields
-        assert "traceback" in fields
-
-    def test_serializer_valid_data(self):
-        data = {
-            "message": "Test message",
-            "type": "Test type",
-            "traceback": ["Line 1", "Line 2", "Line 3"],
-        }
-        serializer = ExceptionTracebackModelSerializer(data=data)
-
-        self.assertTrue(serializer.is_valid())
-        self.assertEqual(serializer.validated_data, data)
-
-    def test_serializer_invalid_data(self):
-        data = {
-            "message": "Test message",
-            "type": "Test type",
-            "traceback": "Invalid traceback",  # Should be a list
-        }
-        serializer = ExceptionTracebackModelSerializer(data=data)
-
-        self.assertFalse(serializer.is_valid())
-        self.assertIn("traceback", serializer.errors)

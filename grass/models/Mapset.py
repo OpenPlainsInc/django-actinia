@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -67,6 +67,9 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
                 fields=["name", "location", "owner"], name="unique_mapset"
             )
         ]
+
+    def __str__(self):
+        return f"{self.location.name} - {self.name}"
 
     def layers_count(type=None):
         """

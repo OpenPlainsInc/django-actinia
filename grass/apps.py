@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Nov 15 2023                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -43,6 +43,8 @@ class GrassConfig(AppConfig):
         name = "grass"
 
         def ready(self):
+            import grass.signals
+
             if os.environ.get("DJANGO_SETTINGS_MODULE") == "test_app.settings":
                 import test_app.celery
             else:

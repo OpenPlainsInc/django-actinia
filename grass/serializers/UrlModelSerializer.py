@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Wed Mar 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -42,7 +42,7 @@ class UrlModelSerializer(serializers.Serializer):
         resources (list): A list of URLs to generated resources, that may be GeoTiff files, vector files, ASCII files or png images
     """
 
-    status = serializers.URLField()  # Add the status URL property
+    status = serializers.CharField()  # Add the status URL property
     resources = serializers.ListField(
         child=serializers.URLField()
     )  # Add the resources property

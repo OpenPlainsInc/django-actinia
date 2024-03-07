@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,8 +32,7 @@
 
 from rest_framework import serializers
 
-# from grass.serializers import ActiniaUserLocationSerializer
-from grass.models import Location
+# from grass.models.Location import Location
 
 
 class ActiniaUserLocationSerializer(serializers.Serializer):
@@ -46,6 +45,6 @@ class ActiniaUserLocationSerializer(serializers.Serializer):
     epsg = serializers.IntegerField()
     mapsets = serializers.ListField(child=serializers.CharField())
 
-    class Meta:
-        model = Location
-        fields = ["id", "location_name", "epsg", "mapsets"]
+    # class Meta:
+    #     model = Location
+    #     fields = ["id", "location_name", "epsg", "mapsets"]

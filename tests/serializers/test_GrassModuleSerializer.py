@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Wed Mar 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,11 +31,9 @@
 ###############################################################################
 
 
-import pytest
 from grass.serializers.GrassModuleSerializer import GrassModuleSerializer
 
 
-@pytest.mark.django_db
 def test_GrassModuleSerializer():
     data = {
         "id": "module_id",

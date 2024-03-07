@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Wed Mar 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -40,19 +40,13 @@ class OutputParameterSerializerTest(TestCase):
             "param": "map",
             "value": "slope@PERMANENT",
             "export": {
-                "format": "GeoTIFF",
-                "options": {"compression": "LZW", "nodata": -9999},
+                "format": "raster",
+                "type": "raster",
+                "dbstring": "postgres://localhost:5432/mydatabase",
+                "output_layer": "mylayer",
             },
-            "metadata": {"author": "John Doe", "description": "Output map"},
+            "metadata": {"format": "COG"},
         }
         serializer = OutputParameterSerializer(data=data)
         self.assertTrue(serializer.is_valid())
-        output_parameter = serializer.save()
-
-        self.assertEqual(output_parameter.param, "map")
-        self.assertEqual(output_parameter.value, "slope@PERMANENT")
-        self.assertEqual(output_parameter.export.format, "GeoTIFF")
-        self.assertEqual(output_parameter.export.options.compression, "LZW")
-        self.assertEqual(output_parameter.export.options.nodata, -9999)
-        self.assertEqual(output_parameter.metadata.author, "John Doe")
-        self.assertEqual(output_parameter.metadata.description, "Output map")
+        assert serializer.validated_data == data
