@@ -46,7 +46,7 @@ class MapsetInline(admin.TabularInline):
 
 
 class ActiniaUserAdmin(admin.ModelAdmin):
-    list_display = ("actinia_username", "actinia_role", "user", "locations")
+    list_display = ("actinia_username", "actinia_role", "user")
     list_filter = ("actinia_username", "actinia_role", "user")
 
     # inlines = [LocationInline]
