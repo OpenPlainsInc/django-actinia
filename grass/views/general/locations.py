@@ -5,12 +5,12 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Fri Mar 08 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -41,8 +41,7 @@ from rest_framework.decorators import action
 
 class LocationViewSet(viewsets.ModelViewSet):
     """
-    List all locations,
-    or create a new location.
+    List all locations, or create a new location.
     """
 
     serializer_class = LocationSerializer
@@ -69,7 +68,6 @@ class LocationViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk=None):
-
         """
         Update a location.
         """
@@ -98,27 +96,3 @@ class LocationViewSet(viewsets.ModelViewSet):
         location = self.get_object()
         location.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    #     create a new location.
-    #     """
-    #     serializer = LocationSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.create(serializer.validated_data)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def retrieve(self, request, pk=None):
-    #     queryset = Location.objects.all()
-    #     location = get_object_or_404(queryset, pk=pk)
-    #     serializer = LocationResponseSerializer(location)
-    #     return Response(serializer.data)
-
-    # def update(self, request, pk=None):
-    #     pass
-
-    # def partial_update(self, request, pk=None):
-    #     pass
-
-    # def destroy(self, request, pk=None):
-    #     pass
