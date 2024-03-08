@@ -21,12 +21,12 @@ import sphinx
 from os.path import abspath
 import sys
 
-project = 'django-actinia'
-copyright = '2022, Corey White'
-author = 'Corey White'
+project = "django-actinia"
+copyright = "2024, Corey White"
+author = "Corey White"
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+release = "0.1.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -39,10 +39,10 @@ sys.path.insert(0, abspath(".."))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.githubpages'
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.githubpages",
 ]
 
 # Nepoleon Configuration
@@ -53,7 +53,7 @@ napoleon_numpy_docstring = True
 autosummary_generate = True
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -66,12 +66,12 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = "alabaster"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # Path to Github pages where docs are hosted
-html_baseurl = 'https://tomorrownow.github.io/django-actinia'
+html_baseurl = "https://tomorrownow.github.io/django-actinia"
