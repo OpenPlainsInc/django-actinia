@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Jan 12 2024                                               #
+# Last Modified: Fri Mar 08 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -61,3 +61,4 @@ class ProcessingResponseSerializer(serializers.Serializer):
     http_code = serializers.IntegerField(required=False)
     urls = serializers.DictField(required=False)
     api_info = serializers.DictField(required=False)
+    message = serializers.CharField(required=False)

@@ -39,7 +39,7 @@ class GrassConfig(AppConfig):
     name = "grass"
 
     def ready(self):
-        import grass.signals.locations
+        from .signals import locations
 
         if os.environ.get("DJANGO_SETTINGS_MODULE") == "test_api.settings":
             import test_api.celery

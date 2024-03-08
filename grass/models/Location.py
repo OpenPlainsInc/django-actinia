@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Fri Mar 08 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -60,8 +60,6 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     actinia_users = models.ManyToManyField(
         "grass.ActiniaUser", related_name="locations"
     )
-
-    # objects = LocationManager()
 
     def save(self, *args, **kwargs):
         """

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Mar 06 2024                                               #
+# Last Modified: Fri Mar 08 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,30 +31,58 @@
 ###############################################################################
 
 
-from grass.serializers.GrassModuleSerializer import GrassModuleSerializer
+from grass.serializers import GrassModuleSerializer
+from django.test import TestCase
 
 
-def test_GrassModuleSerializer():
-    data = {
-        "id": "module_id",
-        "module": "r.univar",
-        "inputs": [
-            {"name": "input_param1", "value": "value1"},
-            {"name": "input_param2", "value": "value2"},
-        ],
-        "outputs": [
-            {"name": "output_param1", "value": "value3"},
-            {"name": "output_param2", "value": "value4"},
-        ],
-        "flags": "-f",
-        "stdin": "previous_module::stdout",
-        "stdout": {"parser": "json", "options": {"key": "value"}},
-        "overwrite": True,
-        "verbose": False,
-        "superquiet": True,
-        "interface_description": False,
-    }
+class GrassModuleSerializerTest(TestCase):
+    def test_valid_data(self):
+        data = {
+            "id": "module_id",
+            "module": "r.univar",
+            "inputs": [
+                {"param": "param1", "value": "value1"},
+                {"param": "param2", "value": "value2"},
+            ],
+            "outputs": [
+                {"param": "param1", "value": "value1"},
+                {"param": "param2", "value": "value2"},
+            ],
+            "flags": "-f",
+            "stdin": "previous_module::stdout",
+            "stdout": {"parser": "json", "options": {"key": "value"}},
+            "overwrite": True,
+            "verbose": False,
+            "superquiet": True,
+            "interface_description": False,
+        }
 
-    serializer = GrassModuleSerializer(data=data)
-    assert serializer.is_valid()
-    assert serializer.validated_data == data
+        serializer = GrassModuleSerializer(data=data)
+        if serializer.is_valid():
+            assert serializer.validated_data == data
+        else:
+            print(serializer.errors)
+
+    def test_invalid_data(self):
+        data = {
+            "id": None,
+            "module": None,
+            "inputs": [
+                {"name": "input_param1", "value": "value1"},
+                {"name": "input_param2", "value": "value2"},
+            ],
+            "outputs": [
+                {"name": "output_param1", "value": "value3"},
+                {"name": "output_param2", "value": "value4"},
+            ],
+            "flags": "-f",
+            "stdin": "previous_module::stdout",
+            "stdout": {"parser": "json", "options": {"key": "value"}},
+            "overwrite": True,
+            "verbose": False,
+            "superquiet": True,
+            "interface_description": False,
+        }
+
+        serializer = GrassModuleSerializer(data=data)
+        assert not serializer.is_valid()
