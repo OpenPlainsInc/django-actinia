@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 08 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,3 +33,4 @@ from .ResourceStatusEnum import ResourceStatusEnum as ResourceStatusEnum
 from .ResponseStatusEnum import ResponseStatusEnum as ResponseStatusEnum
 from .RolesEnum import RolesEnum as RolesEnum
 from .TokenTypeEnum import TokenTypeEnum as TokenTypeEnum
+from .LayerTypeEnum import LayerTypeEnum as LayerTypeEnum

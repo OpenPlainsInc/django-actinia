@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 08 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,8 +31,8 @@
 ###############################################################################
 
 from django.db import models
-from .ObjectAuditAbstract import ObjectAuditAbstract
-from .ObjectInfoAbstract import ObjectInfoAbstract
+from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
+from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
 
 
 class Location(ObjectAuditAbstract, ObjectInfoAbstract):
@@ -81,5 +81,4 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
                 name="unique_location",
             )
         ]
-        ordering = ["-created_on"]
-        verbose_name = "Location"
+        ordering = ["-updated_on"]

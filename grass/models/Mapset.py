@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,8 +32,8 @@
 
 from django.db import models
 from .Location import Location
-from .ObjectInfoAbstract import ObjectInfoAbstract
-from .ObjectAuditAbstract import ObjectAuditAbstract
+from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
+from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
 
 
 class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):

@@ -5,12 +5,12 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 10 2023                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #

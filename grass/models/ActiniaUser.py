@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,8 +36,8 @@ from django.db import models
 
 # from django.contrib.auth.models import BaseUserManager
 from django.utils.crypto import get_random_string
-from .ObjectAuditAbstract import ObjectAuditAbstract
-from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField
+from grass.models.abstracts.ObjectAuditAbstract import ObjectAuditAbstract
+from grass.models.fields.ActiniaRoleEnumField import ActiniaRoleEnumField
 
 # from .enums import RolesEnum
 from django.conf import settings

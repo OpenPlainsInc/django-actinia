@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,7 +32,8 @@
 
 
 from django.db import models
-from grass.models import SimpleResponseAbstract, Token
+from grass.models import Token
+from .abstracts.SimpleResponseAbstract import SimpleResponseAbstract
 
 
 class TokenResponseModel(SimpleResponseAbstract):
