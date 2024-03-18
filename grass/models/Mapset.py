@@ -31,6 +31,7 @@
 ###############################################################################
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from .Location import Location
 from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
 from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
@@ -59,14 +60,33 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
     location = models.ForeignKey(
         Location, editable=False, on_delete=models.CASCADE, related_name="mapsets"
     )
-    users = models.ManyToManyField("grass.ActiniaUser", related_name="mapsets")
+    users = models.ManyToManyField("ActiniaUser", related_name="mapsets")
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "location", "owner"], name="unique_mapset"
+        unique_together = (
+            "name",
+            "location",
+            "owner",
+        )  # This enforces uniqueness across these three fields within the Mapset model.
+
+        # constraints = [
+        #     models.UniqueConstraint(
+        #         fields=["name", "location", "owner"], name="unique_mapset"
+        #     )
+        # ]\
+
+    def clean(self):
+        # Custom validation to check for unique combination across models
+        if Mapset.objects.filter(
+            name=self.name, location__name=self.location.name, owner=self.owner
+        ).exists():
+            raise ValidationError(
+                "A mapset with this name, location, and owner already exists."
             )
-        ]
+
+    def save(self, *args, **kwargs):
+        self.clean()  # Perform custom validation
+        super(Mapset, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.location.name} - {self.name}"

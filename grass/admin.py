@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 27 2023                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -35,14 +35,14 @@ from django.contrib import admin
 from .models import ActiniaUser, Location, Mapset, Region, Token
 
 
-class LocationInline(admin.TabularInline):
-    model = Location
-    extra = 0
+# class LocationInline(admin.TabularInline):
+#     model = Location
+#     extra = 0
 
 
-class MapsetInline(admin.TabularInline):
-    model = Mapset
-    extra = 0
+# class MapsetInline(admin.TabularInline):
+#     model = Mapset
+#     extra = 0
 
 
 class ActiniaUserAdmin(admin.ModelAdmin):

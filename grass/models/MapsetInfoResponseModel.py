@@ -31,7 +31,8 @@
 ###############################################################################
 
 from django.db import models
-from .Location import Location
+
+# from .Location import Location
 from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
 from .Mapset import Mapset
 

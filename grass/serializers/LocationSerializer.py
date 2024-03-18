@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,11 +31,20 @@
 ###############################################################################
 
 from rest_framework import serializers
-from grass.models import Location
+from grass.models.Location import Location
 
 
 class LocationSerializer(serializers.ModelSerializer):
+    actinia_users = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Location
         fields = "__all__"
-        read_only_fields = ("id", "created_at", "updated_at")
+        # exclude = ['actinia_users']
+        read_only_fields = [
+            "id",
+            "created_on",
+            "created_by",
+            "updated_on",
+            "updated_by",
+        ]

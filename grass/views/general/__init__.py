@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,4 +30,5 @@
 #                                                                              #
 ###############################################################################
 
-# from .locations import LocationViewSet as LocationViewSet
+from .locations import LocationViewSet as LocationViewSet
+from .mapsets import MapsetViewSet as MapsetViewSet

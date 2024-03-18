@@ -30,9 +30,9 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
 from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
 from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
+from django.db import models
 
 
 class Location(ObjectAuditAbstract, ObjectInfoAbstract):
@@ -57,9 +57,7 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     """
 
     epsg = models.CharField(max_length=8, blank=False)
-    actinia_users = models.ManyToManyField(
-        "grass.ActiniaUser", related_name="locations"
-    )
+    actinia_users = models.ManyToManyField("ActiniaUser", related_name="locations")
 
     def save(self, *args, **kwargs):
         """
@@ -75,10 +73,11 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
         return self.name
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "epsg", "owner"],
-                name="unique_location",
-            )
-        ]
+        unique_together = ("name", "epsg", "owner")
+        # constraints = [
+        #     models.UniqueConstraint(
+        #         fields=["name", "epsg", "owner"],
+        #         name="unique_location",
+        #     )
+        # ]
         ordering = ["-updated_on"]

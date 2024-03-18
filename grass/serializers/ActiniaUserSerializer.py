@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,7 +31,7 @@
 ###############################################################################
 
 from rest_framework import serializers
-from grass.models import ActiniaUser, Location
+from grass.models import ActiniaUser
 from grass.serializers.ActiniaUserLocationSerializer import (
     ActiniaUserLocationSerializer,
 )
@@ -40,7 +40,6 @@ from grass.serializers.ActiniaUserLocationSerializer import (
 class ActiniaUserSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     user_id = serializers.IntegerField()
-    # locations = serializers.ListField(child=ActiniaUserLocationSerializer())
     locations = ActiniaUserLocationSerializer(many=True, read_only=True)
     modules = serializers.JSONField()
 

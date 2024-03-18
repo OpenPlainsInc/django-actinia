@@ -33,21 +33,10 @@
 # import os
 from typing import Any
 from django.db import models
-
-# from django.contrib.auth.models import BaseUserManager
 from django.utils.crypto import get_random_string
-from grass.models.abstracts.ObjectAuditAbstract import ObjectAuditAbstract
-from grass.models.fields.ActiniaRoleEnumField import ActiniaRoleEnumField
-
-# from .enums import RolesEnum
+from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
+from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField
 from django.conf import settings
-
-# from actinia import Actinia
-# from requests.auth import HTTPBasicAuth
-# from enum import Enum, unique
-# from .Location import Location
-# from .Mapset import Mapset
-# from .Token import Token
 from grass.services import ActiniaUserService
 
 ACTINIA_SETTINGS = settings.ACTINIA
@@ -66,14 +55,13 @@ class ActiniaUserManager(models.Manager):
 
     actinia_user_service = ActiniaUserService()
 
-    def create_actinia_user(self, user, actinia_role, epsg=3358):
+    def create_actinia_user(self, user, actinia_role):
         """
         Create a new actinia user.
 
         Args:
             user (User): The Django user object.
             actinia_role (str): The role of the actinia user.
-            epsg (int): The EPSG code to use for the default location.
 
         Returns:
             ActiniaUser: The new actinia user.
@@ -119,6 +107,7 @@ class ActiniaUser(ObjectAuditAbstract):
         settings.AUTH_USER_MODEL, related_name="actinia_users", on_delete=models.CASCADE
     )
     password = models.CharField(max_length=128)
+    # locations = models.ManyToManyField('grass.Location', related_name='users')
     objects = ActiniaUserManager()
 
     def save(self, *args, **kwargs):

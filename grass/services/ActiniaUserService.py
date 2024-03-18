@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Nov 21 2023                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -55,7 +55,6 @@ import actinia_openapi_python_client
 from actinia_openapi_python_client.rest import ApiException
 from rest_framework import serializers
 from django.http import JsonResponse
-from grass.models import Location, Mapset
 from grass.serializers import UserInfoResponseSerializer
 from grass.serializers.UserListResponseSerializer import UserListResponseSerializer
 from grass.serializers.ActiniaSimpleResponseSerializer import ResponseStatusSerializer
