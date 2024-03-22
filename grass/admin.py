@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 18 2024                                               #
+# Last Modified: Fri Mar 22 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -53,17 +53,39 @@ class ActiniaUserAdmin(admin.ModelAdmin):
 
 
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ("name", "description", "owner", "epsg", "public")
+    list_display = ("name", "description", "owner", "epsg", "public", "slug")
     list_filter = ("name", "description", "owner", "epsg", "public")
 
     # inlines = [MapsetInline]
 
 
+@admin.register(Mapset)
 class MapsetAdmin(admin.ModelAdmin):
-    list_display = ("name", "description", "owner", "location")
-    list_filter = ("name", "description", "owner", "location")
-
-    # inlines = [LocationInline]
+    list_display = (
+        "id",
+        "created_on",
+        "created_by",
+        "updated_on",
+        "updated_by",
+        "name",
+        "description",
+        "owner",
+        "public",
+        "slug",
+        "location",
+    )
+    list_filter = (
+        "created_on",
+        "created_by",
+        "updated_on",
+        "updated_by",
+        "owner",
+        "public",
+        "location",
+    )
+    raw_id_fields = ("users",)
+    search_fields = ("name", "slug")
+    prepopulated_fields = {"slug": ["name"]}
 
 
 class TokenAdmin(admin.ModelAdmin):
@@ -72,5 +94,4 @@ class TokenAdmin(admin.ModelAdmin):
 
 admin.site.register(ActiniaUser, ActiniaUserAdmin)
 admin.site.register(Location, LocationAdmin)
-admin.site.register(Mapset, MapsetAdmin)
 admin.site.register(Token, TokenAdmin)
