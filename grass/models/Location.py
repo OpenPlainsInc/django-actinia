@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,9 +30,9 @@
 #                                                                              #
 ###############################################################################
 
+from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
+from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
 from django.db import models
-from .ObjectAuditAbstract import ObjectAuditAbstract
-from .ObjectInfoAbstract import ObjectInfoAbstract
 
 
 class Location(ObjectAuditAbstract, ObjectInfoAbstract):
@@ -57,11 +57,7 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     """
 
     epsg = models.CharField(max_length=8, blank=False)
-    actinia_users = models.ManyToManyField(
-        "grass.ActiniaUser", related_name="locations"
-    )
-
-    # objects = LocationManager()
+    actinia_users = models.ManyToManyField("ActiniaUser", related_name="locations")
 
     def save(self, *args, **kwargs):
         """
@@ -77,11 +73,11 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
         return self.name
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "epsg", "owner"],
-                name="unique_location",
-            )
-        ]
-        ordering = ["-created_on"]
-        verbose_name = "Location"
+        unique_together = ("name", "epsg", "owner")
+        # constraints = [
+        #     models.UniqueConstraint(
+        #         fields=["name", "epsg", "owner"],
+        #         name="unique_location",
+        #     )
+        # ]
+        ordering = ["-updated_on"]

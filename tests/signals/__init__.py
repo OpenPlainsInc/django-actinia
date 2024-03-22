@@ -1,16 +1,16 @@
 ###############################################################################
-# Filename: SimpleResponseModel.py                                             #
+# Filename: __init__.py                                                        #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Monday June 6th 2022                                           #
+# File Created: Thursday March 7th 2024                                        #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Thu Mar 07 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -29,51 +29,3 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-
-from django.db import models
-
-from grass.models.enums import ResponseStatusEnum
-from .fields.ActiniaResourceStatusEnumField import ActiniaResourceStatusEnumField
-from .fields.ActiniaResponseStatusEnumField import ActiniaResponseStatusEnumField
-
-
-class SimpleResponseAbstract(models.Model):
-    """
-    Abstract model of Actinia's simple response model for resource responses.
-
-    Attributes
-    ----------
-    message : str
-        Message returned from Actinia during a request.
-    """
-
-    message = models.CharField(max_length=250)
-
-    class Meta:
-        abstract = True
-
-
-class ResourceStatusModelAbstract(SimpleResponseAbstract):
-    """
-    Abstract model of Actinia's simple response model for resource responses.
-
-    Attributes
-    ----------
-    status : str
-        The response status from Actinia (accepted, running, terminated, error)
-    """
-
-    status = ActiniaResourceStatusEnumField()
-
-
-class ResponseStatusModelAbstract(SimpleResponseAbstract):
-    """
-    Abstract model of Actinia's simple response model for response statuses.
-
-    Attributes
-    ----------
-    status : str
-        The response status from Actinia (success, error)
-    """
-
-    status = ActiniaResponseStatusEnumField()

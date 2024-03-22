@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Dec 27 2023                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,8 +31,9 @@
 ###############################################################################
 
 from django.db import models
-from .Location import Location
-from .ObjectInfoAbstract import ObjectInfoAbstract
+
+# from .Location import Location
+from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
 from .Mapset import Mapset
 
 

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,7 +33,7 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-from .ObjectAuditAbstract import ObjectAuditAbstract
+from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
 from grass.models.enums import TokenTypeEnum
 from enum import Enum, unique
 import requests

@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: SimpleResponseModel.py                                             #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -29,11 +29,55 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-from .ActiniaResourceStatusEnumField import (
-    ActiniaResourceStatusEnumField as ActiniaResourceStatusEnumField,
+
+from django.db import models
+
+from grass.models.enums import ResponseStatusEnum
+from grass.models.fields.ActiniaResourceStatusEnumField import (
+    ActiniaResourceStatusEnumField,
 )
-from .ActiniaResponseStatusEnumField import (
-    ActiniaResponseStatusEnumField as ActiniaResponseStatusEnumField,
+from grass.models.fields.ActiniaResponseStatusEnumField import (
+    ActiniaResponseStatusEnumField,
 )
-from .ActiniaRoleEnumField import ActiniaRoleEnumField as ActiniaRoleEnumField
-from .LayerTypeEnumField import LayerTypeEnumField as LayerTypeEnumField
+
+
+class SimpleResponseAbstract(models.Model):
+    """
+    Abstract model of Actinia's simple response model for resource responses.
+
+    Attributes
+    ----------
+    message : str
+        Message returned from Actinia during a request.
+    """
+
+    message = models.CharField(max_length=250)
+
+    class Meta:
+        abstract = True
+
+
+class ResourceStatusModelAbstract(SimpleResponseAbstract):
+    """
+    Abstract model of Actinia's simple response model for resource responses.
+
+    Attributes
+    ----------
+    status : str
+        The response status from Actinia (accepted, running, terminated, error)
+    """
+
+    status = ActiniaResourceStatusEnumField()
+
+
+class ResponseStatusModelAbstract(SimpleResponseAbstract):
+    """
+    Abstract model of Actinia's simple response model for response statuses.
+
+    Attributes
+    ----------
+    status : str
+        The response status from Actinia (success, error)
+    """
+
+    status = ActiniaResponseStatusEnumField()

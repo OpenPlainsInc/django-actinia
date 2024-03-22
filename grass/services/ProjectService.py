@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Thu Mar 21 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -169,15 +169,10 @@ class ProjectService:
         except ApiException as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    @transaction.atomic
-    def create_project(
-        self, user, actinia_user, project_name, project_description, project_epsg
-    ):
+    def create_project(self, project_name, project_epsg):
         """
         Create a project (Location) for the user
         """
-        # from grass.models import Location
-
         try:
             epsg = ProjectionInfoModel(epsg=str(project_epsg))
             api_response = self.api_instance.locations_location_name_post(
@@ -185,15 +180,14 @@ class ProjectService:
             )
             serializer = ProcessingResponseSerializer(data=api_response.to_dict())
             if serializer.is_valid():
-                # location = Location.objects.create(
-                #     owner=user,
-                #     name=project_name,
-                #     description=project_description,
-                #     epsg=project_epsg,
-                #     actinia_users=[actinia_user],
-                # )
-                self.logger.info(f"Location created: {project_name}")
-                return serializer.data
+                if serializer.data["status"] == "success":
+                    self.logger.info(f"Location created: {project_name}")
+                    return serializer.data
+                else:
+                    self.logger.error(
+                        f"Location creation failed: {serializer.data['message']}"
+                    )
+                    return JsonResponse(serializer.data, status=400)
         except ApiException as e:
             self.logger.error(f"Exception occurred during project creation: {e}")
             return JsonResponse({"error": str(e)}, status=400)
@@ -212,7 +206,6 @@ class ProjectService:
         except ApiException as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    @transaction.atomic
     def delete_project(self, project_name):
         """
         Delete a project (Location) for the user

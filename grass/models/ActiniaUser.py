@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Thu Mar 21 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,73 +33,11 @@
 # import os
 from typing import Any
 from django.db import models
-
-# from django.contrib.auth.models import BaseUserManager
 from django.utils.crypto import get_random_string
-from .ObjectAuditAbstract import ObjectAuditAbstract
+from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
 from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField
-
-# from .enums import RolesEnum
 from django.conf import settings
-
-# from actinia import Actinia
-# from requests.auth import HTTPBasicAuth
-# from enum import Enum, unique
-# from .Location import Location
-# from .Mapset import Mapset
-# from .Token import Token
 from grass.services import ActiniaUserService
-
-ACTINIA_SETTINGS = settings.ACTINIA
-
-
-class ActiniaUserManager(models.Manager):
-    """
-    Manager class for ActiniaUser model.
-
-    This manager provides methods for creating and deleting ActiniaUser objects.
-
-    Attributes:
-        actinia_user_service (ActiniaUserService): An instance of the ActiniaUserService class.
-
-    """
-
-    actinia_user_service = ActiniaUserService()
-
-    def create_actinia_user(self, user, actinia_role, epsg=3358):
-        """
-        Create a new actinia user.
-
-        Args:
-            user (User): The Django user object.
-            actinia_role (str): The role of the actinia user.
-            epsg (int): The EPSG code to use for the default location.
-
-        Returns:
-            ActiniaUser: The new actinia user.
-
-        """
-
-        actinia_username = user.username
-        actinia_role = actinia_role
-        password = get_random_string(23)
-
-        actinia_user = self.actinia_user_service.create_actinia_user(
-            user=user, group=actinia_role, user_id=actinia_username, password=password
-        )
-
-        return actinia_user
-
-    def delete_actinia_user(self, actinia_user):
-        """
-        Delete an actinia user.
-
-        Args:
-            actinia_user (ActiniaUser): The actinia user to delete.
-
-        """
-
-        self.actinia_user_service.delete_actinia_user(actinia_user)
 
 
 class ActiniaUser(ObjectAuditAbstract):
@@ -119,9 +57,9 @@ class ActiniaUser(ObjectAuditAbstract):
         settings.AUTH_USER_MODEL, related_name="actinia_users", on_delete=models.CASCADE
     )
     password = models.CharField(max_length=128)
-    objects = ActiniaUserManager()
 
     def save(self, *args, **kwargs):
+        # Trigger the pre_save and post_save signal
         """
         Save an actinia user. This could mean creating a new user or updating an existing one.
 
@@ -133,12 +71,7 @@ class ActiniaUser(ObjectAuditAbstract):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # Make a DELETE request to the other API
-        try:
-            ActiniaUser.objects.delete_actinia_user(self)
-        except Exception as e:
-            print("Error deleting actinia user: ", e)
-        # Call the superclass's delete method to delete the ActiniaUser instance
+        # Triggers the pre_delete signal
         super().delete(*args, **kwargs)
 
     def __str__(self):

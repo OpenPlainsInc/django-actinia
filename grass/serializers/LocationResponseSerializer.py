@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -57,22 +57,22 @@ class LocationResponseSerializer(serializers.Serializer):
     locations = StringListField(allow_empty=True)
     status = ResponseStatusChoiceField
 
-    def create(self, validated_data):
-        """
-        Create and return a new 'Location' instance, given the validated data.
+    # def create(self, validated_data):
+    #     """
+    #     Create and return a new 'Location' instance, given the validated data.
 
-        Parameters
-        ----------
-        validated_data : OrderedDict
-            Dict containing validated data.
+    #     Parameters
+    #     ----------
+    #     validated_data : OrderedDict
+    #         Dict containing validated data.
 
-        Returns
-        -------
-        Location
-            New validated 'Location' instance.
-        """
-        LocationModel = apps.get_model("grass", "Location")
-        return LocationModel.objects.create(**validated_data)
+    #     Returns
+    #     -------
+    #     Location
+    #         New validated 'Location' instance.
+    #     """
+    #     LocationModel = apps.get_model("grass", "Location")
+    #     return LocationModel.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        pass
+    # def update(self, instance, validated_data):
+    #     pass

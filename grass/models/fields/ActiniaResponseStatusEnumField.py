@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Fri Mar 22 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,9 +36,12 @@ from django.db import models
 
 class ActiniaResponseStatusEnumField(models.CharField):
     """
-    Custom model field for actinia user roles
+    A custom model field for actinia response statuses. This field extends CharField and
+    uses a ResponseStatusEnum for the choices and a default value.
     """
 
-    max_length = 2
-    choices = (ResponseStatusEnum.choices,)
-    default = ResponseStatusEnum.SUCCESS
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("max_length", 2)
+        kwargs.setdefault("choices", ResponseStatusEnum.choices)
+        kwargs.setdefault("default", ResponseStatusEnum.SUCCESS)
+        super().__init__(*args, **kwargs)

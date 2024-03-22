@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Dec 27 2023                                               #
+# Last Modified: Fri Mar 22 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -40,6 +40,8 @@ class LayerTypeEnumField(models.CharField):
     Custom model field for GRASS layer types
     """
 
-    max_length = 2
-    choices = LayerTypeEnum.choices
-    default = LayerTypeEnum.RASTER
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("max_length", 2)
+        kwargs.setdefault("choices", LayerTypeEnum.choices)
+        kwargs.setdefault("default", LayerTypeEnum.RASTER)
+        super().__init__(*args, **kwargs)

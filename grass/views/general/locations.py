@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 08 2024                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -44,8 +44,8 @@ class LocationViewSet(viewsets.ModelViewSet):
     List all locations, or create a new location.
     """
 
-    serializer_class = LocationSerializer
     queryset = Location.objects.all()
+    serializer_class = LocationSerializer
     permission_classes = [AllowAny]
 
     @action(detail=True, methods=["get"])

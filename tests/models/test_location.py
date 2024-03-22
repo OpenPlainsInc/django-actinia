@@ -1,40 +1,38 @@
-# from django.contrib.auth import get_user_model
-# from django.test import Client, TestCase
-# from grass.models import Location
-
-# # from django.contrib.auth.models import User
-# from django.db import transaction
+from django.test import TestCase
+from django.contrib.auth.models import User
+from grass.models import Location, ActiniaUser
+from grass.models.enums import RolesEnum
 
 
-# class TestLocationModel(TestCase):
-#     @transaction.atomic
-#     def setUp(self):
-#         User = get_user_model()
-#         self.client = Client()
-#         self.user = User.objects.create_user(
-#             username="test_user", password="test_password"
-#         )
-#         self.client.force_login(self.user)
+class LocationTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username="testuser99", password="testpassword"
+        )
+        cls.actinia_user = ActiniaUser.objects.create(
+            user=cls.user, actinia_role=RolesEnum.ADMIN.value
+        )
+        cls.location = Location.objects.create(
+            name="TestLocation", epsg=3358, owner=cls.user
+        )
+        cls.location.actinia_users.set([cls.actinia_user])
+        cls.location.save()
 
-#     def test_location_creation(self):
-#         location = Location.objects.create(
-#             name="test_location",
-#             description="test_description",
-#             owner=self.user,
-#             epsg="3358",
-#             public=False,
-#         )
-#         assert location.owner == self.user
-#         assert location.description == "test_description"
+    @classmethod
+    def tearDownClass(cls):
+        cls.location.delete()
+        cls.actinia_user.delete()
+        cls.user.delete()
 
-#     def test_location_public_default(self):
-#         location = Location.objects.create(
-#             name="test_location", epsg="4326", owner=self.user
-#         )
-#         assert location.public is False
+    def test_location_creation(self):
+        self.assertEqual(self.location.name, "TestLocation")
+        self.assertEqual(self.location.epsg, 3358)
+        self.assertEqual(self.location.owner, self.user)
 
-#     def test_location_str(self):
-#         location = Location.objects.create(
-#             name="test_location", public=False, owner=self.user
-#         )
-#         assert str(location) == "test_location"
+    def test_location_str(self):
+        self.assertEqual(str(self.location), "TestLocation")
+
+    # def test_location_unique_constraint(self):
+    #     with self.assertRaises(Exception):
+    #         Location.objects.create(name="Test Location", epsg=3358, owner=self.user)

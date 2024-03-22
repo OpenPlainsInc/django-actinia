@@ -1,5 +1,5 @@
 psycopg2-binary>=2.8
-djangorestframework>=3.13
+djangorestframework>=3.14
 django-environ>=0.8
 django-filter>=21.1
 django-guardian>=2.4.0

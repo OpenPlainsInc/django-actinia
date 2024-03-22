@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: test_ActiniaUser.py                                                #
+# Filename: actiniaUser.py                                                     #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Friday October 20th 2023                                       #
+# File Created: Thursday March 21st 2024                                       #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,61 +30,55 @@
 #                                                                              #
 ###############################################################################
 
-from django.test import TestCase
-from django.contrib.auth.models import User
-from django.conf import settings
+from django.db.models.signals import pre_save, post_save, pre_delete
+from django.dispatch import receiver
 from grass.models import ActiniaUser
-from grass.models.enums import RolesEnum
-from django.db import IntegrityError, transaction
+from grass.services import ActiniaUserService
+from django.core.exceptions import ValidationError
+from django.utils.crypto import get_random_string
 
 
-class ActiniaUserTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        # Set up non-modified objects used by all test methods
-        cls.user = User.objects.create(
-            username="uesrtest1",
-            email="uesrtest1@example.com",
-            password="testpass",
+@receiver(pre_save, sender=ActiniaUser)
+def actinia_user_pre_save_created(sender, instance, **kwargs):
+    try:
+        actinia_user_service = ActiniaUserService()
+
+        # Use a custom name if it is set otherwise use the username of the user
+        actinia_username = (
+            instance.actinia_username
+            if instance.actinia_username
+            else instance.user.username
         )
+        actinia_role = (
+            instance.get_actinia_role_display()
+        )  # get the label of actinia_role
+        password = get_random_string(23)
 
-    def test_actinia_user_create_actinia_user(self):
-        actinia_user = ActiniaUser.objects.create(
-            user=self.user,
-            actinia_username=self.user.username,
-            actinia_role=RolesEnum.ADMIN.value,
+        actinia_user_service.create_actinia_user(
+            user=actinia_username,
+            group=actinia_role,
+            user_id=actinia_username,
+            password=password,
         )
+    except Exception as e:
+        raise ValidationError(f"Failed to create ActiniaUser: {str(e)}")
 
-        # Assert that the actinia user is saved correctly
-        self.assertEqual(actinia_user.actinia_username, "uesrtest1")
-        self.assertEqual(actinia_user.actinia_role, RolesEnum.ADMIN.value)
-        self.assertEqual(actinia_user.user, self.user)
-        self.assertEqual(ActiniaUser.objects.count(), 1)
-        # Delete the actinia user
-        actinia_user.delete()
-        self.assertEqual(ActiniaUser.objects.count(), 0)
 
-    def test_actinia_user_user_exists(self):
-        actinia_user = ActiniaUser.objects.create(
-            user=self.user,
-            actinia_username=self.user.username,
-            actinia_role=RolesEnum.ADMIN.value,
+@receiver(post_save, sender=ActiniaUser)
+def actinia_user_created(sender, instance, created, **kwargs):
+    if created:
+        # The code here will run after a Location instance is created
+        print(f"ActiniaUser {instance.actinia_username} was created.")
+
+
+@receiver(pre_delete, sender=ActiniaUser)
+def actinia_user_deleted(sender, instance, **kwargs):
+    # The code here will run before a Location instance is deleted
+    print(f"ActiniaUser {instance.actinia_username} is about to be deleted.")
+    try:
+        actinia_user_service = ActiniaUserService()
+        actinia_user_service.delete_actinia_user(
+            actinia_username=instance.actinia_username
         )
-
-        with self.assertRaises(IntegrityError):
-            ActiniaUser.objects.create(
-                user=self.user,
-                actinia_username=self.user.username,
-                actinia_role=RolesEnum.ADMIN.value,
-            )
-
-            # End the transaction block before trying to delete the actinia user
-            transaction.set_rollback(True)
-
-            # Delete the actinia user
-            actinia_user.delete()
-            self.assertEqual(ActiniaUser.objects.count(), 0)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.user.delete()
+    except Exception as e:
+        raise ValidationError(f"Failed to delete ActiniaUser: {str(e)}")

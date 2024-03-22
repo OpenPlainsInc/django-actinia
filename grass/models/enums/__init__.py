@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Mon Mar 18 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -29,7 +29,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-from .ResourceStatusEnum import ResourceStatusEnum
-from .ResponseStatusEnum import ResponseStatusEnum
-from .RolesEnum import RolesEnum
-from .TokenTypeEnum import TokenTypeEnum
+from .ResourceStatusEnum import ResourceStatusEnum as ResourceStatusEnum
+from .ResponseStatusEnum import ResponseStatusEnum as ResponseStatusEnum
+from .RolesEnum import RolesEnum as RolesEnum
+from .TokenTypeEnum import TokenTypeEnum as TokenTypeEnum
+from .LayerTypeEnum import LayerTypeEnum as LayerTypeEnum
