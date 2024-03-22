@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Fri Mar 22 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,9 +36,12 @@ from django.db import models
 
 class ActiniaResourceStatusEnumField(models.CharField):
     """
-    Custom model field for actinia user roles
+    A custom model field for actinia user roles. This field extends CharField and
+    uses a ResourceStatusEnum for the choices and a default value.
     """
 
-    max_length = 2
-    choices = (ResourceStatusEnum.choices,)
-    default = ResourceStatusEnum.ACCEPTED
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("max_length", 2)
+        kwargs.setdefault("choices", ResourceStatusEnum.choices)
+        kwargs.setdefault("default", ResourceStatusEnum.ACCEPTED)
+        super().__init__(*args, **kwargs)

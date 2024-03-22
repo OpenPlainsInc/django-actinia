@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Thu Mar 21 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -37,9 +37,12 @@ from django.utils.translation import gettext_lazy as _
 
 class ActiniaRoleEnumField(models.CharField):
     """
-    Custom model field for actinia user roles
+    A custom model field for actinia user roles. This field extends CharField and
+    uses a RolesEnum for the choices and a default value.
     """
 
-    max_length = 2
-    choices = RolesEnum.choices
-    default = RolesEnum.GUEST
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("max_length", 2)
+        kwargs.setdefault("choices", RolesEnum.choices)
+        kwargs.setdefault("default", RolesEnum.GUEST)
+        super().__init__(*args, **kwargs)
