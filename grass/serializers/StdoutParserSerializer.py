@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Fri Mar 22 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -43,6 +43,6 @@ class StdoutParserSerializer(serializers.Serializer):
         delimiter (str): The delimiter that should be used to parse table, list and key/value module output. Many GRASS GIS modules use by default &quot; NOTE: &quot; in tables and &quot;=&quot; in key/value pairs. A new line &quot;\n&quot; is always the delimiter between rows in the output.
     """
 
-    id = serializers.CharField()
-    format = serializers.CharField()
-    delimiter = serializers.CharField()
+    id = serializers.CharField(required=False)
+    format = serializers.CharField(required=False)
+    delimiter = serializers.CharField(required=False)

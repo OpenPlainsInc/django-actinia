@@ -1,0 +1,718 @@
+openapi: 3.0.3
+info:
+  title: Django-Actina API
+  version: 1.0.0
+  description: Djano-Actinia API for GRASS GIS
+paths:
+  /api/v1/actinia-user/:
+    get:
+      operationId: v1_actinia_user_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedActiniaUserResponseList'
+          description: ''
+    post:
+      operationId: v1_actinia_user_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+        required: true
+      security:
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiniaUserResponse'
+          description: ''
+  /api/v1/actinia-user/{id}/:
+    get:
+      operationId: v1_actinia_user_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Actinia User.
+        required: true
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiniaUserResponse'
+          description: ''
+    put:
+      operationId: v1_actinia_user_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Actinia User.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+        required: true
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiniaUserResponse'
+          description: ''
+    patch:
+      operationId: v1_actinia_user_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Actinia User.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedActiniaUserResponse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedActiniaUserResponse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedActiniaUserResponse'
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiniaUserResponse'
+          description: ''
+    delete:
+      operationId: v1_actinia_user_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Actinia User.
+        required: true
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/actinia-user/{task}/:
+    get:
+      operationId: v1_actinia_user_list_2
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: task
+        schema:
+          type: string
+          pattern: ^\w+$
+        required: true
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedActiniaUserResponseList'
+          description: ''
+    post:
+      operationId: v1_actinia_user_create_2
+      parameters:
+      - in: path
+        name: task
+        schema:
+          type: string
+          pattern: ^\w+$
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+        required: true
+      security:
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiniaUserResponse'
+          description: ''
+  /api/v1/actinia-user/{task}/{id}/:
+    get:
+      operationId: v1_actinia_user_retrieve_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Actinia User.
+        required: true
+      - in: path
+        name: task
+        schema:
+          type: string
+          pattern: ^\w+$
+        required: true
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiniaUserResponse'
+          description: ''
+    put:
+      operationId: v1_actinia_user_update_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Actinia User.
+        required: true
+      - in: path
+        name: task
+        schema:
+          type: string
+          pattern: ^\w+$
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ActiniaUserResponse'
+        required: true
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiniaUserResponse'
+          description: ''
+    patch:
+      operationId: v1_actinia_user_partial_update_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Actinia User.
+        required: true
+      - in: path
+        name: task
+        schema:
+          type: string
+          pattern: ^\w+$
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedActiniaUserResponse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedActiniaUserResponse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedActiniaUserResponse'
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiniaUserResponse'
+          description: ''
+    delete:
+      operationId: v1_actinia_user_destroy_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Actinia User.
+        required: true
+      - in: path
+        name: task
+        schema:
+          type: string
+          pattern: ^\w+$
+        required: true
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/locations/:
+    get:
+      operationId: v1_locations_list
+      description: List all locations, or create a new location.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLocationList'
+          description: ''
+    post:
+      operationId: v1_locations_create
+      description: Create a new location.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Location'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Location'
+        required: true
+      security:
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+  /api/v1/locations/{id}/:
+    get:
+      operationId: v1_locations_retrieve
+      description: List all locations, or create a new location.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this location.
+        required: true
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+    put:
+      operationId: v1_locations_update
+      description: Update a location.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this location.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Location'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Location'
+        required: true
+      security:
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+    patch:
+      operationId: v1_locations_partial_update
+      description: Partially update a location.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this location.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLocation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLocation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLocation'
+      security:
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+    delete:
+      operationId: v1_locations_destroy
+      description: Delete a location.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this location.
+        required: true
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/v1/locations/{id}/custom_action/:
+    get:
+      operationId: v1_locations_custom_action_retrieve
+      description: Custom action for retrieving a specific location.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this location.
+        required: true
+      tags:
+      - v1
+      security:
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+components:
+  schemas:
+    ActiniaUserLocation:
+      type: object
+      description: Serializer for ActiniaUserLocation model.
+      properties:
+        id:
+          type: integer
+        location_name:
+          type: string
+        epsg:
+          type: integer
+        mapsets:
+          type: array
+          items:
+            type: string
+      required:
+      - epsg
+      - id
+      - location_name
+      - mapsets
+    ActiniaUserResponse:
+      type: object
+      description: Serializer for ActiniaUserResponse objects.
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        actinia_username:
+          type: string
+        actinia_role:
+          type: string
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActiniaUserLocation'
+          readOnly: true
+      required:
+      - actinia_role
+      - actinia_username
+      - id
+      - locations
+      - user_id
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        actinia_users:
+          type: array
+          items:
+            type: string
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+          maxLength: 250
+        public:
+          type: boolean
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        epsg:
+          type: string
+          maxLength: 8
+        created_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        updated_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        owner:
+          type: integer
+      required:
+      - actinia_users
+      - created_by
+      - created_on
+      - epsg
+      - id
+      - name
+      - owner
+      - slug
+      - updated_by
+      - updated_on
+    PaginatedActiniaUserResponseList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActiniaUserResponse'
+    PaginatedLocationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+    PatchedActiniaUserResponse:
+      type: object
+      description: Serializer for ActiniaUserResponse objects.
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        actinia_username:
+          type: string
+        actinia_role:
+          type: string
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActiniaUserLocation'
+          readOnly: true
+    PatchedLocation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        actinia_users:
+          type: array
+          items:
+            type: string
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+          maxLength: 250
+        public:
+          type: boolean
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        epsg:
+          type: string
+          maxLength: 8
+        created_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        updated_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        owner:
+          type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

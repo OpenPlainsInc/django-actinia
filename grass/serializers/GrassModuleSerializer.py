@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
+# Last Modified: Fri Mar 22 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -56,8 +56,8 @@ class GrassModuleSerializer(serializers.Serializer):
         interface_description (bool, optional): Flag indicating whether to display the interface description of the GrassModule.
     """
 
-    id = serializers.CharField()
-    module = serializers.CharField()
+    id = serializers.CharField(required=False)
+    module = serializers.CharField(required=False)
     inputs = InputParameterSerializer(many=True, required=False)
     outputs = OutputParameterSerializer(many=True, required=False)
     flags = serializers.CharField(required=False)

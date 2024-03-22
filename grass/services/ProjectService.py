@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 18 2024                                               #
+# Last Modified: Thu Mar 21 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -173,8 +173,6 @@ class ProjectService:
         """
         Create a project (Location) for the user
         """
-        # from grass.models import Location
-
         try:
             epsg = ProjectionInfoModel(epsg=str(project_epsg))
             api_response = self.api_instance.locations_location_name_post(

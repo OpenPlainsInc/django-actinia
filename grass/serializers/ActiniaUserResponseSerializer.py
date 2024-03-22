@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Mar 06 2024                                               #
+# Last Modified: Thu Mar 21 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,7 +31,7 @@
 ###############################################################################
 
 from rest_framework import serializers
-from grass.serializers import ActiniaUserLocationSerializer
+from grass.serializers.LocationSerializer import LocationSerializer
 from grass.models import ActiniaUser
 
 
@@ -44,22 +44,14 @@ class ActiniaUserResponseSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     actinia_username = serializers.CharField()
     actinia_role = serializers.CharField()
-    locations = ActiniaUserLocationSerializer(many=True, read_only=True)
+    locations = LocationSerializer(many=True, read_only=True)
+    created_on = serializers.DateTimeField()
+    updated_on = serializers.DateTimeField()
+    created_by = serializers.CharField()
+    updated_by = serializers.CharField()
     # modules = serializers.JSONField()
 
     class Meta:
         model = "ActiniaUser"
-        fields = [
-            "id",
-            "actinia_username",
-            "actinia_role",
-            "user_id",
-            "locations",
-            "created_on",
-            "updated_on",
-        ]
-
-    # def create(self, validated_data):
-
-    #     data = ActiniaUser.objects.create_actinia_user(**validated_data)
-    #     return data
+        fields = "__all__"
+        depth = 1

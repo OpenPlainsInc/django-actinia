@@ -43,7 +43,7 @@
 
 #         # Create an ActiniaUser instance
 #         actinia_user = ActiniaUser.objects.create_actinia_user(
-#             user=user, actinia_role=RolesEnum.ADMIN.value
+#             user=user, actinia_role=RolesEnum.ADMIN.label
 #         )
 
 #         # Create a Location instance

@@ -10,7 +10,7 @@ class LocationTestCase(TestCase):
         cls.user = User.objects.create_user(
             username="testuser99", password="testpassword"
         )
-        cls.actinia_user = ActiniaUser.objects.create_actinia_user(
+        cls.actinia_user = ActiniaUser.objects.create(
             user=cls.user, actinia_role=RolesEnum.ADMIN.value
         )
         cls.location = Location.objects.create(

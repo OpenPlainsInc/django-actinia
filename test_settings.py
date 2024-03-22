@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Thu Mar 21 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     "django_filters",
     "django_extensions",
     "debug_toolbar",
+    "drf_spectacular",
 ]
 
 
@@ -131,6 +132,15 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Django-Actina API",
+    "DESCRIPTION": "Djano-Actinia API for GRASS GIS",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
 }
 
 # Add Later

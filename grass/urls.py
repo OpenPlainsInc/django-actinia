@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 07 2024                                               #
+# Last Modified: Thu Mar 21 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -59,17 +59,17 @@ router.register(
     ActiniaUserViewSet,
     basename="actinia-user",
 )
-router.register(
-    r"actinia-user/(?P<task>\w+)",
-    ActiniaUserViewSet,
-    basename="actinia-user",
-)
+# router.register(
+#     r"actinia-user/(?P<task>\w+)",
+#     ActiniaUserViewSet,
+#     basename="actinia-user",
+# )
 
 router.register(r"locations", LocationViewSet, basename="location")
 
-router.register(
-    r"locations/(?P<location_pk>\d+)/mapsets", MapsetViewSet, basename="mapset"
-)
+# router.register(
+#     r"locations/(?P<location_pk>\d+)/mapsets", MapsetViewSet, basename="mapset"
+# )
 
 urlpatterns = [
     path("", include(router.urls)),

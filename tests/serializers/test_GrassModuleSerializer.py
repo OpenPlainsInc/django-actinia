@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 08 2024                                               #
+# Last Modified: Fri Mar 22 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -50,7 +50,7 @@ class GrassModuleSerializerTest(TestCase):
             ],
             "flags": "-f",
             "stdin": "previous_module::stdout",
-            "stdout": {"parser": "json", "options": {"key": "value"}},
+            "stdout": {"id": "1", "format": "json", "delimiter": ","},
             "overwrite": True,
             "verbose": False,
             "superquiet": True,
