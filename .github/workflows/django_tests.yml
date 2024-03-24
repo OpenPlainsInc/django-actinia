@@ -20,6 +20,14 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Build Package
+      run : |
+        python -m pip install --upgrade pip
+
+        pip install -r requirements-dev.txt
+        python setup.py sdist bdist_wheel
+        python -m pip install --user django-actinia/dist/django-grass-0.0.1a0.tar.gz
+
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
