@@ -6,6 +6,8 @@
    :target: https://doi.org/10.5281/zenodo.7702949
 .. image:: https://github.com/tomorrownow/django-actinia/actions/workflows/pylint_black.yml/badge.svg
     :target: https://github.com/tomorrownow/django-actinia/actions/workflows/pylint_black.yml
+.. image:: https://github.com/tomorrownow/django-actinia/actions/workflows/django_tests.yml/badge.svg?branch=main
+    :target: https://github.com/tomorrownow/django-actinia/actions/workflows/django_tests.yml
 
 A Django package to utilize `Actinia <https://actinia.mundialis.de/>`__ REST API for GRASS GIS for distributed compuational analysis and modeling.
 
