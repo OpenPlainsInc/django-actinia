@@ -26,7 +26,7 @@ jobs:
 
         pip install -r requirements-dev.txt
         python setup.py sdist
-        python -m pip install --user django-actinia/dist/django-grass-0.0.1a0.tar.gz
+        pip install -e .
 
     - name: Install Dependencies
       run: |
