@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Mar 24 2024                                               #
+# Last Modified: Mon Mar 25 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -54,7 +54,7 @@ import actinia_openapi_python_client
 from actinia_openapi_python_client.rest import ApiException
 from rest_framework import serializers
 from django.http import JsonResponse
-from grass.serializers import UserInfoResponseSerializer
+from grass.serializers import UserInfoResponseModelSerializer
 from grass.serializers.UserListResponseSerializer import UserListResponseSerializer
 from grass.serializers.ActiniaSimpleResponseSerializer import ResponseStatusSerializer
 
@@ -92,7 +92,7 @@ class ActiniaUserService:
         """
         try:
             api_response = self.api_instance.users_get()
-            serializer = UserListResponseSerializer(data=api_response.to_dict())
+            serializer = UserListResponseSerializer(data=api_response)
             if serializer.is_valid():
                 # Check if users exist in database
                 return JsonResponse(serializer.data, status=200)
@@ -105,8 +105,16 @@ class ActiniaUserService:
         """
         try:
             api_response = self.api_instance.users_user_id_get(user_id)
-            serializer = UserInfoResponseSerializer(data=api_response.to_dict())
-            return JsonResponse(serializer.data)
+            serializer = UserInfoResponseModelSerializer(data=api_response)
+            if serializer.is_valid():
+                if serializer.data["status"] == "success":
+                    self.logger.info(f"ActiniaUser retrieved: {user_id}")
+                    return JsonResponse(serializer.data)
+                else:
+                    self.logger.error(
+                        f"ActiniaUser retrieval failed: {serializer.data['message']}"
+                    )
+                    return JsonResponse(serializer.data)
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling UserManagementApi->users_user_id_get: {e}"
