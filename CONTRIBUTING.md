@@ -68,7 +68,9 @@ so the above is then just a simple update (and no actual
 rebase or merge happens).
 
 ### Creating a new feature branch
+
 Now you have updated your local _main_ branch, you can create a festure branch based on it.
+
 * Create a new feature branch and switch to it
 
 ```bash
@@ -113,7 +115,7 @@ To improve code quality install pre-commit to perform precommit checks before pu
 python setup.py sdist
 
 # Install
-python -m pip install --user django-actinia/dist/django-actinia-0.0.1a0.tar.gz
+python -m pip install --user django-actinia/dist/django-grass-0.0.1a0.tar.gz
 
 # Uninstall
 python -m pip uninstall django-actinia

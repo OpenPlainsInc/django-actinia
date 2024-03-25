@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 21 2024                                               #
+# Last Modified: Mon Mar 25 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -34,7 +34,6 @@ import os
 import requests
 from enum import Enum, unique
 from django.utils.crypto import get_random_string
-from actinia import Actinia
 from django.conf import settings
 from grass.models.enums import RolesEnum
 from requests.auth import HTTPBasicAuth
@@ -60,73 +59,6 @@ from actinia_openapi_python_client.models.projection_info_model import (
 )
 
 ACTINIA_SETTINGS = settings.ACTINIA
-
-
-# def populate_mapsets(actinia_user, location_model, mapsets):
-#     """
-#     Populates Mapset objects from the mapsets list.
-
-#     Args:
-#         user (User): The user.
-#         location_models (list): A list of locations.
-#         mapsets (list): A list of mapsets.
-
-#     Returns:
-#         ActiniaUser: The actinia user.
-#     """
-#     if not isinstance(location_model, Location):
-#         raise Exception("Invalid location type")
-
-#     if not mapsets or not isinstance(mapsets, list):
-#         raise Exception("No mapsets provided or invalid mapset type")
-
-#     mapset_models = [
-#         Mapset(
-#             name=mapset,
-#             description="",
-#             owner=actinia_user.owner,
-#             location=location_model,
-#         )
-#         for mapset in mapsets
-#     ]
-
-#     Mapset.objects.bulk_create(mapset_models)
-#     return actinia_user
-
-
-# def populate_locations_mapsets(user, actinia_user, epsg, **kwargs):
-#     """
-#     Populates Location objects from the locations list.
-
-#     Args:
-#         user (User): The user.
-#         actinia_user (ActiniaUser): The actinia user.
-#         epsg (int): The EPSG code for the location.
-#         locations (list): A list of locations.
-#         mapsets (list): A list of mapsets.
-
-#     Returns:from grass.models import Location
-
-#         ActiniaUser: The actinia user.
-#     """
-#     locations = kwargs.get("locations")
-#     mapsets = kwargs.get("mapsets")
-
-#     if not locations or not isinstance(locations, list):
-#         raise Exception("No locations provided or invalid location type")
-
-#     location_models = [
-#         Location(owner=user, name=location["name"], epsg=location["epsg"])
-#         for location in locations
-#     ]
-
-#     Location.objects.bulk_create(location_models)
-
-#     if mapsets and isinstance(mapsets, list):
-#         for location_model in location_models:
-#             populate_mapsets(actinia_user, location_model, mapsets)
-
-#     return actinia_user
 
 
 class ProjectService:
