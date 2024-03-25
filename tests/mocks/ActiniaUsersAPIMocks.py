@@ -1,5 +1,5 @@
 ###############################################################################
-# Filename: ActiniaAPIMocks.py                                                 #
+# Filename: ActiniaUsersMocks.py                                               #
 # Project: OpenPlains Inc.                                                     #
 # File Created: Monday March 25th 2024                                         #
 # Author: Corey White (smortopahri@gmail.com)                                  #
@@ -31,7 +31,7 @@
 ###############################################################################
 
 
-class ActiniaAPIMocks:
+class ActiniaUsersAPIMocks:
 
     # Actinia Users Requests
     @staticmethod

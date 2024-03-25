@@ -37,7 +37,7 @@ from actinia_openapi_python_client import ApiException
 from grass.models import ActiniaUser
 from grass.services.ActiniaUserService import ActiniaUserService
 from django.contrib.auth.models import User
-from ..ActiniaAPIMocks import ActiniaAPIMocks
+from ..mocks.ActiniaUsersAPIMocks import ActiniaUsersAPIMocks
 from unittest.mock import patch
 
 
@@ -47,7 +47,7 @@ class TestActiniaUserService(TestCase):
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
     def test_create_actinia_user_already_exists(self, mock_users_user_id_post):
-        mock_users_user_id_post.return_value = ActiniaAPIMocks.create_user_error(
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user_error(
             "test_user_id"
         )
         with self.assertRaises(Exception):
@@ -61,20 +61,40 @@ class TestActiniaUserService(TestCase):
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_get")
     def test_get_actinia_users(self, mock_users_get):
-        mock_users_get.return_value = ActiniaAPIMocks.get_users(["test_user_id"])
+        mock_users_get.return_value = ActiniaUsersAPIMocks.get_users(["test_user_id"])
         response = self.actinia_user_service.get_actinia_users()
         self.assertIsInstance(response, JsonResponse)
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
     def test_get_actinia_user(self, mock_users_user_id_get):
         user_id = "test_user_id"
-        mock_users_user_id_get.return_value = ActiniaAPIMocks.get_user(user_id)
+        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(user_id)
+        response = self.actinia_user_service.get_actinia_user(user_id)
+        self.assertIsInstance(response, JsonResponse)
+
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
+    def test_get_actinia_user_error(self, mock_users_user_id_get):
+        user_id = "fake_test_user_id"
+        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user_error(
+            user_id
+        )
         response = self.actinia_user_service.get_actinia_user(user_id)
         self.assertIsInstance(response, JsonResponse)
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_delete")
     def test_delete_actinia_user(self, mock_users_user_id_delete):
         user_id = "test_user_id"
-        mock_users_user_id_delete.return_value = ActiniaAPIMocks.delete_user(user_id)
+        mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
+            user_id
+        )
+        response = self.actinia_user_service.delete_actinia_user(user_id)
+        self.assertIsInstance(response, JsonResponse)
+
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_delete")
+    def test_delete_actinia_user_error(self, mock_users_user_id_delete):
+        user_id = "fake_test_user_id"
+        mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user_error(
+            user_id
+        )
         response = self.actinia_user_service.delete_actinia_user(user_id)
         self.assertIsInstance(response, JsonResponse)
