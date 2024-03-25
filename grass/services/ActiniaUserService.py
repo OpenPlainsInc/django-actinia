@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 22 2024                                               #
+# Last Modified: Sun Mar 24 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -44,7 +44,6 @@ import os
 import requests
 from enum import Enum, unique
 from django.utils.crypto import get_random_string
-from actinia import Actinia
 from django.conf import settings
 from grass.models.enums import RolesEnum
 from requests.auth import HTTPBasicAuth

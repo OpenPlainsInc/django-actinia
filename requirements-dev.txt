@@ -24,3 +24,4 @@ django-debug-toolbar==3.7.0
 django-extensions==3.2
 actinia_openapi_python_client @ git+https://github.com/tomorrownow/actinia_openapi_python_client.git
 requests-mock==1.11
+tox
