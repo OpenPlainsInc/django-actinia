@@ -129,10 +129,10 @@ Start the test server:
 docker compose --env-file .test.env --file docker-compose-test.yml up
 
 # or run to rebuild the images
-docker compose --env-file .test.env --file docker-compose-test.yml up
+docker compose --env-file .test.env --file docker-compose-test.yml build <container_name> --no-cache
 
 # Run tests
-docker compose --env-file .test.env --file docker-compose-test.yml run api python manage.py test
+docker compose --env-file .test.env --file docker-compose-test.yml exec api python manage.py test
 ```
 
 To run tests against a particular `python` and `django` version installed inside your virtual environment, you may use:
