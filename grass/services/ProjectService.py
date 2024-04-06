@@ -95,7 +95,7 @@ class ProjectService:
         """
         try:
             api_response = self.api_instance.locations_get()
-            serializer = LocationResponseSerializer(data=api_response.to_dict())
+            serializer = LocationResponseSerializer(data=api_response)
             if serializer.is_valid():
                 return JsonResponse(serializer.data, status=200)
         except ApiException as e:
@@ -110,7 +110,7 @@ class ProjectService:
             api_response = self.api_instance.locations_location_name_post(
                 location_name=project_name, epsg_code=epsg
             )
-            serializer = ProcessingResponseSerializer(data=api_response.to_dict())
+            serializer = ProcessingResponseSerializer(data=api_response)
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
                     self.logger.info(f"Location created: {project_name}")
@@ -132,7 +132,7 @@ class ProjectService:
             api_response = self.api_instance.locations_location_name_info_get(
                 location_name=project_name
             )
-            serializer = MapsetInfoResponseSerializer(data=api_response.to_dict())
+            serializer = MapsetInfoResponseSerializer(data=api_response)
             if serializer.is_valid():
                 return JsonResponse(serializer.data, status=200)
         except ApiException as e:
@@ -146,7 +146,7 @@ class ProjectService:
             api_response = self.api_instance.locations_location_name_delete(
                 location_name=project_name
             )
-            serializer = ResourceStatusSerializer(data=api_response.to_dict())
+            serializer = ResourceStatusSerializer(data=api_response)
             if serializer.is_valid():
                 return JsonResponse(serializer.data, status=200)
         except ApiException as e:
