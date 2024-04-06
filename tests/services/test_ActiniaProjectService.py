@@ -48,6 +48,23 @@ class TestActiniaProjectService(TestCase):
     @patch(
         "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
     )
+    def test_create_project(self, mock_locations_location_name_post):
+        mock_locations_location_name_post.return_value = (
+            ActiniaLocationsAPIMocks.create_location("test_location_name", 2264)
+        )
+        project_name = "test_location_name"
+        project_epsg = 2264
+        response = self.project_service.create_project(project_name, project_epsg)
+        self.assertIsInstance(response, JsonResponse)
+        response_data = response.json()
+        self.assertEqual(response_data["status"], "finished")
+        self.assertEqual(
+            response_data["message"], f"Location <{project_name}> successfully created"
+        )
+
+    @patch(
+        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
+    )
     def test_create_project_already_exists(self, mock_locations_location_name_post):
         mock_locations_location_name_post.return_value = (
             ActiniaLocationsAPIMocks.create_location_error("test_location_name", 2264)
