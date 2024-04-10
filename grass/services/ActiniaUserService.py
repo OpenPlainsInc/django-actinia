@@ -94,10 +94,18 @@ class ActiniaUserService:
             api_response = self.api_instance.users_get()
             serializer = UserListResponseSerializer(data=api_response)
             if serializer.is_valid():
-                # Check if users exist in database
-                return JsonResponse(serializer.data, status=200)
+                if serializer.data["status"] == "success":
+                    # Check if users exist in database
+                    return serializer.data
+                else:
+                    self.logger.warning(
+                        f"ActiniaUsers retrevial warning: {serializer.data['message']}"
+                    )
+                    return serializer.data
         except ApiException as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            self.logger.error(
+                f"Exception when calling UserManagementApi->users_get: {e}"
+            )
 
     def get_actinia_user(self, user_id):
         """
@@ -109,17 +117,16 @@ class ActiniaUserService:
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
                     self.logger.info(f"ActiniaUser retrieved: {user_id}")
-                    return JsonResponse(serializer.data)
+                    return serializer.data
                 else:
                     self.logger.error(
                         f"ActiniaUser retrieval failed: {serializer.data['message']}"
                     )
-                    return JsonResponse(serializer.data)
+                    return serializer.data
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling UserManagementApi->users_user_id_get: {e}"
             )
-            return JsonResponse({"error": str(e)}, status=400)
 
     def create_actinia_user(self, user, user_id, password, group=RolesEnum.USER.label):
         """
