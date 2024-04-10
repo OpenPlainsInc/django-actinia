@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 25 2024                                               #
+# Last Modified: Wed Apr 10 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -127,15 +127,11 @@ class ActiniaUserService:
         """
         from grass.models.ActiniaUser import ActiniaUser
 
-        print("user_id: ", user_id)
-        print("password: ", password)
-        print("group: ", group)
-
         try:
             api_response = self.api_instance.users_user_id_post(
                 user_id=user_id, password=password, group=group
             )
-            print(api_response)
+
             serializer = ResponseStatusSerializer(data=api_response)
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
@@ -147,13 +143,12 @@ class ActiniaUserService:
                     self.logger.error(
                         f"ActiniaUser creation failed: {serializer.data['message']}"
                     )
-                    return JsonResponse(serializer.data, status=400)
+                    return serializer.data
 
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling UserManagementApi->users_user_id_post: {e}"
             )
-            return JsonResponse({"error": str(e)}, status=400)
 
     def delete_actinia_user(self, actinia_username):
         """
@@ -176,4 +171,3 @@ class ActiniaUserService:
             self.logger.error(
                 f"Exception when calling UserManagementApi->users_user_id_delete: {e}"
             )
-            return JsonResponse({"error": str(e)}, status=400)

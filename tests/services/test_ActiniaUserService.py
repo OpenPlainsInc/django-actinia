@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 25 2024                                               #
+# Last Modified: Wed Apr 10 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -87,8 +87,10 @@ class TestActiniaUserService(TestCase):
         mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
             user_id
         )
+        expected_response = {"status": "success", "message": f"User {user_id} deleted"}
         response = self.actinia_user_service.delete_actinia_user(user_id)
-        self.assertIsInstance(response, JsonResponse)
+        self.assertIsInstance(response, dict)
+        self.assertEqual(response, expected_response)
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_delete")
     def test_delete_actinia_user_error(self, mock_users_user_id_delete):
@@ -96,5 +98,10 @@ class TestActiniaUserService(TestCase):
         mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user_error(
             user_id
         )
+        expected_response = {
+            "status": "error",
+            "message": f"Unable to delete user {user_id}. User does not exist.",
+        }
         response = self.actinia_user_service.delete_actinia_user(user_id)
-        self.assertIsInstance(response, JsonResponse)
+        self.assertIsInstance(response, dict)
+        self.assertEqual(response, expected_response)
