@@ -1,11 +1,11 @@
 ###############################################################################
 # Filename: ResponseStatusEnum.py                                              #
-# Project: django-actinia                                                          #
+# Project: OpenPlains Inc.                                                     #
 # File Created: Monday June 6th 2022                                           #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Jun 06 2022                                               #
+# Last Modified: Wed Apr 10 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,5 +33,5 @@ from django.db import models
 
 
 class ResponseStatusEnum(models.TextChoices):
-    SUCCESS = "SC", "success"
-    ERROR = "ER", "error"
+    SUCCESS = "success", "success"
+    ERROR = "error", "error"

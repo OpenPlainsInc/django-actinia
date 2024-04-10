@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 22 2024                                               #
+# Last Modified: Wed Apr 10 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -41,7 +41,7 @@ class ActiniaResponseStatusEnumField(models.CharField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault("max_length", 2)
+        kwargs.setdefault("max_length", 7)
         kwargs.setdefault("choices", ResponseStatusEnum.choices)
         kwargs.setdefault("default", ResponseStatusEnum.SUCCESS)
         super().__init__(*args, **kwargs)
