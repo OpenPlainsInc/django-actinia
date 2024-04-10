@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
+# Last Modified: Wed Apr 10 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -56,10 +56,10 @@ class ActiniaSimpleResponseSerializer(serializers.Serializer):
 class ResourceStatusSerializer(ActiniaSimpleResponseSerializer):
     """Serializer to consume response from Actinia API resource stutas"""
 
-    status = ResourceStatusChoiceField
+    status = ResourceStatusChoiceField()
 
 
 class ResponseStatusSerializer(ActiniaSimpleResponseSerializer):
     """Serializer to consume response from Actinia API response stutas"""
 
-    status = ResponseStatusChoiceField
+    status = ResponseStatusChoiceField()
