@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Thu Apr 11 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,27 +31,21 @@
 ###############################################################################
 
 from rest_framework import serializers
-
-from actinia_openapi_python_client.models.user_info_response_model_permissions import (
-    UserInfoResponseModelPermissions,
-)
+from .ActiniaSimpleResponseSerializer import ResponseStatusSerializer
 
 
 class UserInfoResponseModelPermissionsSerializer(serializers.Serializer):
-    cell_limit = serializers.IntegerField(required=False, allow_null=True)
-    process_num_limit = serializers.IntegerField(required=False, allow_null=True)
-    process_time_limit = serializers.CharField(required=False, allow_null=True)
-    accessible_datasets = serializers.JSONField(required=False, allow_null=True)
+    cell_limit = serializers.IntegerField(required=False)
+    process_num_limit = serializers.IntegerField(required=False)
+    process_time_limit = serializers.CharField(required=False)
+    accessible_datasets = serializers.JSONField(required=False)
     accessible_modules = serializers.ListField(
-        child=serializers.CharField(), required=False, allow_null=True
+        child=serializers.CharField(), required=False
     )
 
 
-class UserInfoResponseModelSerializer(serializers.Serializer):
-    status = serializers.CharField()
-    user_id = serializers.CharField(required=False, allow_null=True)
-    user_role = serializers.CharField(required=False, allow_null=True)
-    user_group = serializers.CharField(required=False, allow_null=True)
-    permissions = UserInfoResponseModelPermissionsSerializer(
-        required=False, allow_null=True
-    )
+class UserInfoResponseModelSerializer(ResponseStatusSerializer):
+    user_id = serializers.CharField(required=False)
+    user_role = serializers.CharField(required=False)
+    user_group = serializers.CharField(required=False)
+    permissions = UserInfoResponseModelPermissionsSerializer(required=False)
