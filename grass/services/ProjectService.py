@@ -5,8 +5,8 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 25 2024                                               #
-# Modified By: Corey White                                                     #
+# Last Modified: Mon April 15 2024                                             #
+# Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
@@ -97,9 +97,18 @@ class ProjectService:
             api_response = self.api_instance.locations_get()
             serializer = LocationResponseSerializer(data=api_response)
             if serializer.is_valid():
-                return JsonResponse(serializer.data, status=200)
+                if serializer.data["status"] == "success":
+                    # Check if locations exist in database
+                    return serializer.data
+                else:
+                    self.logger.warning(
+                        f"ActiniaLocations retrevial warning: {serializer.data['message']}"
+                    )
+                    return serializer.data
         except ApiException as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            self.logger.error(
+                f"Exception when calling LocationManagementApi->locations_get: {e}"
+            )
 
     def create_project(self, project_name, project_epsg):
         """
@@ -119,10 +128,11 @@ class ProjectService:
                     self.logger.error(
                         f"Location creation failed: {serializer.data['message']}"
                     )
-                    return JsonResponse(serializer.data, status=400)
+                    return serializer.data
         except ApiException as e:
-            self.logger.error(f"Exception occurred during project creation: {e}")
-            return JsonResponse({"error": str(e)}, status=400)
+            self.logger.error(
+                f"Exception when calling LocationManagementApi->locations_location_name_post: {e}"
+            )
 
     def get_project(self, project_name):
         """
@@ -130,24 +140,43 @@ class ProjectService:
         """
         try:
             api_response = self.api_instance.locations_location_name_info_get(
-                location_name=project_name
+                project_name
             )
             serializer = MapsetInfoResponseSerializer(data=api_response)
             if serializer.is_valid():
-                return JsonResponse(serializer.data, status=200)
+                if serializer.data["status"] == "finished":
+                    self.logger.info(f"ActiniaLocation retrieved: {project_name}")
+                    return serializer.data
+                else:
+                    self.logger.error(
+                        f"ActiniaLocation retrieval failed: {serializer.data['message']}"
+                    )
+                    return serializer.data
         except ApiException as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            self.logger.error(
+                f"Exception when calling LocationManagementApi->locations_location_name_info_get: {e}"
+            )
 
     def delete_project(self, project_name):
         """
         Delete a project (Location) for the user
         """
         try:
+            location_name = project_name
             api_response = self.api_instance.locations_location_name_delete(
-                location_name=project_name
+                location_name
             )
             serializer = ResourceStatusSerializer(data=api_response)
             if serializer.is_valid():
-                return JsonResponse(serializer.data, status=200)
+                if serializer.data["status"] == "success":
+                    self.logger.info(f"ActiniaProject deleted: {location_name}")
+                    return serializer.data
+                else:
+                    self.logger.error(
+                        f"ActiniaProject deletion failed: {serializer.data['message']}"
+                    )
+                    return serializer.data
         except ApiException as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            self.logger.error(
+                f"Exception when calling LocationManagementApi->locations_location_name_delete: {e}"
+            )

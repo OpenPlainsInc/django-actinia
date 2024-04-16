@@ -5,8 +5,8 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 25 2024                                               #
-# Modified By: Corey White                                                     #
+# Last Modified: Sun April 14th 2024                                               #
+# Modified By: Srihitha Reddy Kaalam                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
@@ -35,9 +35,9 @@ class ActiniaLocationsAPIMocks:
 
     # Actinia Location Requests
     @staticmethod
-    def get_locations(locations=["nc_spm_08"]):
+    def get_locations(location_list=["nc_spm_08"]):
         """Mock response for a getting locations GET: /locations"""
-        return {"locations": ["nc_spm_08", "test_location"], "status": "success"}
+        return {"locations": location_list, "status": "success"}
 
     @staticmethod
     def get_location_info(location_name):

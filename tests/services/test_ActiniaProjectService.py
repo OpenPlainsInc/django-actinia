@@ -5,7 +5,7 @@
 # Author: Srihitha Reddy Kaalam (srihithareddykaalam@gmail.com)                #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Monday April 1st 2024                                         #
+# Last Modified: Monday April 15th 2024                                        #
 # Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -55,11 +55,10 @@ class TestActiniaProjectService(TestCase):
         project_name = "test_location_name"
         project_epsg = 2264
         response = self.project_service.create_project(project_name, project_epsg)
-        self.assertIsInstance(response, JsonResponse)
-        response_data = response.json()
-        self.assertEqual(response_data["status"], "finished")
+        self.assertIsInstance(response, dict)
+        self.assertEqual(response["status"], "finished")
         self.assertEqual(
-            response_data["message"], f"Location <{project_name}> successfully created"
+            response["message"], f"Location <{project_name}> successfully created"
         )
 
     @patch(
@@ -76,11 +75,14 @@ class TestActiniaProjectService(TestCase):
 
     @patch("actinia_openapi_python_client.LocationManagementApi.locations_get")
     def test_get_projects(self, mock_locations_get):
+        location_list = ["test_locations"]
         mock_locations_get.return_value = ActiniaLocationsAPIMocks.get_locations(
-            ["test_locations"]
+            location_list
         )
         response = self.project_service.get_projects()
-        self.assertIsInstance(response, JsonResponse)
+        expected_response = {"locations": location_list, "status": "success"}
+        self.assertIsInstance(response, dict)
+        self.assertEqual(response, expected_response)
 
     @patch(
         "actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get"
@@ -91,7 +93,7 @@ class TestActiniaProjectService(TestCase):
             ActiniaLocationsAPIMocks.get_location_info(location_name)
         )
         response = self.project_service.get_project(location_name)
-        self.assertIsInstance(response, JsonResponse)
+        self.assertIsInstance(response, dict)
 
     @patch(
         "actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get"
@@ -102,7 +104,7 @@ class TestActiniaProjectService(TestCase):
             ActiniaLocationsAPIMocks.get_location_info_error(location_name)
         )
         response = self.project_service.get_project(location_name)
-        self.assertIsInstance(response, JsonResponse)
+        self.assertIsInstance(response, dict)
 
     @patch(
         "actinia_openapi_python_client.LocationManagementApi.locations_location_name_delete"
@@ -112,8 +114,13 @@ class TestActiniaProjectService(TestCase):
         mock_locations_location_name_delete.return_value = (
             ActiniaLocationsAPIMocks.delete_location(location_name)
         )
+        expected_response = {
+            "message": f"location {location_name} deleted",
+            "status": "success",
+        }
         response = self.project_service.delete_project(location_name)
-        self.assertIsInstance(response, JsonResponse)
+        self.assertIsInstance(response, dict)
+        self.assertEqual(response, expected_response)
 
     @patch(
         "actinia_openapi_python_client.LocationManagementApi.locations_location_name_delete"
@@ -123,5 +130,10 @@ class TestActiniaProjectService(TestCase):
         mock_locations_location_name_delete.return_value = (
             ActiniaLocationsAPIMocks.delete_location_error(location_name)
         )
+        expected_response = {
+            "message": f"location {location_name} does not exists",
+            "status": "error",
+        }
         response = self.project_service.delete_project(location_name)
-        self.assertIsInstance(response, JsonResponse)
+        self.assertIsInstance(response, dict)
+        self.assertEqual(response, expected_response)

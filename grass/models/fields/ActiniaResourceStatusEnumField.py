@@ -5,12 +5,12 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 22 2024                                               #
-# Modified By: Corey White                                                     #
+# Last Modified: Sat Apr 13 2024                                               #
+# Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -41,7 +41,7 @@ class ActiniaResourceStatusEnumField(models.CharField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault("max_length", 2)
+        kwargs.setdefault("max_length", 10)
         kwargs.setdefault("choices", ResourceStatusEnum.choices)
         kwargs.setdefault("default", ResourceStatusEnum.ACCEPTED)
         super().__init__(*args, **kwargs)
