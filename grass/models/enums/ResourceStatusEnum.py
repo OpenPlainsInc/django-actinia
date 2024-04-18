@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sat Apr 13 2023                                               #
+# Last Modified: Wed Apr 17 2023                                               #
 # Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,6 +33,8 @@ from django.db import models
 
 
 class ResourceStatusEnum(models.TextChoices):
+
+    SUCCESS = "success", "success"
     ACCEPTED = "accepted", "accepted"
     RUNNING = "running", "running"
     FINISHED = "finished", "finished"

@@ -5,7 +5,7 @@
 # Author: Srihitha Reddy Kaalam (srihithareddykaalam@gmail.com)                #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Monday April 15th 2024                                        #
+# Last Modified: Wed April 17th 2024                                           #
 # Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -49,11 +49,11 @@ class TestActiniaProjectService(TestCase):
         "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
     )
     def test_create_project(self, mock_locations_location_name_post):
-        mock_locations_location_name_post.return_value = (
-            ActiniaLocationsAPIMocks.create_location("test_location_name", 2264)
-        )
         project_name = "test_location_name"
         project_epsg = 2264
+        mock_locations_location_name_post.return_value = (
+            ActiniaLocationsAPIMocks.create_location(project_name, project_epsg)
+        )
         response = self.project_service.create_project(project_name, project_epsg)
         self.assertIsInstance(response, dict)
         self.assertEqual(response["status"], "finished")
@@ -65,13 +65,18 @@ class TestActiniaProjectService(TestCase):
         "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
     )
     def test_create_project_already_exists(self, mock_locations_location_name_post):
+        project_name = "test_location_name"
+        project_epsg = 2264
         mock_locations_location_name_post.return_value = (
-            ActiniaLocationsAPIMocks.create_location_error("test_location_name", 2264)
+            ActiniaLocationsAPIMocks.create_location_error(project_name, project_epsg)
         )
-        with self.assertRaises(Exception):
-            project_name = "test_location_name"
-            project_epsg = 2264
-            self.project_service.create_project(project_name, project_epsg)
+        response = self.project_service.create_project(project_name, project_epsg)
+        self.assertIsInstance(response, dict)
+        self.assertEqual(response["status"], "error")
+        self.assertEqual(
+            response["message"],
+            f"Unable to create location. Location <{project_name}> exists in user database.",
+        )
 
     @patch("actinia_openapi_python_client.LocationManagementApi.locations_get")
     def test_get_projects(self, mock_locations_get):

@@ -5,8 +5,8 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
-# Modified By: Corey White                                                     #
+# Last Modified: Wed April 17 2024                                             #
+# Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
@@ -39,6 +39,7 @@ from .ApiInfoModelSerializer import ApiInfoModelSerializer
 from .ProcessLogModelSerializer import ProcessLogModelSerializer
 from .GrassModuleSerializer import GrassModuleSerializer
 from .ExceptionTracebackModelSerializer import ExceptionTracebackModelSerializer
+from .fields.ResourceStatusChoiceField import ResourceStatusChoiceField
 
 
 class MapsetInfoResponseSerializer(serializers.Serializer):
@@ -69,7 +70,7 @@ class MapsetInfoResponseSerializer(serializers.Serializer):
         api_info (ApiInfoModel, optional).
     """
 
-    status = serializers.CharField()
+    status = ResourceStatusChoiceField()
     user_id = serializers.CharField()
     resource_id = serializers.CharField()
     queue = serializers.CharField(required=False)

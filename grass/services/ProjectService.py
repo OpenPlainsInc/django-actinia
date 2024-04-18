@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon April 15 2024                                             #
+# Last Modified: Wed April 17 2024                                             #
 # Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -121,7 +121,7 @@ class ProjectService:
             )
             serializer = ProcessingResponseSerializer(data=api_response)
             if serializer.is_valid():
-                if serializer.data["status"] == "success":
+                if serializer.data["status"] == "finished":
                     self.logger.info(f"Location created: {project_name}")
                     return serializer.data
                 else:
