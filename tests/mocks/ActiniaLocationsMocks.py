@@ -5,8 +5,8 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun April 14th 2024                                               #
-# Modified By: Srihitha Reddy Kaalam                                                     #
+# Last Modified: Sun April 14th 2024                                           #
+# Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
