@@ -5,12 +5,12 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Oct 18 2023                                               #
-# Modified By: Corey White                                                     #
+# Last Modified: Wed Apr 17 2024                                               #
+# Modified By: Srihitha Reddy Kaalam                                           #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2023 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -33,8 +33,10 @@ from django.db import models
 
 
 class ResourceStatusEnum(models.TextChoices):
-    ACCEPTED = "AC", "accepted"
-    RUNNING = "RN", "running"
-    FINISHED = "FN", "finished"
-    TERMINATED = "TM", "terminated"
-    ERROR = "ER", "error"
+
+    SUCCESS = "success", "success"
+    ACCEPTED = "accepted", "accepted"
+    RUNNING = "running", "running"
+    FINISHED = "finished", "finished"
+    TERMINATED = "terminated", "terminated"
+    ERROR = "error", "error"
