@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 22 2024                                               #
+# Last Modified: Fri Aug 30 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,12 +30,14 @@
 #                                                                              #
 ###############################################################################
 
+from unittest.mock import patch
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.conf import settings
 from grass.models import ActiniaUser
 from grass.models.enums import RolesEnum
 from django.db import IntegrityError, transaction
+from ..mocks.ActiniaUsersAPIMocks import ActiniaUsersAPIMocks
 
 
 class ActiniaUserTestCase(TestCase):
@@ -48,7 +50,18 @@ class ActiniaUserTestCase(TestCase):
             password="testpass",
         )
 
-    def test_actinia_user_create_actinia_user(self):
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_delete")
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
+    def test_actinia_user_create_actinia_user(
+        self, mock_users_user_id_post, mock_users_user_id_delete
+    ):
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
+            self.user.username
+        )
+        mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
+            self.user.username
+        )
+
         actinia_user = ActiniaUser.objects.create(
             user=self.user,
             actinia_username=self.user.username,
@@ -63,8 +76,14 @@ class ActiniaUserTestCase(TestCase):
         # Delete the actinia user
         actinia_user.delete()
         self.assertEqual(ActiniaUser.objects.count(), 0)
+        # Ensure the mock was called
+        # mock_users_user_id_post.assert_called_once_with(user_id=self.user.username, password=actinia_user.password, group=RolesEnum.ADMIN.label)
 
-    def test_actinia_user_user_exists(self):
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
+    def test_actinia_user_user_exists(self, mock_users_user_id_post):
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user_error(
+            "test_user_id"
+        )
         actinia_user = ActiniaUser.objects.create(
             user=self.user,
             actinia_username=self.user.username,

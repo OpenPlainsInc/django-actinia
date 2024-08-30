@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Apr 10 2024                                               #
+# Last Modified: Fri Aug 30 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -102,6 +102,11 @@ class ActiniaUserService:
                         f"ActiniaUsers retrevial warning: {serializer.data['message']}"
                     )
                     return serializer.data
+            else:
+                self.logger.error(
+                    f"UserListResponseSerializer Serialization Error: {serializer.errors}"
+                )
+                return serializer.errors
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling UserManagementApi->users_get: {e}"
@@ -123,6 +128,11 @@ class ActiniaUserService:
                         f"ActiniaUser retrieval failed: {serializer.data['message']}"
                     )
                     return serializer.data
+            else:
+                self.logger.error(
+                    f"UserInfoResponseModelSerializer Serialization Error: {serializer.errors}"
+                )
+                return serializer.errors
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling UserManagementApi->users_user_id_get: {e}"
@@ -151,6 +161,11 @@ class ActiniaUserService:
                         f"ActiniaUser creation failed: {serializer.data['message']}"
                     )
                     return serializer.data
+            else:
+                self.logger.error(
+                    f"ResponseStatusSerializer Serialization Error: {serializer.errors}"
+                )
+                return serializer.errors
 
         except ApiException as e:
             self.logger.error(
@@ -174,6 +189,11 @@ class ActiniaUserService:
                         f"ActiniaUser deletion failed: {serializer.data['message']}"
                     )
                     return serializer.data
+            else:
+                self.logger.error(
+                    f"ResponseStatusSerializer Serialization Error: {serializer.errors}"
+                )
+                return serializer.errors
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling UserManagementApi->users_user_id_delete: {e}"
