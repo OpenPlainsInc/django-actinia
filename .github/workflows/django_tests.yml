@@ -53,10 +53,20 @@ jobs:
 
     - name: Run migrations
       env:
-        DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+        POSTGRES_DBNAME: test_db
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
       run: |
           python manage.py migrate
 
     - name: Run Tests
+      env:
+          POSTGRES_DBNAME: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
       run: |
         python manage.py test
