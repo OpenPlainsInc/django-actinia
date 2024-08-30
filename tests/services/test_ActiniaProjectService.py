@@ -2,11 +2,11 @@
 # Filename: test_ActiniaProjectService.py                                      #
 # Project: OpenPlains Inc.                                                     #
 # File Created: Monday April 1st 2024                                          #
-# Author: Srihitha Reddy Kaalam (srihithareddykaalam@gmail.com)                #
+# Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed April 17th 2024                                           #
-# Modified By: Srihitha Reddy Kaalam                                           #
+# Last Modified: Fri Aug 30 2024                                               #
+# Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #

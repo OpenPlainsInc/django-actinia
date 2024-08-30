@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 08 2024                                               #
+# Last Modified: Fri Aug 30 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -53,9 +53,9 @@ class ProcessingResponseSerializer(serializers.Serializer):
     process_results = serializers.DictField(required=False)
     progress = serializers.DictField(required=False)
     exception = serializers.DictField(required=False)
-    accept_timestamp = serializers.IntegerField(required=False)
+    accept_timestamp = serializers.FloatField(required=False)
     accept_datetime = serializers.CharField(required=False)
-    timestamp = serializers.IntegerField(required=False)
+    timestamp = serializers.FloatField(required=False)
     time_delta = serializers.FloatField(required=False)
     datetime = serializers.CharField(required=False)
     http_code = serializers.IntegerField(required=False)

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Fri Aug 30 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -53,7 +53,7 @@ class ProcessLogModelSerializer(serializers.Serializer):
     executable = serializers.CharField()
     parameter = serializers.ListField(child=serializers.CharField())
     stdout = serializers.CharField()
-    stderr = serializers.ListField(child=serializers.CharField())
+    stderr = serializers.ListField(child=serializers.CharField(), required=False)
     return_code = serializers.FloatField()
     run_time = serializers.FloatField(required=False)
     mapset_size = serializers.FloatField(required=False)

@@ -5,8 +5,8 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed April 17 2024                                             #
-# Modified By: Srihitha Reddy Kaalam                                           #
+# Last Modified: Fri Aug 30 2024                                               #
+# Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
@@ -73,7 +73,6 @@ class ProjectService:
 
     def __init__(self):
         try:
-            print("ACTINIA_BASEURL: ", ACTINIA_SETTINGS["ACTINIA_BASEURL"])
             configuration = actinia_openapi_python_client.Configuration(
                 host=f'{ACTINIA_SETTINGS["ACTINIA_BASEURL"]}/api/v3/',
                 username=ACTINIA_SETTINGS["ACTINIA_USER"],
@@ -105,6 +104,9 @@ class ProjectService:
                         f"ActiniaLocations retrevial warning: {serializer.data['message']}"
                     )
                     return serializer.data
+            else:
+                self.logger.error(f"Serialization Error: {serializer.errors}")
+                return serializer.errors
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling LocationManagementApi->locations_get: {e}"
@@ -121,14 +123,18 @@ class ProjectService:
             )
             serializer = ProcessingResponseSerializer(data=api_response)
             if serializer.is_valid():
+                self.logger.info(
+                    f"Create Project Serialized Response: {serializer.data}"
+                )
                 if serializer.data["status"] == "finished":
                     self.logger.info(f"Location created: {project_name}")
                     return serializer.data
                 else:
-                    self.logger.error(
-                        f"Location creation failed: {serializer.data['message']}"
-                    )
+                    self.logger.error(f"Error: {serializer.data['message']}")
                     return serializer.data
+            else:
+                self.logger.error(f"Serialization Error: {serializer.errors}")
+                return serializer.errors
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling LocationManagementApi->locations_location_name_post: {e}"
@@ -152,6 +158,10 @@ class ProjectService:
                         f"ActiniaLocation retrieval failed: {serializer.data['message']}"
                     )
                     return serializer.data
+            else:
+                self.logger.error(f"Serialization Error: {serializer.errors}")
+                return serializer.errors
+
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling LocationManagementApi->locations_location_name_info_get: {e}"
@@ -176,6 +186,9 @@ class ProjectService:
                         f"ActiniaProject deletion failed: {serializer.data['message']}"
                     )
                     return serializer.data
+            else:
+                self.logger.error(f"Serialization Error: {serializer.errors}")
+                return serializer.errors
         except ApiException as e:
             self.logger.error(
                 f"Exception when calling LocationManagementApi->locations_location_name_delete: {e}"

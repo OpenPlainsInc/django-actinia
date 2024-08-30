@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sun Dec 17 2023                                               #
+# Last Modified: Fri Aug 30 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -67,7 +67,7 @@ class ProcessLogModelSerializerTest(TestCase):
             self.assertIsInstance(self.serializer.fields[field_name], field_type)
 
     def test_serializer_required_fields(self):
-        required_fields = ["executable", "parameter", "stdout", "stderr", "return_code"]
+        required_fields = ["executable", "parameter", "stdout", "return_code"]
         for field_name in required_fields:
             self.assertTrue(self.serializer.fields[field_name].required)
 
