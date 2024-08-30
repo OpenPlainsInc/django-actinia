@@ -52,8 +52,10 @@ class ProcessLogModelSerializer(serializers.Serializer):
     id = serializers.CharField(required=False)
     executable = serializers.CharField()
     parameter = serializers.ListField(child=serializers.CharField())
-    stdout = serializers.CharField()
-    stderr = serializers.ListField(child=serializers.CharField(), required=False)
+    stdout = serializers.CharField(required=False)
+    stderr = serializers.ListField(
+        child=serializers.CharField(required=False), required=False
+    )
     return_code = serializers.FloatField()
     run_time = serializers.FloatField(required=False)
     mapset_size = serializers.FloatField(required=False)
