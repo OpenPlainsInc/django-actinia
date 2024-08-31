@@ -17,14 +17,14 @@ $ git clone YOUR_FORKED_REPO_URL
 cd django-actinia/
 ```
 
-* Add main GRASS GIS repository as "upstream" (use HTTPS URL):
+* Add main django-actinia repository as "upstream" (use HTTPS URL):
 
 ```bash
-git remote add upstream https://github.com/tomorrownow/django-actinia.git
+git remote add upstream https://github.com/openplainsinc/django-actinia.git
 ```
 
 * Your remotes now should be "origin" which is your fork and "upstream" which
-  is this main GRASS GIS repository. You can confirm that using:
+  is this main django-actinia repository. You can confirm that using:
 
 ```bash
 git remote -v
@@ -38,7 +38,7 @@ origin  git@github.com:your_GH_account/django-actinia.git (push)
 ```
 
 For the following workflow, it is important that
-"upstream" points to the OSGeo/grass repository
+"upstream" points to the OpenPlainsInc/django-actinia repository
 and "origin" to your fork
 (although generally, the naming is up to you).
 
