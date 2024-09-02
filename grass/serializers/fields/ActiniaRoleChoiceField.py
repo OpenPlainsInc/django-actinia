@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: __init__.py                                                        #
+# Filename: ActiniaRoleChoiceField.py                                          #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday June 7th 2022                                          #
+# File Created: Monday September 2nd 2024                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                                #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -29,12 +29,29 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.       #
 #                                                                              #
 ###############################################################################
-from .ResourceStatusChoiceField import (
-    ResourceStatusChoiceField as ResourceStatusChoiceField,
-)
-from .ResponseStatusChoiceField import (
-    ResponseStatusChoiceField as ResponseStatusChoiceField,
-)
-from .StringListField import StringListField as StringListField
 
-from .ActiniaRoleChoiceField import ActiniaRoleChoiceField as ActiniaRoleChoiceField
+from rest_framework import serializers
+from grass.models.enums.RolesEnum import RolesEnum
+
+
+class ActiniaRoleChoiceField(serializers.ChoiceField):
+    """
+    Custom serializer to handle Actinia resource response statuses.
+    (spueradmin, admin, user, guest)
+    """
+
+    def __init__(self, **kwargs):
+        kwargs["choices"] = RolesEnum.choices
+        kwargs["allow_blank"] = False
+        super().__init__(**kwargs)
+
+    def to_representation(self, value):
+        if value in ("", None):
+            return value
+        return self.choices[value]
+
+    def to_internal_value(self, data):
+        for key, label in self.choices.items():
+            if data == label:
+                return key
+        self.fail("invalid_choice", input=data)
