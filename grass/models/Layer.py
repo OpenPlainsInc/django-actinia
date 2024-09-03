@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 18 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -34,7 +34,9 @@ from django.db import models
 from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
 from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
 from .Mapset import Mapset
-from .fields.LayerTypeEnumField import LayerTypeEnumField
+from .ActiniaUser import ActiniaUser
+from .fields import LayerTypeEnumField
+from django.contrib.gis.db import models as gis_models
 
 
 class Layer(ObjectAuditAbstract, ObjectInfoAbstract):
@@ -43,19 +45,24 @@ class Layer(ObjectAuditAbstract, ObjectInfoAbstract):
     """
 
     mutable = models.BooleanField(default=False)
-    mapsets = models.ManyToManyField("grass.Mapset", related_name="layers")
-    users = models.ManyToManyField("grass.User", related_name="layers")
+    mapset = models.ForeignKey(Mapset, related_name="layers", on_delete=models.CASCADE)
+    actinia_owner = models.ManyToManyField(ActiniaUser, related_name="layers")
     layer_type = LayerTypeEnumField()
     size = models.CharField()  # KB
     eres = models.FloatField()
     wres = models.FloatField()
     stac_asset = models.URLField()
     thumbnail = models.URLField()
-    bbox = models.GeojsonField()
+    bbox = gis_models.PolygonField()
     # spacial_resolution = # Create Spatial Resolution Field
     # temporal_extent = # Create Temporal Extent Field
     # categories = # Create Class
     # color_scheme = # Create Color Scheme
     # metadata = # Create Metadata class
-    # permissions = (READ, WRITE, UPDATE, DELETE)
     # protocols =  (WebSocket, WebHook, WebRTC)
+
+    def has_permission(self, user, action, context=None):
+        return self.mapset.has_permission(user, action, context)
+
+    def __str__(self):
+        return f"{self.name} ({self.layer_type})"

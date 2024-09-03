@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Apr 10 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -73,7 +73,7 @@ class TestActiniaUserService(TestCase):
         user_id = "test_user_id"
         mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(user_id)
         response = self.actinia_user_service.get_actinia_user(user_id)
-        # expected_response = {"message": f"User <{user_id}> does not exist", "status": "error"}  # TODO: Fix this
+        # expected_response = {"message": f"User <{user_id}> does not exist", "status": "success"}  # TODO: Fix this
         self.assertIsInstance(response, dict)
         # self.assertEqual(response, expected_response)  # TODO: Fix this
 

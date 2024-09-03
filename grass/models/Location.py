@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 18 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -57,11 +57,11 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     """
 
     epsg = models.CharField(max_length=8, blank=False)
-    actinia_users = models.ManyToManyField("ActiniaUser", related_name="locations")
+    actinia_users = models.ManyToManyField("ActiniaUser", related_name="projects")
 
     def save(self, *args, **kwargs):
         """
-        Create a new actinia user.
+        Create a new location.
 
         Args:
             *args: Variable length argument list.
@@ -74,10 +74,4 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
 
     class Meta:
         unique_together = ("name", "epsg", "owner")
-        # constraints = [
-        #     models.UniqueConstraint(
-        #         fields=["name", "epsg", "owner"],
-        #         name="unique_location",
-        #     )
-        # ]
         ordering = ["-updated_on"]

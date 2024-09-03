@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Sep 02 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -53,7 +53,6 @@ from grass.serializers import ProcessingResponseSerializer
 from grass.serializers import MapsetInfoResponseSerializer
 from grass.serializers import ResourceStatusSerializer
 
-from django.db import transaction
 from actinia_openapi_python_client.models.projection_info_model import (
     ProjectionInfoModel,
 )
@@ -123,7 +122,9 @@ class ProjectService:
             api_response = self.api_instance.locations_location_name_post(
                 location_name=project_name, epsg_code=epsg
             )
-            serializer = ProcessingResponseSerializer(data=api_response)
+
+            self.logger.info(f"create_project.api_response: {api_response}")
+            serializer = ResourceStatusSerializer(data=api_response)
             if serializer.is_valid():
                 self.logger.info(
                     f"Create Project Serialized Response: {serializer.data}"

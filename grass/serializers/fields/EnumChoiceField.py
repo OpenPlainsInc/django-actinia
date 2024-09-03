@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: ActiniaUserResponseSerializer.py                                   #
+# Filename: EnumChoiceField.py                                                 #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Friday November 17th 2023                                      #
+# File Created: Tuesday September 3rd 2024                                     #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -32,51 +32,21 @@
 
 from rest_framework import serializers
 
-# from grass.serializers.LocationSerializer import LocationSerializer
-from grass.models import ActiniaUser
-from .fields import ActiniaRoleChoiceField
-from grass.services import ActiniaUserService
 
-# from grass.serializers.UserInfoResponseModelSerializer import UserInfoResponseModelSerializer
-import logging
+class EnumChoiceField(serializers.ChoiceField):
+    def __init__(self, enum_class, **kwargs):
+        self.enum_class = enum_class
+        choices = [(tag.value, tag.label) for tag in enum_class]
+        super().__init__(choices=choices, **kwargs)
 
-logger = logging.getLogger(__name__)
+    def to_representation(self, obj):
+        # Convert the value to the human-readable label in the response
+        if obj in self.choices:
+            return self.choices[obj]
+        return obj
 
-
-class ActiniaUserResponseSerializer(serializers.Serializer):
-    """
-    Serializer for ActiniaUserResponse objects.
-    """
-
-    user_id = serializers.IntegerField()
-    actinia_username = serializers.CharField()
-    actinia_role = ActiniaRoleChoiceField()
-    locations = serializers.SlugRelatedField(read_only=True, slug_field="slug")
-    created_on = serializers.DateTimeField()
-    updated_on = serializers.DateTimeField()
-    created_by = serializers.CharField()
-    updated_by = serializers.CharField()
-    user_details = serializers.SerializerMethodField()
-
-    class Meta:
-        model = "ActiniaUser"
-        fields = "__all__"
-        depth = 1
-
-    def get_user_details(self, obj):
-        """Get the user details for the actinia user"""
-        try:
-            # Access the dictionary key properly
-            actinia_username = obj.get("actinia_username")
-            if actinia_username:
-                print(f"get_user_details: {actinia_username}")
-                actinia_user_service = ActiniaUserService.ActiniaUserService()
-                user_details = actinia_user_service.get_actinia_user(actinia_username)
-                logger.info(f"User Details for {actinia_username}: {user_details}")
-                return user_details
-            else:
-                logger.error("actinia_username not found in the object")
-                return {}
-        except Exception as e:
-            logger.error(f"Error fetching user details: {e}")
-            return {}
+    def to_internal_value(self, data):
+        # Validate and convert the input to the enum value
+        if data in self.choices:
+            return data
+        self.fail("invalid_choice", input=data)

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Aug 30 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,20 +31,21 @@
 ###############################################################################
 
 from unittest.mock import patch
-from django.test import TestCase
-from django.contrib.auth.models import User
+from django.test import TransactionTestCase
 from django.conf import settings
 from grass.models import ActiniaUser
 from grass.models.enums import RolesEnum
 from django.db import IntegrityError, transaction
 from ..mocks.ActiniaUsersAPIMocks import ActiniaUsersAPIMocks
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
-class ActiniaUserTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
+class ActiniaUserTestCase(TransactionTestCase):
+    def setUp(self):
         # Set up non-modified objects used by all test methods
-        cls.user = User.objects.create(
+        self.user = User.objects.create_user(
             username="uesrtest1",
             email="uesrtest1@example.com",
             password="testpass",
@@ -104,6 +105,6 @@ class ActiniaUserTestCase(TestCase):
             actinia_user.delete()
             self.assertEqual(ActiniaUser.objects.count(), 0)
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.user.delete()
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.user.delete()

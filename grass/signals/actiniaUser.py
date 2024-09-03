@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Mar 22 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,6 +36,9 @@ from grass.models import ActiniaUser
 from grass.services import ActiniaUserService
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @receiver(pre_save, sender=ActiniaUser)
@@ -52,7 +55,13 @@ def actinia_user_pre_save_created(sender, instance, **kwargs):
         actinia_role = (
             instance.get_actinia_role_display()
         )  # get the label of actinia_role
-        password = get_random_string(23)
+
+        # Generate a password if none is provided
+        if not instance.password:
+            password = get_random_string(23)
+            instance.password = password  # Save the generated password to the instance
+        else:
+            password = instance.password
 
         actinia_user_service.create_actinia_user(
             user=actinia_username,
@@ -61,14 +70,37 @@ def actinia_user_pre_save_created(sender, instance, **kwargs):
             password=password,
         )
     except Exception as e:
+        logger.error(f"Failed to create ActiniaUser: {str(e)}", exc_info=True)
         raise ValidationError(f"Failed to create ActiniaUser: {str(e)}")
 
 
 @receiver(post_save, sender=ActiniaUser)
 def actinia_user_created(sender, instance, created, **kwargs):
-    if created:
-        # The code here will run after a Location instance is created
-        print(f"ActiniaUser {instance.actinia_username} was created.")
+    try:
+        # actinia_user_service = ActiniaUserService()
+        if created:
+            # The code here will run after a Location instance is created
+            logger.info(f"ActiniaUser {instance.actinia_username} was created.")
+
+            # Add extra notifications or actions for new ActiniaUser instances
+            notify_admin(instance)
+
+            # Sync the new ActiniaUser with the third-party API
+
+        else:
+            # Perform actions specific to updates to an existing ActiniaUser
+            logger.info(
+                f"ActiniaUser updated (Not Implemented): {instance.actinia_username}"
+            )
+            # Example: Sync updated details with the third-party API
+            # actinia_user_service.update_actinia_user(
+            #     user=instance.actinia_username,
+            #     group=instance.get_actinia_role_display(),
+            #     user_id=instance.actinia_username,
+            #     password=instance.password,
+            # )
+    except Exception as e:
+        logger.error(f"Error during post_save for ActiniaUser: {str(e)}", exc_info=True)
 
 
 @receiver(pre_delete, sender=ActiniaUser)
@@ -81,4 +113,11 @@ def actinia_user_deleted(sender, instance, **kwargs):
             actinia_username=instance.actinia_username
         )
     except Exception as e:
+        logger.error(f"Failed to delete ActiniaUser: {str(e)}", exc_info=True)
         raise ValidationError(f"Failed to delete ActiniaUser: {str(e)}")
+
+
+def notify_admin(instance):
+    # Example function to notify an admin about the new user
+    # This could be an email, a Slack message, or another form of notification
+    logger.info(f"Notifying admin about new ActiniaUser: {instance.actinia_username}")

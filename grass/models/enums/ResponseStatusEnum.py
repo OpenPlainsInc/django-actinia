@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Apr 10 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,8 +30,9 @@
 #                                                                              #
 ###############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class ResponseStatusEnum(models.TextChoices):
-    SUCCESS = "success", "success"
-    ERROR = "error", "error"
+    SUCCESS = "success", _("success")
+    ERROR = "error", _("error")

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Sep 02 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -260,6 +260,11 @@ DATABASES = {
         "PASSWORD": env("POSTGRES_PASSWORD", default="postgres"),
         "HOST": env("POSTGRES_HOST", default="localhost"),
         "PORT": env("POSTGRES_PORT", default="5432"),
+        "OPTIONS": {
+            "connect_timeout": 10,
+            # If using a connection pool, you might set this:
+            # 'MAX_CONNS': 20,
+        },
     },
     "actinia": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
@@ -281,7 +286,7 @@ CACHES = {
         "LOCATION": f'redis://{env("REDIS_USER")}:{env("REDIS_PASSWORD")}@django-redis-cache:6370',
         "OPTIONS": {
             "db": "10",
-            "parser_class": "redis.connection.HiredisParser",
+            "parser_class": "redis.connection._HiredisParser",
             "pool_class": "redis.BlockingConnectionPool",
         },
     }

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 18 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -57,37 +57,46 @@ class LocationViewSet(viewsets.ModelViewSet):
         serializer = LocationSerializer(location)
         return Response(serializer.data)
 
-    def create(self, request):
-        """
-        Create a new location.
-        """
-        serializer = LocationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def create(self, request):
+    #     """
+    #     Create a new location.
+    #     """
+    #     serializer = LocationSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, pk=None):
-        """
-        Update a location.
-        """
-        location = self.get_object()
-        serializer = LocationSerializer(location, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user, updated_by=self.request.user)
 
-    def partial_update(self, request, pk=None):
+    def perform_update(self, serializer):
         """
-        Partially update a location.
+        Set the updated_by field during update.
         """
-        location = self.get_object()
-        serializer = LocationSerializer(location, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save(updated_by=self.request.user)
+
+    # def update(self, request, pk=None):
+    #     """
+    #     Update a location.
+    #     """
+    #     location = self.get_object()
+    #     serializer = LocationSerializer(location, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save(updated_by=self.request.user)
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # def partial_update(self, request, pk=None):
+    #     """
+    #     Partially update a location.
+    #     """
+    #     location = self.get_object()
+    #     serializer = LocationSerializer(location, data=request.data, partial=True)
+    #     if serializer.is_valid():
+    #         serializer.save(updated_by=self.request.user)
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
         """
