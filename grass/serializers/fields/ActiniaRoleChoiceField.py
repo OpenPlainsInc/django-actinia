@@ -37,7 +37,7 @@ from grass.models.enums.RolesEnum import RolesEnum
 class ActiniaRoleChoiceField(serializers.ChoiceField):
     """
     Custom serializer to handle Actinia resource response statuses.
-    (spueradmin, admin, user, guest)
+    (superadmin, admin, user, guest)
     """
 
     def __init__(self, **kwargs):
@@ -46,11 +46,13 @@ class ActiniaRoleChoiceField(serializers.ChoiceField):
         super().__init__(**kwargs)
 
     def to_representation(self, value):
+        """Converts the internal value to the string representation of a choice."""
         if value in ("", None):
             return value
         return self.choices[value]
 
     def to_internal_value(self, data):
+        """Converts the string representation of a choice to the internal value."""
         for key, label in self.choices.items():
             if data == label:
                 return key

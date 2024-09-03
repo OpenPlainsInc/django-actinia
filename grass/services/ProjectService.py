@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Aug 30 2024                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -105,7 +105,9 @@ class ProjectService:
                     )
                     return serializer.data
             else:
-                self.logger.error(f"Serialization Error: {serializer.errors}")
+                self.logger.error(
+                    f"LocationResponseSerializer Serialization Error: {serializer.errors}"
+                )
                 return serializer.errors
         except ApiException as e:
             self.logger.error(
@@ -133,7 +135,9 @@ class ProjectService:
                     self.logger.error(f"Error: {serializer.data['message']}")
                     return serializer.data
             else:
-                self.logger.error(f"Serialization Error: {serializer.errors}")
+                self.logger.error(
+                    f"ProcessingResponseSerializer Serialization Error: {serializer.errors}"
+                )
                 return serializer.errors
         except ApiException as e:
             self.logger.error(
@@ -159,7 +163,9 @@ class ProjectService:
                     )
                     return serializer.data
             else:
-                self.logger.error(f"Serialization Error: {serializer.errors}")
+                self.logger.error(
+                    f"MapsetInfoResponseSerializer Serialization Error: {serializer.errors}"
+                )
                 return serializer.errors
 
         except ApiException as e:
@@ -187,7 +193,9 @@ class ProjectService:
                     )
                     return serializer.data
             else:
-                self.logger.error(f"Serialization Error: {serializer.errors}")
+                self.logger.error(
+                    f"ResourceStatusSerializer Serialization Error: {serializer.errors}"
+                )
                 return serializer.errors
         except ApiException as e:
             self.logger.error(

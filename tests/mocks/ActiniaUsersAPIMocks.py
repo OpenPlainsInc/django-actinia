@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 25 2024                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -30,6 +30,13 @@
 #                                                                              #
 ###############################################################################
 
+from actinia_openapi_python_client.models.user_info_response_model import (
+    UserInfoResponseModel,
+)
+from actinia_openapi_python_client.models.simple_response_model import (
+    SimpleResponseModel,
+)
+
 
 class ActiniaUsersAPIMocks:
 
@@ -40,9 +47,9 @@ class ActiniaUsersAPIMocks:
         return {"status": "success", "user_list": user_list}
 
     @staticmethod
-    def get_user(user_id, user_role="admin"):
+    def get_user(user_id, user_role="admin", as_dict=False):
         """Mock response for getting a user at GET: /users/{user_id}"""
-        return {
+        data = {
             "permissions": {
                 "accessible_datasets": {},
                 "accessible_modules": [
@@ -250,10 +257,17 @@ class ActiniaUsersAPIMocks:
             "user_role": user_role,
         }
 
+        if as_dict:
+            return data
+
+        return UserInfoResponseModel.from_dict(data)
+
     @staticmethod
     def get_user_error(user_id):
         """Mock error response for getting a user at GET: /users/{user_id}"""
-        return {"message": f"User <{user_id}> does not exist", "status": "error"}
+        return SimpleResponseModel.from_dict(
+            {"message": f"User <{user_id}> does not exist", "status": "error"}
+        )
 
     @staticmethod
     def create_user(user_id):

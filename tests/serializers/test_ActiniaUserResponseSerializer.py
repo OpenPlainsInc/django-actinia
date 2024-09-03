@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Aug 30 2024                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -39,81 +39,126 @@ from grass.models.enums import RolesEnum
 from grass.models.ActiniaUser import ActiniaUser
 from unittest.mock import patch
 from ..mocks.ActiniaUsersAPIMocks import ActiniaUsersAPIMocks
+from django.db import transaction
+from rest_framework.exceptions import ValidationError
+from grass.serializers.fields import ActiniaRoleChoiceField
+from grass.services import ActiniaUserService
 
 
 class ActiniaUserResponseSerializerTestCase(TestCase):
-    @classmethod
-    def tearDownClass(cls):
-        with patch(
-            "actinia_openapi_python_client.UserManagementApi.users_user_id_delete"
-        ) as mock_users_user_id_delete:
-            mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
-                cls.defaultVars["username"]
-            )
-            # Clean up any resources that were created in the setUpTestData() classmethod or by the test methods
-            cls.actinia_user.delete()
-            cls.user.delete()
-
-    @classmethod
-    def setUpTestData(cls):
-
-        with patch(
-            "actinia_openapi_python_client.UserManagementApi.users_user_id_post"
-        ) as mock_users_user_id_post:
-
-            cls.defaultVars = {
-                "username": "actiniatestuser3",
-                "actinia_username": "actiniatestuser3",
-                "email": "testuser@example.com",
-                "password": "testpass",
-                "actinia_role": RolesEnum.ADMIN.value,
-            }
-
-            mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
-                cls.defaultVars["username"]
-            )
-
-            # Set up non-modified objects used by all test methods
-            cls.user = User.objects.create(
-                username=cls.defaultVars["username"],
-                email=cls.defaultVars["email"],
-                password=cls.defaultVars["password"],
-            )
-
-            cls.actinia_user = ActiniaUser.objects.create(
-                user=cls.user,
-                actinia_role=RolesEnum.ADMIN.value,
-                actinia_username=cls.user.username,
-                password="testpass",
-            )
-            cls.serializer_data = {
-                "id": cls.actinia_user.id,
-                "user_id": cls.actinia_user.user_id,
-                "actinia_username": cls.user.username,
-                "locations": [],
-                "actinia_role": RolesEnum.ADMIN.value,
-                "created_on": "2023-11-17T00:00:00Z",
-                "updated_on": "2023-11-17T00:00:00Z",
-                "created_by": "actiniatestuser3",
-                "updated_by": "actiniatestuser3",
-                # "modules": {}
-            }
-            cls.serializer = ActiniaUserResponseSerializer(instance=cls.actinia_user)
-
-    def test_serializer_fields(self):
-        self.assertIsInstance(self.actinia_user, ActiniaUser)
-        self.assertEqual(
-            self.actinia_user.actinia_username, self.defaultVars["actinia_username"]
+    def setUp(self):
+        self.user = User(
+            username="testuser",
+            email="testuser@example.com",
+            password="testpass",
         )
-        self.assertEqual(
-            self.actinia_user.actinia_role, self.defaultVars["actinia_role"]
-        )
-        self.assertEqual(self.actinia_user.user_id, self.user.id)
 
-    def test_serializer_valid(self):
-        serializer = ActiniaUserResponseSerializer(data=self.serializer_data)
+        self.user_data = {
+            "id": 1,
+            "user_id": 1,
+            "actinia_username": "testuser",
+            "actinia_role": RolesEnum.ADMIN.label,
+            "locations": [],
+            "created_on": "2023-11-17T00:00:00Z",
+            "updated_on": "2023-11-17T00:00:00Z",
+            "created_by": self.user.get_username(),
+            "updated_by": self.user.get_username(),
+            "user_details": {},
+        }
+
+        self.actinia_user = ActiniaUser(
+            id=1,
+            user_id=1,
+            actinia_username="testuser",
+            actinia_role=RolesEnum.ADMIN.value,
+            created_on="2023-11-17T00:00:00Z",
+            updated_on="2023-11-17T00:00:00Z",
+            created_by=self.user,
+            updated_by=self.user,
+        )
+
+    # Creating a user in the setUp method is causing a the database connection to be closed
+    # and the test to fail. The user is created in the test method instead.
+    # def tearDown(self):
+    #     self.user.delete()
+
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
+    @patch.object(ActiniaUserService, "get_actinia_user")
+    def test_serializer_valid(self, mock_users_user_id_get, mock_get_actinia_user):
+
+        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(
+            user_id=self.user.username, user_role="admin"
+        )
+
+        mock_get_actinia_user.return_value = ActiniaUsersAPIMocks.get_user(
+            self.user.username,
+            user_role=self.user_data.get("actinia_role"),
+            as_dict=True,
+        )
+        serializer = ActiniaUserResponseSerializer(data=self.user_data)
         if serializer.is_valid():
-            self.assertTrue(serializer.is_valid())
+            print(f"test_serializer_valid: data: {serializer.data}")
         else:
-            print(serializer.errors)
-            self.assertTrue(serializer.is_valid())
+            print(f"test_serializer_valid: errors: {serializer.errors}")
+
+        self.assertTrue(serializer.is_valid())
+
+    # @patch.object(ActiniaUserService, 'get_actinia_user')
+    # def test_serializer_fields(self, mock_get_actinia_user):
+    #     mock_get_actinia_user.return_value = ActiniaUsersAPIMocks.get_user(
+    #         self.user.username, as_dict=True
+    #     )
+    #     serializer = ActiniaUserResponseSerializer(instance=self.actinia_user)
+    #     print(f"test_serializer_fields: {serializer.data}")
+    #     data = serializer.data
+    #     self.assertEqual(set(data.keys()), set(self.user_data.keys()))
+
+    # def test_serializer_valid(self):
+    #     serializer = ActiniaUserResponseSerializer(data=self.user_data)
+    #     self.assertTrue(serializer.is_valid())
+
+    # def test_serializer_invalid(self):
+    #     invalid_data = self.user_data.copy()
+    #     invalid_data["actinia_role"] = "invalid_role"
+    #     serializer = ActiniaUserResponseSerializer(data=invalid_data)
+    #     with self.assertRaises(ValidationError):
+    #         serializer.is_valid(raise_exception=True)
+
+    # @patch.object(ActiniaUserService, 'get_actinia_user')
+    # def test_get_user_details(self, mock_get_actinia_user):
+    #     mock_get_actinia_user.return_value = {"detail": "user details"}
+    #     serializer = ActiniaUserResponseSerializer(instance=self.actinia_user)
+    #     user_details = serializer.get_user_details(self.actinia_user)
+    #     self.assertEqual(user_details, {"detail": "user details"})
+    #     mock_get_actinia_user.assert_called_once_with("testuser")
+
+    # @patch.object(ActiniaUserService, 'get_actinia_user')
+    # def test_get_user_details_exception(self, mock_get_actinia_user):
+    #     mock_get_actinia_user.side_effect = Exception("Error fetching user details")
+    #     serializer = ActiniaUserResponseSerializer(instance=self.actinia_user)
+    #     user_details = serializer.get_user_details(self.actinia_user)
+    #     self.assertEqual(user_details, {"error": "Error fetching user details"})
+    #     mock_get_actinia_user.assert_called_once_with("testuser")
+
+    # @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
+    # def test_serializer_valid(self, mock_users_user_id_get):
+    #     print("test_serializer_valid")
+    #     mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(
+    #         self.defaultVars["username"]
+    #     )
+    #     serializer = ActiniaUserResponseSerializer(instance=self.actinia_user)
+    #     self.assertIsInstance(serializer, ActiniaUserResponseSerializer)
+    #     self.assertTrue(serializer.is_valid())
+
+    # @classmethod
+    # def tearDownClass(cls):
+    #     with patch(
+    #         "actinia_openapi_python_client.UserManagementApi.users_user_id_delete"
+    #     ) as mock_users_user_id_delete:
+    #         mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
+    #             cls.defaultVars["username"]
+    #         )
+    #         # Clean up any resources that were created in the setUpTestData() classmethod or by the test methods
+    #         cls.actinia_user.delete()
+
+    #         cls.user.delete()

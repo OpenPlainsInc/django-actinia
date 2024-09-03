@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: ActiniaUserViewSet.py                                              #
+# Filename: test_ActiniaRoleChoiceField.py                                     #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Friday November 17th 2023                                      #
+# File Created: Monday September 2nd 2024                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,36 +30,39 @@
 #                                                                              #
 ###############################################################################
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets, routers
-from grass.models import ActiniaUser
-from grass.serializers import ActiniaUserResponseSerializer
-import logging
 
-logger = logging.getLogger(__name__)
+from django.test import TestCase
+from rest_framework import serializers
+from grass.models.enums.RolesEnum import RolesEnum
+from grass.serializers.fields.ActiniaRoleChoiceField import ActiniaRoleChoiceField
 
 
-class ActiniaUserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ActiniaUser.objects.all()
-    serializer_class = ActiniaUserResponseSerializer
+class TestActiniaRoleChoiceField(TestCase):
+    def setUp(self):
+        self.field = ActiniaRoleChoiceField()
 
-    def get_queryset(self):
-        return self.queryset
+    def test_init(self):
+        self.assertIsInstance(self.field, serializers.ChoiceField)
+        self.assertEqual(self.field.choices, RolesEnum.to_dict())
+        self.assertFalse(self.field.allow_blank)
 
-    def get_serializer_class(self):
-        return self.serializer_class
+    def test_to_representation(self):
+        self.assertEqual(self.field.to_representation(""), "")
+        self.assertEqual(self.field.to_representation(None), None)
+        self.assertEqual(self.field.to_representation("SU"), "superadmin")
+        self.assertEqual(self.field.to_representation("AD"), "admin")
+        self.assertEqual(self.field.to_representation("US"), "user")
+        self.assertEqual(self.field.to_representation("GU"), "guest")
 
-
-class ActiniaUserDetailView(APIView):
-    def get(self, request, pk, format=None):
-        try:
-            actinia_user = ActiniaUser.objects.get(pk=pk)
-            serializer = ActiniaUserResponseSerializer(actinia_user)
-            return Response(serializer.data)
-        except ActiniaUser.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            logger.error(e)
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    def test_to_internal_value(self):
+        self.assertEqual(self.field.to_internal_value("superadmin"), "SU")
+        self.assertEqual(self.field.to_internal_value("admin"), "AD")
+        self.assertEqual(self.field.to_internal_value("user"), "US")
+        self.assertEqual(self.field.to_internal_value("guest"), "GU")
+        self.assertRaises(serializers.ValidationError, self.field.to_internal_value, "")
+        self.assertRaises(
+            serializers.ValidationError, self.field.to_internal_value, None
+        )
+        self.assertRaises(
+            serializers.ValidationError, self.field.to_internal_value, "invalid_role"
+        )

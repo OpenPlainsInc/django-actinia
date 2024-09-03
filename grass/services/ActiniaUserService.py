@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Aug 30 2024                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -118,16 +118,16 @@ class ActiniaUserService:
         """
         try:
             api_response = self.api_instance.users_user_id_get(user_id)
-            serializer = UserInfoResponseModelSerializer(data=api_response)
+            serializer = UserInfoResponseModelSerializer(data=api_response.to_dict())
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
                     self.logger.info(f"ActiniaUser retrieved: {user_id}")
-                    return serializer.data
+                    return serializer.validated_data
                 else:
                     self.logger.error(
                         f"ActiniaUser retrieval failed: {serializer.data['message']}"
                     )
-                    return serializer.data
+                    return serializer.validated_data
             else:
                 self.logger.error(
                     f"UserInfoResponseModelSerializer Serialization Error: {serializer.errors}"
