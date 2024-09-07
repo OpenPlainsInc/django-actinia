@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Aug 30 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -39,9 +39,10 @@ from grass.services.ProjectService import ProjectService
 from django.contrib.auth.models import User
 from ..mocks.ActiniaLocationsMocks import ActiniaLocationsAPIMocks
 from unittest.mock import patch
+from django.test import TransactionTestCase
 
 
-class TestActiniaProjectService(TestCase):
+class TestActiniaProjectService(TransactionTestCase):
     def setUp(self):
         self.project_service = ProjectService()
 

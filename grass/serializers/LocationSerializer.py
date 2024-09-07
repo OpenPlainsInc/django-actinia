@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -32,11 +32,15 @@
 
 from rest_framework import serializers
 from grass.models import Location, ActiniaUser
+import logging
 
 # User = get_user_model()
 
+logger = logging.getLogger(__name__)
+
 
 class LocationSerializer(serializers.ModelSerializer):
+
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
     actinia_users = serializers.PrimaryKeyRelatedField(
         many=True, queryset=ActiniaUser.objects.all(), required=False
@@ -78,10 +82,12 @@ class LocationSerializer(serializers.ModelSerializer):
             # Get the current user from the context
             user = self.context["request"].user
 
-            # Get the ActiniaUser instance corresponding to the current user
-            actinia_user = ActiniaUser.objects.get(user=user)
-
-            # Add the user's ActiniaUser instance to the actinia_users field
-            location.actinia_users.add(actinia_user)
+            if user.actinia_user:
+                # Add the user's ActiniaUser instance to the actinia_users field
+                location.actinia_users.add(user.actinia_user)
+            else:
+                logger.warning(
+                    f"ActiniaUser instance not found for user {user.username}"
+                )
 
         return location

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -116,16 +116,17 @@ class ActiniaUserService:
         """
         try:
             api_response = self.api_instance.users_user_id_get(user_id)
+            print("get_actinia_user api_response: ", api_response)
             serializer = UserInfoResponseModelSerializer(data=api_response.to_dict())
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
                     self.logger.info(f"ActiniaUser retrieved: {user_id}")
-                    return serializer.validated_data
+                    return serializer.data
                 else:
                     self.logger.error(
                         f"ActiniaUser retrieval failed: {serializer.data['message']}"
                     )
-                    return serializer.validated_data
+                    return serializer.data
             else:
                 self.logger.error(
                     f"UserInfoResponseModelSerializer Serialization Error: {serializer.errors}"
@@ -161,7 +162,7 @@ class ActiniaUserService:
                     return serializer.data
             else:
                 self.logger.error(
-                    f"UserManagementApi->users_user_id_post: ResponseStatusSerializer Serialization Error: {serializer.errors}, {serializer.data}"
+                    f"UserManagementApi->users_user_id_post: ResourceStatusSerializer Serialization Error: {serializer.errors}, {serializer.data}"
                 )
                 return serializer.errors
 

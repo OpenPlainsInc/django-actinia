@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -44,6 +44,7 @@ class ObjectInfoAbstract(models.Model):
 
     # TODO: Create PR to update model ids to uuids
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.BigAutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=150, blank=False)
     description = models.CharField(max_length=250, blank=True)
     owner = models.ForeignKey(

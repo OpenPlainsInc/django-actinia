@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -48,6 +48,7 @@ class ActiniaUserResponseSerializer(serializers.Serializer):
     Serializer for ActiniaUserResponse objects.
     """
 
+    id = serializers.IntegerField()
     user_id = serializers.IntegerField()
     actinia_username = serializers.CharField()
     actinia_role = ActiniaRoleChoiceField()
@@ -67,9 +68,8 @@ class ActiniaUserResponseSerializer(serializers.Serializer):
         """Get the user details for the actinia user"""
         try:
             # Access the dictionary key properly
-            actinia_username = obj.get("actinia_username")
+            actinia_username = obj.actinia_username
             if actinia_username:
-                print(f"get_user_details: {actinia_username}")
                 actinia_user_service = ActiniaUserService.ActiniaUserService()
                 user_details = actinia_user_service.get_actinia_user(actinia_username)
                 logger.info(f"User Details for {actinia_username}: {user_details}")

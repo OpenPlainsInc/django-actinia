@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -51,7 +51,8 @@ from grass.serializers import LocationResponseSerializer
 # from grass.serializers.UserListResponseSerializer import UserListResponseSerializer
 from grass.serializers import ProcessingResponseSerializer
 from grass.serializers import MapsetInfoResponseSerializer
-from grass.serializers import ResourceStatusSerializer
+from grass.serializers import ResourceStatusSerializer, ResponseStatusSerializer
+from grass.models.enums import ResponseStatusEnum, ResourceStatusEnum
 
 from actinia_openapi_python_client.models.projection_info_model import (
     ProjectionInfoModel,
@@ -95,12 +96,12 @@ class ProjectService:
             api_response = self.api_instance.locations_get()
             serializer = LocationResponseSerializer(data=api_response)
             if serializer.is_valid():
-                if serializer.data["status"] == "success":
+                if serializer.data["status"] == ResponseStatusEnum.SUCCESS.label:
                     # Check if locations exist in database
                     return serializer.data
                 else:
                     self.logger.warning(
-                        f"ActiniaLocations retrevial warning: {serializer.data['message']}"
+                        f"ActiniaLocations retrevial warning: {serializer.data}"
                     )
                     return serializer.data
             else:
@@ -124,16 +125,16 @@ class ProjectService:
             )
 
             self.logger.info(f"create_project.api_response: {api_response}")
-            serializer = ResourceStatusSerializer(data=api_response)
+            serializer = ProcessingResponseSerializer(data=api_response)
             if serializer.is_valid():
                 self.logger.info(
                     f"Create Project Serialized Response: {serializer.data}"
                 )
-                if serializer.data["status"] == "finished":
+                if serializer.data["status"] == ResourceStatusEnum.FINISHED.label:
                     self.logger.info(f"Location created: {project_name}")
                     return serializer.data
                 else:
-                    self.logger.error(f"Error: {serializer.data['message']}")
+                    self.logger.error(f"Error: {serializer.data}")
                     return serializer.data
             else:
                 self.logger.error(
@@ -183,9 +184,9 @@ class ProjectService:
             api_response = self.api_instance.locations_location_name_delete(
                 location_name
             )
-            serializer = ResourceStatusSerializer(data=api_response)
+            serializer = ResponseStatusSerializer(data=api_response)
             if serializer.is_valid():
-                if serializer.data["status"] == "success":
+                if serializer.data["status"] == ResponseStatusEnum.SUCCESS.label:
                     self.logger.info(f"ActiniaProject deleted: {location_name}")
                     return serializer.data
                 else:
@@ -195,7 +196,7 @@ class ProjectService:
                     return serializer.data
             else:
                 self.logger.error(
-                    f"ResourceStatusSerializer Serialization Error: {serializer.errors}"
+                    f"ResponseStatusSerializer Serialization Error: {serializer.errors}"
                 )
                 return serializer.errors
         except ApiException as e:

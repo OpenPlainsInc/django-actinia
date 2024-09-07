@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -51,21 +51,16 @@ class LocationSerializerTest(TransactionTestCase):
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
     def setUp(self, mock_users_user_id_post, mock_locations_location_name_post):
         self.user = User.objects.create_user(username="testuser", password="password")
-        self.user.save()
         self.factory = RequestFactory()
-        self.request = self.factory.post("/location/")
+        self.request = self.factory.post("/location/", format="json")
         self.request.user = self.user
         mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
             self.user.username
         )
 
-        self.actinia_user = ActiniaUser.objects.create(
-            actinia_username=self.user.username,
-            actinia_role=RolesEnum.ADMIN.value,
-            user=self.user,
-        )
+        self.actinia_user = self.user.actinia_user
         self.location_data = {
-            "name": "Test Location",
+            "name": "Test_Location",
             "epsg": "4326",
             "public": True,
             "slug": "test-location",
@@ -128,22 +123,28 @@ class LocationSerializerTest(TransactionTestCase):
                 self.location_data["name"], self.location_data["epsg"]
             )
         )
-        self.location_data["name"] = "Test Location 2"
+        self.location_data["name"] = "Test_Location_2"
         serializer = LocationSerializer(
             data=self.location_data, context={"request": self.request}
         )
+        print(f"test_deserialization {serializer}")
         self.assertTrue(serializer.is_valid())
         location = serializer.save()
         self.assertEqual(location.name, self.location_data["name"])
 
-    # @patch(
-    #     "actinia_openapi_python_client.LocationManagementApi.locations_location_name_delete"
-    # )
-    # def tearDown(self, mock_locations_location_name_delete):
-    #     mock_locations_location_name_delete.return_value = (
-    #         ActiniaLocationsAPIMocks.delete_location(self.location_data['name'])
-    #     )
-
-    #     self.location.delete()
-    #     patch.stopall()  # This will stop all active patches
-    #     super().tearDown()
+    @patch(
+        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
+    )
+    def test_invalid_location_name(self, mock_locations_location_name_post):
+        """Location names shouldnt have spaces"""
+        mock_locations_location_name_post.return_value = (
+            ActiniaLocationsAPIMocks.create_location(
+                "Test Location", self.location_data["epsg"]
+            )
+        )
+        self.location_data["name"] = "Test Location"
+        serializer = LocationSerializer(
+            data=self.location_data, context={"request": self.request}
+        )
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("name", serializer.errors)

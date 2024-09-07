@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Sep 02 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -263,11 +263,12 @@ class ActiniaUsersAPIMocks:
         return UserInfoResponseModel.from_dict(data)
 
     @staticmethod
-    def get_user_error(user_id):
+    def get_user_error(user_id, as_dict=False):
         """Mock error response for getting a user at GET: /users/{user_id}"""
-        return SimpleResponseModel.from_dict(
-            {"message": f"User <{user_id}> does not exist", "status": "error"}
-        )
+        response = {"message": f"User <{user_id}> does not exist", "status": "error"}
+        if as_dict:
+            return response
+        return SimpleResponseModel.from_dict(response)
 
     @staticmethod
     def create_user(user_id):

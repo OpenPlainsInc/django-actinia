@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Nov 13 2023                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -55,6 +55,14 @@ class ObjectAuditAbstract(models.Model):
         null=True,
         blank=True,
     )
+
+    def save(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        if user:
+            if not self.pk:
+                self.created_by = user
+            self.updated_by = user
+        super(ObjectAuditAbstract, self).save(*args, **kwargs)
 
     class Meta:
         abstract = True

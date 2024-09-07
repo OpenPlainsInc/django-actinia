@@ -30,32 +30,13 @@ class LocationTestCase(TransactionTestCase):
             username=self.username, password=self.user_password
         )
 
-        self.actinia_user = ActiniaUser.objects.create(
-            user=self.user, actinia_role=RolesEnum.ADMIN.value
-        )
+        self.actinia_user = self.user.actinia_user
 
         self.location = Location.objects.create(
             name=self.location_name, epsg=self.location_epsg, owner=self.user
         )
         self.location.actinia_users.set([self.actinia_user])
         self.location.save()
-
-    # @classmethod
-    # def tearDownClass(cls):
-    #     with patch(
-    #         "actinia_openapi_python_client.LocationManagementApi.locations_location_name_delete"
-    #     ) as mock_locations_location_name_delete, patch(
-    #         "actinia_openapi_python_client.UserManagementApi.users_user_id_delete"
-    #     ) as mock_users_user_id_delete:
-    #         mock_locations_location_name_delete.return_value = (
-    #             ActiniaLocationsAPIMocks.delete_location(cls.location_name)
-    #         )
-    #         cls.location.delete()
-    #         mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
-    #             cls.username
-    #         )
-    #         cls.actinia_user.delete()
-    #         cls.user.delete()
 
     def test_location_creation(self):
         self.assertEqual(self.location.name, self.location_name)

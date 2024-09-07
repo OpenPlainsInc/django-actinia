@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,6 +33,7 @@
 from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
 from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
 from django.db import models
+from grass.validators import validate_no_spaces
 
 
 class Location(ObjectAuditAbstract, ObjectInfoAbstract):
@@ -56,6 +57,9 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     slug : str
     """
 
+    name = models.CharField(
+        max_length=255, blank=False, validators=[validate_no_spaces]
+    )
     epsg = models.CharField(max_length=8, blank=False)
     actinia_users = models.ManyToManyField("ActiniaUser", related_name="projects")
 

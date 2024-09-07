@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,7 +31,7 @@
 ###############################################################################
 
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from grass.models import Location
 from grass.serializers import LocationSerializer
 from rest_framework.response import Response
@@ -46,7 +46,8 @@ class LocationViewSet(viewsets.ModelViewSet):
 
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    http_method_names = ["get", "post", "delete"]
 
     @action(detail=True, methods=["get"])
     def custom_action(self, request, pk=None):

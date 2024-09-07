@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -44,12 +44,15 @@ User = get_user_model()
 
 class ActiniaUserTestCase(TransactionTestCase):
     def setUp(self):
+        self.username = "testuser"
         # Set up non-modified objects used by all test methods
         self.user = User.objects.create_user(
-            username="uesrtest1",
+            username=self.username,
             email="uesrtest1@example.com",
             password="testpass",
         )
+
+        self.actinia_user = self.user.actinia_user
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_delete")
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
@@ -57,25 +60,19 @@ class ActiniaUserTestCase(TransactionTestCase):
         self, mock_users_user_id_post, mock_users_user_id_delete
     ):
         mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
-            self.user.username
+            self.username
         )
         mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
-            self.user.username
-        )
-
-        actinia_user = ActiniaUser.objects.create(
-            user=self.user,
-            actinia_username=self.user.username,
-            actinia_role=RolesEnum.ADMIN.value,
+            self.username
         )
 
         # Assert that the actinia user is saved correctly
-        self.assertEqual(actinia_user.actinia_username, "uesrtest1")
-        self.assertEqual(actinia_user.actinia_role, RolesEnum.ADMIN.value)
-        self.assertEqual(actinia_user.user, self.user)
+        self.assertEqual(self.actinia_user.actinia_username, self.username)
+        self.assertEqual(self.actinia_user.actinia_role.value, RolesEnum.GUEST.value)
+        self.assertEqual(self.actinia_user.user, self.user)
         self.assertEqual(ActiniaUser.objects.count(), 1)
         # Delete the actinia user
-        actinia_user.delete()
+        self.actinia_user.delete()
         self.assertEqual(ActiniaUser.objects.count(), 0)
         # Ensure the mock was called
         # mock_users_user_id_post.assert_called_once_with(user_id=self.user.username, password=actinia_user.password, group=RolesEnum.ADMIN.label)
@@ -83,28 +80,16 @@ class ActiniaUserTestCase(TransactionTestCase):
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
     def test_actinia_user_user_exists(self, mock_users_user_id_post):
         mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user_error(
-            "test_user_id"
-        )
-        actinia_user = ActiniaUser.objects.create(
-            user=self.user,
-            actinia_username=self.user.username,
-            actinia_role=RolesEnum.ADMIN.value,
+            self.username
         )
 
         with self.assertRaises(IntegrityError):
             ActiniaUser.objects.create(
                 user=self.user,
-                actinia_username=self.user.username,
+                actinia_username=self.username,
                 actinia_role=RolesEnum.ADMIN.value,
             )
 
-            # End the transaction block before trying to delete the actinia user
-            transaction.set_rollback(True)
-
-            # Delete the actinia user
-            actinia_user.delete()
-            self.assertEqual(ActiniaUser.objects.count(), 0)
-
-    # @classmethod
-    # def tearDownClass(cls):
-    #     cls.user.delete()
+        self.actinia_user.delete()
+        # Delete the actinia user
+        self.assertEqual(ActiniaUser.objects.count(), 0)

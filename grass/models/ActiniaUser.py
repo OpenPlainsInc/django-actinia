@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -50,6 +50,7 @@ class ActiniaUser(ObjectAuditAbstract):
         password (str): The password of the actinia user.
     """
 
+    id = models.BigAutoField(primary_key=True, editable=False)
     actinia_username = models.CharField(max_length=50, blank=False, unique=True)
     actinia_role = ActiniaRoleEnumField()
     user = models.OneToOneField(

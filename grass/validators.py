@@ -1,7 +1,7 @@
 ###############################################################################
-# Filename: test_ActiniaUserResponseSerializer.py                              #
+# Filename: validators.py                                                      #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Friday November 17th 2023                                      #
+# File Created: Friday September 6th 2024                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
@@ -10,7 +10,7 @@
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,60 +30,9 @@
 #                                                                              #
 ###############################################################################
 
-
-from django.test import TransactionTestCase
-from grass.serializers import (
-    ActiniaUserResponseSerializer,
-)
-from grass.models.enums import RolesEnum
-from grass.models.ActiniaUser import ActiniaUser
-from unittest.mock import patch
-from ..mocks.ActiniaUsersAPIMocks import ActiniaUsersAPIMocks
-
-# from django.db import transaction
-from rest_framework.exceptions import ValidationError
-from grass.serializers.fields import ActiniaRoleChoiceField
-from grass.services import ActiniaUserService
-
-from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
 
-User = get_user_model()
-
-
-class ActiniaUserResponseSerializerTestCase(TransactionTestCase):
-    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
-    def setUp(self, mock_users_user_id_post):
-
-        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
-            "testuser"
-        )
-
-        self.user = User.objects.create_user(
-            username="testuser",
-            email="testuser@example.com",
-            password="testpass",
-        )
-
-        self.user_data = {
-            "id": self.user.id,
-            "user_id": self.user.id,
-            "actinia_username": self.user.username,
-            "actinia_role": RolesEnum.ADMIN.label,
-            "locations": [],
-            "created_on": "2023-11-17T00:00:00Z",
-            "updated_on": "2023-11-17T00:00:00Z",
-            "created_by": self.user.get_username(),
-            "updated_by": self.user.get_username(),
-            "user_details": {},
-        }
-
-    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
-    def test_serializer_valid(self, mock_users_user_id_get):
-
-        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(
-            self.user.username, as_dict=False
-        )
-
-        serializer = ActiniaUserResponseSerializer(data=self.user_data)
-        self.assertTrue(serializer.is_valid())
+def validate_no_spaces(value):
+    if " " in value:
+        raise ValidationError("This field should not contain spaces.")
