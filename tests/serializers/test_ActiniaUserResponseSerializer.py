@@ -70,7 +70,7 @@ class ActiniaUserResponseSerializerTestCase(TransactionTestCase):
             "user_id": self.user.id,
             "actinia_username": self.user.username,
             "actinia_role": RolesEnum.ADMIN.label,
-            "locations": [],
+            "projects": [],
             "created_on": "2023-11-17T00:00:00Z",
             "updated_on": "2023-11-17T00:00:00Z",
             "created_by": self.user.get_username(),

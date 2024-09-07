@@ -52,7 +52,9 @@ class ActiniaUserResponseSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     actinia_username = serializers.CharField()
     actinia_role = ActiniaRoleChoiceField()
-    locations = serializers.SlugRelatedField(read_only=True, slug_field="slug")
+    projects = serializers.SlugRelatedField(
+        read_only=True, slug_field="slug", many=True
+    )
     created_on = serializers.DateTimeField()
     updated_on = serializers.DateTimeField()
     created_by = serializers.CharField()
