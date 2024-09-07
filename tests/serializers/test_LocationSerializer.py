@@ -127,7 +127,7 @@ class LocationSerializerTest(TransactionTestCase):
         serializer = LocationSerializer(
             data=self.location_data, context={"request": self.request}
         )
-        print(f"test_deserialization {serializer}")
+
         self.assertTrue(serializer.is_valid())
         location = serializer.save()
         self.assertEqual(location.name, self.location_data["name"])

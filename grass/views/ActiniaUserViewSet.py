@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Sep 02 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,6 +36,7 @@ from rest_framework import status
 from rest_framework import viewsets, routers
 from grass.models import ActiniaUser
 from grass.serializers import ActiniaUserResponseSerializer
+from rest_framework.permissions import IsAuthenticated
 import logging
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,8 @@ logger = logging.getLogger(__name__)
 class ActiniaUserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ActiniaUser.objects.all()
     serializer_class = ActiniaUserResponseSerializer
+    # http_method_names = ["get", "post", "delete"]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset

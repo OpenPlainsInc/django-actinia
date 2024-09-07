@@ -116,7 +116,7 @@ class ActiniaUserService:
         """
         try:
             api_response = self.api_instance.users_user_id_get(user_id)
-            print("get_actinia_user api_response: ", api_response)
+
             serializer = UserInfoResponseModelSerializer(data=api_response.to_dict())
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
