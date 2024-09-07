@@ -43,8 +43,12 @@ User = get_user_model()
 
 
 class ActiniaUserTestCase(TransactionTestCase):
-    def setUp(self):
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
+    def setUp(self, mock_users_user_id_post):
         self.username = "testuser"
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
+            self.username
+        )
         # Set up non-modified objects used by all test methods
         self.user = User.objects.create_user(
             username=self.username,
@@ -77,9 +81,15 @@ class ActiniaUserTestCase(TransactionTestCase):
         # Ensure the mock was called
         # mock_users_user_id_post.assert_called_once_with(user_id=self.user.username, password=actinia_user.password, group=RolesEnum.ADMIN.label)
 
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_delete")
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
-    def test_actinia_user_user_exists(self, mock_users_user_id_post):
+    def test_actinia_user_user_exists(
+        self, mock_users_user_id_post, mock_users_user_id_delete
+    ):
         mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user_error(
+            self.username
+        )
+        mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
             self.username
         )
 
