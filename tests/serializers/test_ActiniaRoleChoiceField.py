@@ -1,16 +1,16 @@
 ###############################################################################
-# Filename: Layer.py                                                           #
+# Filename: test_ActiniaRoleChoiceField.py                                     #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Monday November 27th 2023                                      #
+# File Created: Monday September 2nd 2024                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,39 +30,39 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
-from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
-from .Mapset import Mapset
-from .ActiniaUser import ActiniaUser
-from .fields import LayerTypeEnumField
-from django.contrib.gis.db import models as gis_models
+
+from django.test import TestCase
+from rest_framework import serializers
+from grass.models.enums.RolesEnum import RolesEnum
+from grass.serializers.fields.ActiniaRoleChoiceField import ActiniaRoleChoiceField
 
 
-class Layer(ObjectAuditAbstract, ObjectInfoAbstract):
-    """
-    GRASS Layer class
-    """
+class TestActiniaRoleChoiceField(TestCase):
+    def setUp(self):
+        self.field = ActiniaRoleChoiceField()
 
-    mutable = models.BooleanField(default=False)
-    mapset = models.ForeignKey(Mapset, related_name="layers", on_delete=models.CASCADE)
-    actinia_owner = models.ManyToManyField(ActiniaUser, related_name="layers")
-    layer_type = LayerTypeEnumField()
-    size = models.CharField()  # KB
-    eres = models.FloatField()
-    wres = models.FloatField()
-    stac_asset = models.URLField()
-    thumbnail = models.URLField()
-    bbox = gis_models.PolygonField()
-    # spacial_resolution = # Create Spatial Resolution Field
-    # temporal_extent = # Create Temporal Extent Field
-    # categories = # Create Class
-    # color_scheme = # Create Color Scheme
-    # metadata = # Create Metadata class
-    # protocols =  (WebSocket, WebHook, WebRTC)
+    def test_init(self):
+        self.assertIsInstance(self.field, serializers.ChoiceField)
+        self.assertEqual(self.field.choices, RolesEnum.to_dict())
+        self.assertFalse(self.field.allow_blank)
 
-    def has_permission(self, user, action, context=None):
-        return self.mapset.has_permission(user, action, context)
+    def test_to_representation(self):
+        self.assertEqual(self.field.to_representation(""), "")
+        self.assertEqual(self.field.to_representation(None), None)
+        self.assertEqual(self.field.to_representation("SU"), "superadmin")
+        self.assertEqual(self.field.to_representation("AD"), "admin")
+        self.assertEqual(self.field.to_representation("US"), "user")
+        self.assertEqual(self.field.to_representation("GU"), "guest")
 
-    def __str__(self):
-        return f"{self.name} ({self.layer_type})"
+    def test_to_internal_value(self):
+        self.assertEqual(self.field.to_internal_value("superadmin"), "SU")
+        self.assertEqual(self.field.to_internal_value("admin"), "AD")
+        self.assertEqual(self.field.to_internal_value("user"), "US")
+        self.assertEqual(self.field.to_internal_value("guest"), "GU")
+        self.assertRaises(serializers.ValidationError, self.field.to_internal_value, "")
+        self.assertRaises(
+            serializers.ValidationError, self.field.to_internal_value, None
+        )
+        self.assertRaises(
+            serializers.ValidationError, self.field.to_internal_value, "invalid_role"
+        )

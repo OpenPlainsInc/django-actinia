@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Jan 11 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -44,3 +44,16 @@ class ResourceStatusChoiceField(serializers.ChoiceField):
         kwargs["choices"] = ResourceStatusEnum.choices
         kwargs["allow_blank"] = False
         super().__init__(**kwargs)
+
+    def to_representation(self, value):
+        """Converts the internal value to the string representation of a choice."""
+        if value in ("", None):
+            return value
+        return self.choices[value]
+
+    def to_internal_value(self, data):
+        """Converts the string representation of a choice to the internal value."""
+        for key, label in self.choices.items():
+            if data == label:
+                return key
+        self.fail("invalid_choice", input=data)

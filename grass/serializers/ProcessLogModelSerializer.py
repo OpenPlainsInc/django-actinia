@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Aug 30 2024                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -52,9 +52,11 @@ class ProcessLogModelSerializer(serializers.Serializer):
     id = serializers.CharField(required=False)
     executable = serializers.CharField()
     parameter = serializers.ListField(child=serializers.CharField())
-    stdout = serializers.CharField(required=False)
+    stdout = serializers.CharField(required=False, allow_blank=True)
     stderr = serializers.ListField(
-        child=serializers.CharField(required=False), required=False
+        child=serializers.CharField(required=False, allow_blank=True),
+        required=False,
+        default=[],
     )
     return_code = serializers.FloatField()
     run_time = serializers.FloatField(required=False)

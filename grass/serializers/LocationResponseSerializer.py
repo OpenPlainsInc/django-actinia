@@ -5,8 +5,8 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Sat Apr 13 2024                                               #
-# Modified By: Srihitha Reddy Kaalam                                           #
+# Last Modified: Fri Sep 06 2024                                               #
+# Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
@@ -56,6 +56,7 @@ class LocationResponseSerializer(serializers.Serializer):
 
     locations = StringListField(allow_empty=True)
     status = ResponseStatusChoiceField()
+    message = serializers.CharField(required=False, read_only=True)
 
     # def create(self, validated_data):
     #     """

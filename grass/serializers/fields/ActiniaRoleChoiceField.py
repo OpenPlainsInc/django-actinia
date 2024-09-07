@@ -1,16 +1,16 @@
 ###############################################################################
-# Filename: ActiniaUser.py                                                     #
+# Filename: ActiniaRoleChoiceField.py                                          #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Tuesday November 14th 2023                                     #
+# File Created: Monday September 2nd 2024                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Nov 17 2023                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,32 +30,30 @@
 #                                                                              #
 ###############################################################################
 
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from grass.services.ActiniaUserService import ActiniaUserService, USER_TASK
+from rest_framework import serializers
+from grass.models.enums.RolesEnum import RolesEnum
 
 
-# class ActiniaUserView(APIView):
-#     def get(self, request, task, format=None):
-#         service = ActiniaUserService()
-#         task = USER_TASK(task)
+class ActiniaRoleChoiceField(serializers.ChoiceField):
+    """
+    Custom serializer to handle Actinia resource response statuses.
+    (superadmin, admin, user, guest)
+    """
 
-#         if task == USER_TASK.USERS:
-#             # Call the method to get users
-#             data = service.get_users()
-#         elif task == USER_TASK.TOKEN:
-#             # Call the method to get token
-#             data = service.get_token()
-#         elif task == USER_TASK.API_KEY:
-#             # Call the method to get API key
-#             data = service.get_api_key()
-#         elif task == USER_TASK.API_LOG:
-#             # Call the method to get API log
-#             data = service.get_api_log()
-#         else:
-#             return Response(
-#                 {"error": "Invalid task"}, status=status.HTTP_400_BAD_REQUEST
-#             )
+    def __init__(self, **kwargs):
+        kwargs["choices"] = RolesEnum.choices
+        kwargs["allow_blank"] = False
+        super().__init__(**kwargs)
 
-#         return Response(data)
+    def to_representation(self, value):
+        """Converts the internal value to the string representation of a choice."""
+        if value in ("", None):
+            return value
+        return self.choices[value]
+
+    def to_internal_value(self, data):
+        """Converts the string representation of a choice to the internal value."""
+        for key, label in self.choices.items():
+            if data == label:
+                return key
+        self.fail("invalid_choice", input=data)

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 21 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,14 +36,33 @@ from rest_framework import status
 from rest_framework import viewsets, routers
 from grass.models import ActiniaUser
 from grass.serializers import ActiniaUserResponseSerializer
+from rest_framework.permissions import IsAuthenticated
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ActiniaUserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ActiniaUser.objects.all()
     serializer_class = ActiniaUserResponseSerializer
+    # http_method_names = ["get", "post", "delete"]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset
 
     def get_serializer_class(self):
         return self.serializer_class
+
+
+class ActiniaUserDetailView(APIView):
+    def get(self, request, pk, format=None):
+        try:
+            actinia_user = ActiniaUser.objects.get(pk=pk)
+            serializer = ActiniaUserResponseSerializer(actinia_user)
+            return Response(serializer.data)
+        except ActiniaUser.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.error(e)
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)

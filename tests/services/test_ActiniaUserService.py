@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Apr 10 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -46,18 +46,34 @@ class TestActiniaUserService(TestCase):
         self.actinia_user_service = ActiniaUserService()
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
+    def test_create_actinia_user(self, mock_users_user_id_post):
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
+            "test_user_id"
+        )
+        response = self.actinia_user_service.create_actinia_user(
+            None, "test_user_id", "test_password", "admin"
+        )
+        self.assertEqual(
+            response, {"status": "success", "message": "User test_user_id created"}
+        )
+
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
     def test_create_actinia_user_already_exists(self, mock_users_user_id_post):
         mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user_error(
             "test_user_id"
         )
-        with self.assertRaises(Exception):
-            user = self.user
-            user_id = "test_user_id"
-            password = "test_password"
-            group = "admin"
-            self.actinia_user_service.create_actinia_user(
-                user, user_id, password, group
-            )
+        # with self.assertRaises(Exception):
+        user = None
+        user_id = "test_user_id"
+        password = "test_password"
+        group = "admin"
+        response = self.actinia_user_service.create_actinia_user(
+            user, user_id, password, group
+        )
+        self.assertEqual(
+            response,
+            {"message": "User <test_user_id> already exists", "status": "error"},
+        )
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_get")
     def test_get_actinia_users(self, mock_users_get):
@@ -71,9 +87,11 @@ class TestActiniaUserService(TestCase):
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
     def test_get_actinia_user(self, mock_users_user_id_get):
         user_id = "test_user_id"
-        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(user_id)
+        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(
+            user_id, as_dict=False
+        )
         response = self.actinia_user_service.get_actinia_user(user_id)
-        # expected_response = {"message": f"User <{user_id}> does not exist", "status": "error"}  # TODO: Fix this
+        # expected_response = {"message": f"User <{user_id}> does not exist", "status": "success"}  # TODO: Fix this
         self.assertIsInstance(response, dict)
         # self.assertEqual(response, expected_response)  # TODO: Fix this
 
@@ -81,7 +99,7 @@ class TestActiniaUserService(TestCase):
     def test_get_actinia_user_error(self, mock_users_user_id_get):
         user_id = "fake_test_user_id"
         mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user_error(
-            user_id
+            user_id, as_dict=False
         )
         response = self.actinia_user_service.get_actinia_user(user_id)
         expected_response = {

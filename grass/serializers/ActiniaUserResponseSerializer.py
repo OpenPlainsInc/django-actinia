@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 21 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,8 +31,16 @@
 ###############################################################################
 
 from rest_framework import serializers
-from grass.serializers.LocationSerializer import LocationSerializer
+
+# from grass.serializers.LocationSerializer import LocationSerializer
 from grass.models import ActiniaUser
+from .fields import ActiniaRoleChoiceField
+from grass.services import ActiniaUserService
+
+# from grass.serializers.UserInfoResponseModelSerializer import UserInfoResponseModelSerializer
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ActiniaUserResponseSerializer(serializers.Serializer):
@@ -43,15 +51,34 @@ class ActiniaUserResponseSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     user_id = serializers.IntegerField()
     actinia_username = serializers.CharField()
-    actinia_role = serializers.CharField()
-    locations = LocationSerializer(many=True, read_only=True)
+    actinia_role = ActiniaRoleChoiceField()
+    projects = serializers.SlugRelatedField(
+        read_only=True, slug_field="slug", many=True
+    )
     created_on = serializers.DateTimeField()
     updated_on = serializers.DateTimeField()
     created_by = serializers.CharField()
     updated_by = serializers.CharField()
-    # modules = serializers.JSONField()
+    user_details = serializers.SerializerMethodField()
 
     class Meta:
         model = "ActiniaUser"
         fields = "__all__"
         depth = 1
+
+    def get_user_details(self, obj):
+        """Get the user details for the actinia user"""
+        try:
+            # Access the dictionary key properly
+            actinia_username = obj.actinia_username
+            if actinia_username:
+                actinia_user_service = ActiniaUserService.ActiniaUserService()
+                user_details = actinia_user_service.get_actinia_user(actinia_username)
+                logger.info(f"User Details for {actinia_username}: {user_details}")
+                return user_details
+            else:
+                logger.error("actinia_username not found in the object")
+                return {}
+        except Exception as e:
+            logger.error(f"Error fetching user details: {e}")
+            return {}

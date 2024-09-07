@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 18 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -33,8 +33,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from .Location import Location
+from .Permission import Permission
 from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
 from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
+from django.contrib.contenttypes.models import ContentType
 
 
 class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
@@ -57,15 +59,17 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
         The users who have access to the mapset.
     """
 
-    location = models.ForeignKey(
+    project = models.ForeignKey(
         Location, editable=False, on_delete=models.CASCADE, related_name="mapsets"
     )
-    users = models.ManyToManyField("ActiniaUser", related_name="mapsets")
+    allowed_users = models.ManyToManyField(
+        "ActiniaUser", related_name="accessible_mapsets"
+    )
 
     class Meta:
         unique_together = (
             "name",
-            "location",
+            "project",
             "owner",
         )  # This enforces uniqueness across these three fields within the Mapset model.
 
@@ -88,17 +92,19 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
         self.clean()  # Perform custom validation
         super(Mapset, self).save(*args, **kwargs)
 
+    def has_permission(self, user, action, context=None):
+        # Check if the user has direct permission or belongs to the allowed users
+        if self.owner == user or self.allowed_users.filter(id=user.id).exists():
+            return True
+
+        # Check specific permissions
+        permissions = Permission.objects.filter(
+            actinia_user=user,
+            content_type=ContentType.objects.get_for_model(self),
+            object_id=self.id,
+            action=action,
+        )
+        return any(perm.is_valid(context=context) for perm in permissions)
+
     def __str__(self):
         return f"{self.location.name} - {self.name}"
-
-    def layers_count(type=None):
-        """
-        Returns the number of layers in the mapset
-        """
-        pass
-
-    def layers(datatype=None):
-        """
-        Returns the layers in the mapset
-        """
-        pass

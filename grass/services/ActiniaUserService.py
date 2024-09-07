@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Fri Aug 30 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -57,9 +57,7 @@ from django.http import JsonResponse
 from grass.serializers import UserInfoResponseModelSerializer
 from grass.serializers.UserListResponseSerializer import UserListResponseSerializer
 from grass.serializers.ActiniaSimpleResponseSerializer import ResponseStatusSerializer
-
-
-from django.db import transaction
+from grass.serializers.ActiniaSimpleResponseSerializer import ResourceStatusSerializer
 
 ACTINIA_SETTINGS = settings.ACTINIA
 
@@ -118,7 +116,8 @@ class ActiniaUserService:
         """
         try:
             api_response = self.api_instance.users_user_id_get(user_id)
-            serializer = UserInfoResponseModelSerializer(data=api_response)
+
+            serializer = UserInfoResponseModelSerializer(data=api_response.to_dict())
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
                     self.logger.info(f"ActiniaUser retrieved: {user_id}")
@@ -148,8 +147,8 @@ class ActiniaUserService:
             api_response = self.api_instance.users_user_id_post(
                 user_id=user_id, password=password, group=group
             )
-
-            serializer = ResponseStatusSerializer(data=api_response)
+            self.logger.info("create_actinia_user.api_response: ", api_response)
+            serializer = ResourceStatusSerializer(data=api_response)
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
                     self.logger.info(
@@ -163,7 +162,7 @@ class ActiniaUserService:
                     return serializer.data
             else:
                 self.logger.error(
-                    f"ResponseStatusSerializer Serialization Error: {serializer.errors}"
+                    f"UserManagementApi->users_user_id_post: ResourceStatusSerializer Serialization Error: {serializer.errors}, {serializer.data}"
                 )
                 return serializer.errors
 

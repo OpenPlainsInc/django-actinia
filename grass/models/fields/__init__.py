@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 18 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,4 +36,4 @@ from .ActiniaResponseStatusEnumField import (
     ActiniaResponseStatusEnumField as ActiniaResponseStatusEnumField,
 )
 from .ActiniaRoleEnumField import ActiniaRoleEnumField as ActiniaRoleEnumField
-from .LayerTypeEnumField import LayerTypeEnumField as LayerTypeEnumField
+from .LayerTypeEnumField import LayerTypeEnumField

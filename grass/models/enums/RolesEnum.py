@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 21 2024                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -42,3 +42,7 @@ class RolesEnum(models.TextChoices):
     ADMIN = "AD", _("admin")
     USER = "US", _("user")
     GUEST = "GU", _("guest")
+
+    @classmethod
+    def to_dict(cls):
+        return {key: value for key, value in cls.choices}

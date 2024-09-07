@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Mar 06 2024                                               #
+# Last Modified: Mon Sep 02 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -36,3 +36,5 @@ from .ResponseStatusChoiceField import (
     ResponseStatusChoiceField as ResponseStatusChoiceField,
 )
 from .StringListField import StringListField as StringListField
+
+from .ActiniaRoleChoiceField import ActiniaRoleChoiceField as ActiniaRoleChoiceField

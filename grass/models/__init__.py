@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Mon Mar 18 2024                                               #
+# Last Modified: Tue Sep 03 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -37,7 +37,11 @@
 # from .fields.ActiniaResponseStatusEnumField import ActiniaResponseStatusEnumField as ActiniaResponseStatusEnumField
 # from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField as ActiniaRoleEnumField
 from .ActiniaUser import ActiniaUser as ActiniaUser
-from .Location import Location as Location
+from .Location import Location
 from .Mapset import Mapset as Mapset
 from .Token import Token as Token
 from .TokenResponseModel import TokenResponseModel as TokenResponseModel
+from .Permission import Permission as Permission
+from .Layer import Layer as Layer
+
+__all__ = ["Location", "ActiniaUser", "Mapset", "Layer", "Permission", "Token"]

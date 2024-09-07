@@ -5,8 +5,8 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Wed Apr 17 2024                                               #
-# Modified By: Srihitha Reddy Kaalam                                           #
+# Last Modified: Tue Sep 03 2024                                               #
+# Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
@@ -30,13 +30,14 @@
 #                                                                              #
 ###############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class ResourceStatusEnum(models.TextChoices):
 
-    SUCCESS = "success", "success"
-    ACCEPTED = "accepted", "accepted"
-    RUNNING = "running", "running"
-    FINISHED = "finished", "finished"
-    TERMINATED = "terminated", "terminated"
-    ERROR = "error", "error"
+    SUCCESS = "success", _("success")
+    ACCEPTED = "accepted", _("accepted")
+    RUNNING = "running", _("running")
+    FINISHED = "finished", _("finished")
+    TERMINATED = "terminated", _("terminated")
+    ERROR = "error", _("error")

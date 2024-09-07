@@ -1,16 +1,16 @@
 ###############################################################################
-# Filename: Layer.py                                                           #
+# Filename: validators.py                                                      #
 # Project: OpenPlains Inc.                                                     #
-# File Created: Monday November 27th 2023                                      #
+# File Created: Friday September 6th 2024                                      #
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Tue Sep 03 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
 #                                                                              #
-# Copyright (c) 2023 OpenPlains Inc.                                           #
+# Copyright (c) 2024 OpenPlains Inc.                                           #
 #                                                                              #
 # django-actinia is an open-source django app that allows for with             #
 # the Actinia REST API for GRASS GIS for distributed computational tasks.      #
@@ -30,39 +30,9 @@
 #                                                                              #
 ###############################################################################
 
-from django.db import models
-from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
-from .abstracts.ObjectInfoAbstract import ObjectInfoAbstract
-from .Mapset import Mapset
-from .ActiniaUser import ActiniaUser
-from .fields import LayerTypeEnumField
-from django.contrib.gis.db import models as gis_models
+from django.core.exceptions import ValidationError
 
 
-class Layer(ObjectAuditAbstract, ObjectInfoAbstract):
-    """
-    GRASS Layer class
-    """
-
-    mutable = models.BooleanField(default=False)
-    mapset = models.ForeignKey(Mapset, related_name="layers", on_delete=models.CASCADE)
-    actinia_owner = models.ManyToManyField(ActiniaUser, related_name="layers")
-    layer_type = LayerTypeEnumField()
-    size = models.CharField()  # KB
-    eres = models.FloatField()
-    wres = models.FloatField()
-    stac_asset = models.URLField()
-    thumbnail = models.URLField()
-    bbox = gis_models.PolygonField()
-    # spacial_resolution = # Create Spatial Resolution Field
-    # temporal_extent = # Create Temporal Extent Field
-    # categories = # Create Class
-    # color_scheme = # Create Color Scheme
-    # metadata = # Create Metadata class
-    # protocols =  (WebSocket, WebHook, WebRTC)
-
-    def has_permission(self, user, action, context=None):
-        return self.mapset.has_permission(user, action, context)
-
-    def __str__(self):
-        return f"{self.name} ({self.layer_type})"
+def validate_no_spaces(value):
+    if " " in value:
+        raise ValidationError("This field should not contain spaces.")

@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 21 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -37,7 +37,6 @@ from django.utils.crypto import get_random_string
 from .abstracts.ObjectAuditAbstract import ObjectAuditAbstract
 from .fields.ActiniaRoleEnumField import ActiniaRoleEnumField
 from django.conf import settings
-from grass.services import ActiniaUserService
 
 
 class ActiniaUser(ObjectAuditAbstract):
@@ -51,12 +50,16 @@ class ActiniaUser(ObjectAuditAbstract):
         password (str): The password of the actinia user.
     """
 
+    id = models.BigAutoField(primary_key=True, editable=False)
     actinia_username = models.CharField(max_length=50, blank=False, unique=True)
     actinia_role = ActiniaRoleEnumField()
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name="actinia_users", on_delete=models.CASCADE
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, related_name="actinia_user", on_delete=models.CASCADE
     )
-    password = models.CharField(max_length=128)
+    password = models.CharField(max_length=128, blank=True)
+    api_token = models.CharField(
+        max_length=255, blank=True
+    )  # Token for third-party API access
 
     def save(self, *args, **kwargs):
         # Trigger the pre_save and post_save signal

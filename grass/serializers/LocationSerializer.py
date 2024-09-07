@@ -5,7 +5,7 @@
 # Author: Corey White (smortopahri@gmail.com)                                  #
 # Maintainer: Corey White                                                      #
 # -----                                                                        #
-# Last Modified: Thu Mar 21 2024                                               #
+# Last Modified: Fri Sep 06 2024                                               #
 # Modified By: Corey White                                                     #
 # -----                                                                        #
 # License: GPLv3                                                               #
@@ -31,20 +31,63 @@
 ###############################################################################
 
 from rest_framework import serializers
-from grass.models.Location import Location
+from grass.models import Location, ActiniaUser
+import logging
+
+# User = get_user_model()
+
+logger = logging.getLogger(__name__)
 
 
 class LocationSerializer(serializers.ModelSerializer):
-    actinia_users = serializers.StringRelatedField(many=True)
+
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+    actinia_users = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=ActiniaUser.objects.all(), required=False
+    )
 
     class Meta:
         model = Location
-        fields = "__all__"
-        # exclude = ['actinia_users']
-        read_only_fields = [
+        fields = [
             "id",
+            "name",
+            "description",
+            "owner",
+            "epsg",
+            "public",
+            "slug",
+            "actinia_users",
             "created_on",
             "created_by",
             "updated_on",
             "updated_by",
         ]
+        read_only_fields = [
+            "id",
+            "slug",
+            "created_on",
+            "updated_on",
+            "created_by",
+            "updated_by",
+            "owner",
+        ]
+
+    def save(self, **kwargs):
+        # Pass the owner to the save method via kwargs if it's not set
+        kwargs["owner"] = self.context["request"].user
+        location = super().save(**kwargs)
+
+        # Check if actinia_users is empty
+        if not self.validated_data.get("actinia_users"):
+            # Get the current user from the context
+            user = self.context["request"].user
+
+            if user.actinia_user:
+                # Add the user's ActiniaUser instance to the actinia_users field
+                location.actinia_users.add(user.actinia_user)
+            else:
+                logger.warning(
+                    f"ActiniaUser instance not found for user {user.username}"
+                )
+
+        return location
