@@ -8,20 +8,20 @@ ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends --no-install-suggests \
-        # build-essential \
-        libssl-dev \
-        libffi-dev \
-        # python3-dev \
-        # python3-wheel \
-        # python3-setuptools \
-        # python3.10 \
-        # python3-pip \
-        binutils \
-        libgdal-dev \
-        libgeos-dev \
-        libproj-dev \
-        geoip-database \
-        postgis
+    # build-essential \
+    libssl-dev \
+    libffi-dev \
+    # python3-dev \
+    # python3-wheel \
+    # python3-setuptools \
+    # python3.10 \
+    # python3-pip \
+    binutils \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    geoip-database \
+    postgis
 
 # RUN ln -sf /usr/local/grass `grass --config path`
 # RUN pip install --upgrade pip six grass-session --ignore-installed six
@@ -38,10 +38,4 @@ RUN apt-get update \
 
 COPY requirements-dev.txt /code/requirements.txt
 RUN pip install -r /code/requirements.txt
-RUN pip install git+https://github.com/tomorrownow/actinia_openapi_python_client.git
-
-# # Build
-# RUN python setup.py sdist
-
-# # Install
-# RUN python -m pip install --user django-actinia/dist/django-grass-0.0.1a0.tar.gz
+RUN pip install actinia-openapi-python-client

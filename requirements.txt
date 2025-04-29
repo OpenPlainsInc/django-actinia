@@ -1,4 +1,4 @@
-actinia-openapi-python-client @ git+https://github.com/openplainsinc/actinia_openapi_python_client.git@v0.0.4
+actinia-openapi-python-client==0.0.5
 actinia-python-client==0.4.1
 celery==5.4.0
 channels==4.1.0
