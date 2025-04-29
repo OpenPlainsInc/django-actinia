@@ -1,5 +1,4 @@
 services:
-
   db:
     platform: linux/amd64
     image: postgis/postgis:13-3.2-alpine
@@ -16,8 +15,8 @@ services:
   actinia-core:
     platform: linux/amd64
     build:
-        context: ./actinia
-        dockerfile: Dockerfile
+      context: ./actinia
+      dockerfile: Dockerfile
     volumes:
       - ./actinia-core-data/grassdb:/actinia_core/grassdb:Z
       - ./actinia-core-data/userdata:/actinia_core/userdata
@@ -33,7 +32,7 @@ services:
       - "8088:8088"
       - "5439:5432"
     depends_on:
-      - redis
+      - valkey
 
   redis:
     image: redis:5.0.4-alpine
@@ -42,15 +41,32 @@ services:
     environment:
       - REDIS_PASS_FILE=/data/.redis
     command: [
-      "sh", "-c",
-      '
-      docker-entrypoint.sh
-      "/data/redis.conf"
-      --requirepass "$$(cat $$REDIS_PASS_FILE)"
-      '
-    ]
+        "sh",
+        "-c",
+        '
+        docker-entrypoint.sh
+        "/data/redis.conf"
+        --requirepass "$$(cat $$REDIS_PASS_FILE)"
+        ',
+      ]
     ports:
-        - "6379:6379"
+      - "6379:6379"
+
+  valkey:
+    image: valkey/valkey:8.1-alpine
+    volumes:
+      - ./valkey_data:/data
+    environment:
+      - VALKEY_PASS_FILE=/data/config/.valkey
+    command: [
+        "sh",
+        "-c",
+        '
+        docker-entrypoint.sh
+        "/data/config/valkey.conf"
+        --requirepass "$$(cat $$VALKEY_PASS_FILE)"
+        ',
+      ]
 
   django-redis-cache:
     image: redis:5.0.4-alpine
@@ -59,15 +75,16 @@ services:
     environment:
       - REDIS_PASS_FILE=/data/.redis
     command: [
-      "sh", "-c",
-      '
-      docker-entrypoint.sh
-      "/data/django-redis.conf"
-      --requirepass "$$(cat $$REDIS_PASS_FILE)"
-      '
-    ]
+        "sh",
+        "-c",
+        '
+        docker-entrypoint.sh
+        "/data/django-redis.conf"
+        --requirepass "$$(cat $$REDIS_PASS_FILE)"
+        ',
+      ]
     ports:
-        - "6370:6370"
+      - "6370:6370"
 
   api:
     build:
