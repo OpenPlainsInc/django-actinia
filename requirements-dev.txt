@@ -16,7 +16,7 @@ beautifulsoup4==4.12.3
 billiard==4.2.0
 black==24.8.0
 boltons==24.0.0
-cachetools==5.5.0
+cachetools==5.5.2
 celery==5.4.0
 certifi==2024.8.30
 cffi==1.17.0
