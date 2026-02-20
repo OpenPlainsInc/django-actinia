@@ -33,10 +33,17 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from grass.models import Location
-from grass.serializers import LocationSerializer
+from grass.serializers import LocationSerializer, LocationDetailSerializer
+from grass.serializers.LocationDetailSerializer import (
+    extract_bbox_from_wkt,
+    extract_unit_from_wkt,
+)
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class LocationViewSet(viewsets.ModelViewSet):
@@ -48,6 +55,47 @@ class LocationViewSet(viewsets.ModelViewSet):
     serializer_class = LocationSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "delete"]
+
+    def retrieve(self, request, pk=None):
+        """
+        Retrieve a specific location enriched with Actinia location info.
+
+        In addition to the standard model fields the response includes:
+        - ``region``: current computational region from Actinia
+        - ``bbox``: bounding box parsed from the CRS WKT
+        - ``unit``: linear/angular unit parsed from the CRS WKT
+        - ``mapsets``: names of mapsets that belong to this location
+        """
+        from grass.services.ProjectService import ProjectService
+
+        location = self.get_object()
+        serializer = LocationDetailSerializer(location, context={"request": request})
+        data = dict(serializer.data)
+
+        region = None
+        bbox = None
+        unit = None
+        try:
+            project_service = ProjectService()
+            actinia_data = project_service.get_project(location.name)
+            if actinia_data and "process_results" in actinia_data:
+                process_results = actinia_data["process_results"]
+                region = process_results.get("region")
+                projection_wkt = process_results.get("projection", "")
+                bbox = extract_bbox_from_wkt(projection_wkt)
+                unit = extract_unit_from_wkt(projection_wkt)
+        except Exception as e:
+            logger.warning(
+                "Could not retrieve Actinia location info for %s: %s",
+                location.name,
+                e,
+            )
+
+        data["region"] = region
+        data["bbox"] = bbox
+        data["unit"] = unit
+        data["mapsets"] = list(location.mapsets.values_list("name", flat=True))
+        return Response(data)
 
     @action(detail=True, methods=["get"])
     def custom_action(self, request, pk=None):
