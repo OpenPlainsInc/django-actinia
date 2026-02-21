@@ -83,7 +83,7 @@ def extract_unit_from_wkt(wkt):
         if "foot" in unit_name or "feet" in unit_name:
             return "feet"
         return unit_name
-    if re.search(r'ANGLEUNIT\[', wkt):
+    if re.search(r"ANGLEUNIT\[", wkt):
         return "degrees"
     return None
 

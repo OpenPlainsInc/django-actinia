@@ -33,7 +33,6 @@ from grass.serializers.LocationDetailSerializer import (
     extract_unit_from_wkt,
 )
 
-
 # Sample WKT strings used in tests
 PROJECTED_WKT = (
     'PROJCRS["NAD83(HARN) / North Carolina",'
@@ -93,9 +92,9 @@ class ExtractUnitFromWktTests(TestCase):
         # Geographic CRS: no LENGTHUNIT at top-level axes, only ANGLEUNIT
         geographic_no_lengthunit = (
             'GEOGCRS["WGS 84",DATUM["World Geodetic System 1984"],'
-            'CS[ellipsoidal,2],'
+            "CS[ellipsoidal,2],"
             'AXIS["latitude",north,ORDER[1],ANGLEUNIT["degree",0.0174532925199433]],'
-            'BBOX[-90,-180,90,180]]'
+            "BBOX[-90,-180,90,180]]"
         )
         result = extract_unit_from_wkt(geographic_no_lengthunit)
         self.assertEqual(result, "degrees")
@@ -104,7 +103,7 @@ class ExtractUnitFromWktTests(TestCase):
         wkt_with_foot = (
             'PROJCRS["Test",CS[Cartesian,2],'
             'AXIS["easting",east,LENGTHUNIT["foot",0.3048]],'
-            'BBOX[0,0,1,1]]'
+            "BBOX[0,0,1,1]]"
         )
         result = extract_unit_from_wkt(wkt_with_foot)
         self.assertEqual(result, "feet")
