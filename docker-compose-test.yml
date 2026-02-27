@@ -1,9 +1,10 @@
 services:
   db:
     platform: linux/amd64
-    image: postgis/postgis:13-3.2-alpine
-    # volumes:
-    #   - ./data/db:/var/lib/postgresql/data:Z
+    image: postgis/postgis:18-3.6
+    volumes:
+      - pgdata:/var/lib/postgresql
+   #   - ./data/db:/var/lib/postgresql/data:Z
     ports:
       - "5431:5432"
     restart: always
@@ -111,3 +112,6 @@ services:
       - redis
       - db
       - api
+
+volumes:
+  pgdata: 
