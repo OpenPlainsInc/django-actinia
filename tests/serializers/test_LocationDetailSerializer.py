@@ -101,9 +101,7 @@ class ExtractUnitFromWktTests(TestCase):
 
     def test_foot_unit(self):
         wkt_with_foot = (
-            'PROJCRS["Test",CS[Cartesian,2],'
-            'AXIS["easting",east,LENGTHUNIT["foot",0.3048]],'
-            "BBOX[0,0,1,1]]"
+            'PROJCRS["Test",CS[Cartesian,2],AXIS["easting",east,LENGTHUNIT["foot",0.3048]],BBOX[0,0,1,1]]'
         )
         result = extract_unit_from_wkt(wkt_with_foot)
         self.assertEqual(result, "feet")

@@ -113,9 +113,7 @@ class LocationDetailSerializer(LocationSerializer):
         child=serializers.FloatField(), required=False, read_only=True, allow_null=True
     )
     unit = serializers.CharField(required=False, read_only=True, allow_null=True)
-    mapsets = serializers.ListField(
-        child=serializers.CharField(), required=False, read_only=True
-    )
+    mapsets = serializers.ListField(child=serializers.CharField(), required=False, read_only=True)
 
     class Meta(LocationSerializer.Meta):
         fields = LocationSerializer.Meta.fields + ["region", "bbox", "unit", "mapsets"]

@@ -68,12 +68,8 @@ class LocationAPITestCase(APITestCase, URLPatternsTestCase, TransactionTestCase)
         # Check the returned data
         self.assertGreaterEqual(len(response.data), 1)  # At least one location should exist
 
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get"
-    )
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get")
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_post")
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
     def test_retrieve_location(
         self,
@@ -83,16 +79,12 @@ class LocationAPITestCase(APITestCase, URLPatternsTestCase, TransactionTestCase)
     ):
         """Test retrieving a single location (GET /locations/{id}/) includes region data"""
 
-        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(
-            self.user.username, as_dict=False
+        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(self.user.username, as_dict=False)
+        mock_locations_location_name_post.return_value = ActiniaLocationsAPIMocks.create_location(
+            self.location_data["name"], self.location_data["epsg"]
         )
-        mock_locations_location_name_post.return_value = (
-            ActiniaLocationsAPIMocks.create_location(
-                self.location_data["name"], self.location_data["epsg"]
-            )
-        )
-        mock_locations_location_name_info_get.return_value = (
-            ActiniaLocationsAPIMocks.get_location_info(self.location_data["name"])
+        mock_locations_location_name_info_get.return_value = ActiniaLocationsAPIMocks.get_location_info(
+            self.location_data["name"]
         )
 
         # Create a location first
