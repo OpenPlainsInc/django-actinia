@@ -68,6 +68,43 @@ class LocationAPITestCase(APITestCase, URLPatternsTestCase, TransactionTestCase)
         # Check the returned data
         self.assertGreaterEqual(len(response.data), 1)  # At least one location should exist
 
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get")
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_post")
+    @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
+    def test_retrieve_location(
+        self,
+        mock_users_user_id_get,
+        mock_locations_location_name_post,
+        mock_locations_location_name_info_get,
+    ):
+        """Test retrieving a single location (GET /locations/{id}/) includes region data"""
+
+        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(self.user.username, as_dict=False)
+        mock_locations_location_name_post.return_value = ActiniaLocationsAPIMocks.create_location(
+            self.location_data["name"], self.location_data["epsg"]
+        )
+        mock_locations_location_name_info_get.return_value = ActiniaLocationsAPIMocks.get_location_info(
+            self.location_data["name"]
+        )
+
+        # Create a location first
+        create_response = self.client.post(self.url, self.location_data, format="json")
+        self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
+        location_id = create_response.data["id"]
+
+        # Retrieve the specific location
+        url = reverse("grass:location-detail", args=[location_id])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("region", response.data)
+        self.assertIn("bbox", response.data)
+        self.assertIn("unit", response.data)
+        self.assertIn("mapsets", response.data)
+        # region should be a dict from Actinia
+        self.assertIsInstance(response.data["region"], dict)
+        self.assertIn("n", response.data["region"])
+
     def test_update_location(self):
         """Test updating a location (PUT request)"""
         # First, create a location

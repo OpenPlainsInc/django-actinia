@@ -54,6 +54,9 @@ from .InputParameterImportDescrSerializer import (
 from .InputParameterSerializer import (
     InputParameterSerializer as InputParameterSerializer,
 )
+from .LocationDetailSerializer import (
+    LocationDetailSerializer as LocationDetailSerializer,
+)
 from .LocationResponseSerializer import (
     LocationResponseSerializer as LocationResponseSerializer,
 )
