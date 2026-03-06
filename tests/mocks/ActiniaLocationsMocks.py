@@ -32,11 +32,12 @@
 
 
 class ActiniaLocationsAPIMocks:
-
     # Actinia Location Requests
     @staticmethod
-    def get_locations(location_list=["nc_spm_08"]):
+    def get_locations(location_list=None):
         """Mock response for a getting locations GET: /locations"""
+        if location_list is None:
+            location_list = ["nc_spm_08"]
         return {"locations": location_list, "status": "success"}
 
     @staticmethod
