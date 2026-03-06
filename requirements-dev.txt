@@ -69,7 +69,7 @@ hyperlink==21.0.0
 hypothesis==6.111.2
 hypothesis-graphql==0.11.1
 hypothesis-jsonschema==0.23.1
-identify==2.6.0
+identify==2.6.17
 idna==3.8
 imagesize==1.4.1
 incremental==24.7.2
