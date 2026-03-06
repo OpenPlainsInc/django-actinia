@@ -1,4 +1,4 @@
-FROM python:3.10.8-bullseye
+FROM python:3.13.6-bullseye
 # FROM osgeo/grass-gis:releasebranch_8_3-debian as grass
 WORKDIR /code
 LABEL authors="Corey White"
