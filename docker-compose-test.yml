@@ -36,7 +36,7 @@ services:
       - valkey
 
   redis:
-    image: redis:5.0.14-alpine
+    image: redis:8.6.1-alpine
     volumes:
       - ./redis_config:/data/
     environment:
@@ -70,7 +70,7 @@ services:
       ]
 
   django-redis-cache:
-    image: redis:5.0.14-alpine
+    image: redis:8.6.1-alpine
     volumes:
       - ./redis_config:/data/
     environment:
