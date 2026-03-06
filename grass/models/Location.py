@@ -57,9 +57,7 @@ class Location(ObjectAuditAbstract, ObjectInfoAbstract):
     slug : str
     """
 
-    name = models.CharField(
-        max_length=255, blank=False, validators=[validate_no_spaces]
-    )
+    name = models.CharField(max_length=255, blank=False, validators=[validate_no_spaces])
     epsg = models.CharField(max_length=8, blank=False)
     actinia_users = models.ManyToManyField("ActiniaUser", related_name="projects")
 

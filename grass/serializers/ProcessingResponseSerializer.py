@@ -47,9 +47,7 @@ class ProcessingResponseSerializer(serializers.Serializer):
     resource_id = serializers.CharField(required=True)
     queue = serializers.CharField(required=False)
     process_log = serializers.ListField(child=serializers.DictField(), required=False)
-    process_chain_list = serializers.ListField(
-        child=serializers.DictField(), required=False
-    )
+    process_chain_list = serializers.ListField(child=serializers.DictField(), required=False)
     process_results = serializers.DictField(required=False)
     progress = serializers.DictField(required=False)
     exception = serializers.DictField(required=False)

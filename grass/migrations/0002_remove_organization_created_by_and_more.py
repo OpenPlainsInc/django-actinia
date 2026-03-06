@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("grass", "0001_initial"),
     ]
@@ -88,9 +87,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name="location",
-            constraint=models.UniqueConstraint(
-                fields=("name", "epsg", "owner"), name="unique_location"
-            ),
+            constraint=models.UniqueConstraint(fields=("name", "epsg", "owner"), name="unique_location"),
         ),
         migrations.DeleteModel(
             name="Organization",

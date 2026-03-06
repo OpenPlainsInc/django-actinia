@@ -46,30 +46,24 @@ class TestActiniaProjectService(TransactionTestCase):
     def setUp(self):
         self.project_service = ProjectService()
 
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_post")
     def test_create_project(self, mock_locations_location_name_post):
         project_name = "test_location_name"
         project_epsg = 2264
-        mock_locations_location_name_post.return_value = (
-            ActiniaLocationsAPIMocks.create_location(project_name, project_epsg)
+        mock_locations_location_name_post.return_value = ActiniaLocationsAPIMocks.create_location(
+            project_name, project_epsg
         )
         response = self.project_service.create_project(project_name, project_epsg)
         self.assertIsInstance(response, dict)
         self.assertEqual(response["status"], "finished")
-        self.assertEqual(
-            response["message"], f"Location <{project_name}> successfully created"
-        )
+        self.assertEqual(response["message"], f"Location <{project_name}> successfully created")
 
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_post")
     def test_create_project_already_exists(self, mock_locations_location_name_post):
         project_name = "test_location_name"
         project_epsg = 2264
-        mock_locations_location_name_post.return_value = (
-            ActiniaLocationsAPIMocks.create_location_error(project_name, project_epsg)
+        mock_locations_location_name_post.return_value = ActiniaLocationsAPIMocks.create_location_error(
+            project_name, project_epsg
         )
         response = self.project_service.create_project(project_name, project_epsg)
         self.assertIsInstance(response, dict)
@@ -82,43 +76,35 @@ class TestActiniaProjectService(TransactionTestCase):
     @patch("actinia_openapi_python_client.LocationManagementApi.locations_get")
     def test_get_projects(self, mock_locations_get):
         location_list = ["test_locations"]
-        mock_locations_get.return_value = ActiniaLocationsAPIMocks.get_locations(
-            location_list
-        )
+        mock_locations_get.return_value = ActiniaLocationsAPIMocks.get_locations(location_list)
         response = self.project_service.get_projects()
         expected_response = {"locations": location_list, "status": "success"}
         self.assertIsInstance(response, dict)
         self.assertEqual(response, expected_response)
 
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get")
     def test_get_project(self, mock_locations_location_name_info_get):
         location_name = "test_location_name"
-        mock_locations_location_name_info_get.return_value = (
-            ActiniaLocationsAPIMocks.get_location_info(location_name)
+        mock_locations_location_name_info_get.return_value = ActiniaLocationsAPIMocks.get_location_info(
+            location_name
         )
         response = self.project_service.get_project(location_name)
         self.assertIsInstance(response, dict)
 
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_info_get")
     def test_get_project_error(self, mock_locations_location_name_info_get):
         location_name = "fake_test_location_name"
-        mock_locations_location_name_info_get.return_value = (
-            ActiniaLocationsAPIMocks.get_location_info_error(location_name)
+        mock_locations_location_name_info_get.return_value = ActiniaLocationsAPIMocks.get_location_info_error(
+            location_name
         )
         response = self.project_service.get_project(location_name)
         self.assertIsInstance(response, dict)
 
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_delete"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_delete")
     def test_delete_project(self, mock_locations_location_name_delete):
         location_name = "test_location_name"
-        mock_locations_location_name_delete.return_value = (
-            ActiniaLocationsAPIMocks.delete_location(location_name)
+        mock_locations_location_name_delete.return_value = ActiniaLocationsAPIMocks.delete_location(
+            location_name
         )
         expected_response = {
             "message": f"location {location_name} deleted",
@@ -128,13 +114,11 @@ class TestActiniaProjectService(TransactionTestCase):
         self.assertIsInstance(response, dict)
         self.assertEqual(response, expected_response)
 
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_delete"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_delete")
     def test_delete_project_error(self, mock_locations_location_name_delete):
         location_name = "fake_test_location_name"
-        mock_locations_location_name_delete.return_value = (
-            ActiniaLocationsAPIMocks.delete_location_error(location_name)
+        mock_locations_location_name_delete.return_value = ActiniaLocationsAPIMocks.delete_location_error(
+            location_name
         )
         expected_response = {
             "message": f"location {location_name} does not exists",

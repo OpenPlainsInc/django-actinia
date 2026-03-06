@@ -44,10 +44,6 @@ class ProgressInfoModelSerializerTest(TestCase):
     def test_serializer_field_types(self):
         serializer = ProgressInfoModelSerializer()
         self.assertIsInstance(serializer.fields["step"], serializers.IntegerField)
-        self.assertIsInstance(
-            serializer.fields["num_of_steps"], serializers.IntegerField
-        )
+        self.assertIsInstance(serializer.fields["num_of_steps"], serializers.IntegerField)
         self.assertIsInstance(serializer.fields["sub_step"], serializers.IntegerField)
-        self.assertIsInstance(
-            serializer.fields["num_of_sub_steps"], serializers.IntegerField
-        )
+        self.assertIsInstance(serializer.fields["num_of_sub_steps"], serializers.IntegerField)

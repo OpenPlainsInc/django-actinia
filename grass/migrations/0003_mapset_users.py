@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("grass", "0002_remove_organization_created_by_and_more"),
@@ -15,8 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="mapset",
             name="users",
-            field=models.ManyToManyField(
-                related_name="mapsets", to=settings.AUTH_USER_MODEL
-            ),
+            field=models.ManyToManyField(related_name="mapsets", to=settings.AUTH_USER_MODEL),
         ),
     ]

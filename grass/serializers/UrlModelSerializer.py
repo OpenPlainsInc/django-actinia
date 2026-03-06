@@ -43,6 +43,4 @@ class UrlModelSerializer(serializers.Serializer):
     """
 
     status = serializers.CharField()  # Add the status URL property
-    resources = serializers.ListField(
-        child=serializers.URLField()
-    )  # Add the resources property
+    resources = serializers.ListField(child=serializers.URLField())  # Add the resources property

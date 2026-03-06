@@ -60,9 +60,5 @@ class TestActiniaRoleChoiceField(TestCase):
         self.assertEqual(self.field.to_internal_value("user"), "US")
         self.assertEqual(self.field.to_internal_value("guest"), "GU")
         self.assertRaises(serializers.ValidationError, self.field.to_internal_value, "")
-        self.assertRaises(
-            serializers.ValidationError, self.field.to_internal_value, None
-        )
-        self.assertRaises(
-            serializers.ValidationError, self.field.to_internal_value, "invalid_role"
-        )
+        self.assertRaises(serializers.ValidationError, self.field.to_internal_value, None)
+        self.assertRaises(serializers.ValidationError, self.field.to_internal_value, "invalid_role")

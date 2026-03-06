@@ -47,9 +47,7 @@ class ObjectInfoAbstract(models.Model):
     id = models.BigAutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=150, blank=False)
     description = models.CharField(max_length=250, blank=True)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, editable=True, on_delete=models.CASCADE
-    )
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, editable=True, on_delete=models.CASCADE)
     public = models.BooleanField(default=False)
     slug = models.SlugField(max_length=150, blank=True, editable=False, unique=True)
 

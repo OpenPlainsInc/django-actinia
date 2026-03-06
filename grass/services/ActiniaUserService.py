@@ -63,25 +63,20 @@ ACTINIA_SETTINGS = settings.ACTINIA
 
 
 class ActiniaUserService:
-
     logger = logging.getLogger(__name__)
 
     def __init__(self):
         try:
             print("ACTINIA_BASEURL: ", ACTINIA_SETTINGS["ACTINIA_BASEURL"])
             configuration = actinia_openapi_python_client.Configuration(
-                host=f'{ACTINIA_SETTINGS["ACTINIA_BASEURL"]}/api/v3/',
+                host=f"{ACTINIA_SETTINGS['ACTINIA_BASEURL']}/api/v3/",
                 username=ACTINIA_SETTINGS["ACTINIA_USER"],
                 password=ACTINIA_SETTINGS["ACTINIA_PASSWORD"],
             )
             with actinia_openapi_python_client.ApiClient(configuration) as api_client:
-                self.api_instance = actinia_openapi_python_client.UserManagementApi(
-                    api_client
-                )
+                self.api_instance = actinia_openapi_python_client.UserManagementApi(api_client)
         except Exception as e:
-            self.logger.error(
-                f"Exception occurred during Actinia user service initialization: {e}"
-            )
+            self.logger.error(f"Exception occurred during Actinia user service initialization: {e}")
             raise
 
     def get_actinia_users(self):
@@ -96,19 +91,13 @@ class ActiniaUserService:
                     # Check if users exist in database
                     return serializer.data
                 else:
-                    self.logger.warning(
-                        f"ActiniaUsers retrevial warning: {serializer.data['message']}"
-                    )
+                    self.logger.warning(f"ActiniaUsers retrevial warning: {serializer.data['message']}")
                     return serializer.data
             else:
-                self.logger.error(
-                    f"UserListResponseSerializer Serialization Error: {serializer.errors}"
-                )
+                self.logger.error(f"UserListResponseSerializer Serialization Error: {serializer.errors}")
                 return serializer.errors
         except ApiException as e:
-            self.logger.error(
-                f"Exception when calling UserManagementApi->users_get: {e}"
-            )
+            self.logger.error(f"Exception when calling UserManagementApi->users_get: {e}")
 
     def get_actinia_user(self, user_id):
         """
@@ -123,19 +112,13 @@ class ActiniaUserService:
                     self.logger.info(f"ActiniaUser retrieved: {user_id}")
                     return serializer.data
                 else:
-                    self.logger.error(
-                        f"ActiniaUser retrieval failed: {serializer.data['message']}"
-                    )
+                    self.logger.error(f"ActiniaUser retrieval failed: {serializer.data['message']}")
                     return serializer.data
             else:
-                self.logger.error(
-                    f"UserInfoResponseModelSerializer Serialization Error: {serializer.errors}"
-                )
+                self.logger.error(f"UserInfoResponseModelSerializer Serialization Error: {serializer.errors}")
                 return serializer.errors
         except ApiException as e:
-            self.logger.error(
-                f"Exception when calling UserManagementApi->users_user_id_get: {e}"
-            )
+            self.logger.error(f"Exception when calling UserManagementApi->users_user_id_get: {e}")
 
     def create_actinia_user(self, user, user_id, password, group=RolesEnum.USER.label):
         """
@@ -151,14 +134,10 @@ class ActiniaUserService:
             serializer = ResourceStatusSerializer(data=api_response)
             if serializer.is_valid():
                 if serializer.data["status"] == "success":
-                    self.logger.info(
-                        f"ActiniaUser created: {user_id} in group: {group}"
-                    )
+                    self.logger.info(f"ActiniaUser created: {user_id} in group: {group}")
                     return serializer.data
                 else:
-                    self.logger.error(
-                        f"ActiniaUser creation failed: {serializer.data['message']}"
-                    )
+                    self.logger.error(f"ActiniaUser creation failed: {serializer.data['message']}")
                     return serializer.data
             else:
                 self.logger.error(
@@ -167,9 +146,7 @@ class ActiniaUserService:
                 return serializer.errors
 
         except ApiException as e:
-            self.logger.error(
-                f"Exception when calling UserManagementApi->users_user_id_post: {e}"
-            )
+            self.logger.error(f"Exception when calling UserManagementApi->users_user_id_post: {e}")
 
     def delete_actinia_user(self, actinia_username):
         """
@@ -184,16 +161,10 @@ class ActiniaUserService:
                     self.logger.info(f"ActiniaUser deleted: {actinia_user_id}")
                     return serializer.data
                 else:
-                    self.logger.error(
-                        f"ActiniaUser deletion failed: {serializer.data['message']}"
-                    )
+                    self.logger.error(f"ActiniaUser deletion failed: {serializer.data['message']}")
                     return serializer.data
             else:
-                self.logger.error(
-                    f"ResponseStatusSerializer Serialization Error: {serializer.errors}"
-                )
+                self.logger.error(f"ResponseStatusSerializer Serialization Error: {serializer.errors}")
                 return serializer.errors
         except ApiException as e:
-            self.logger.error(
-                f"Exception when calling UserManagementApi->users_user_id_delete: {e}"
-            )
+            self.logger.error(f"Exception when calling UserManagementApi->users_user_id_delete: {e}")

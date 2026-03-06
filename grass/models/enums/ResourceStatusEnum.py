@@ -34,7 +34,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ResourceStatusEnum(models.TextChoices):
-
     SUCCESS = "success", _("success")
     ACCEPTED = "accepted", _("accepted")
     RUNNING = "running", _("running")
