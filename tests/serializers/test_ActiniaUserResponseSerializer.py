@@ -47,17 +47,13 @@ from grass.services import ActiniaUserService
 
 from django.contrib.auth import get_user_model
 
-
 User = get_user_model()
 
 
 class ActiniaUserResponseSerializerTestCase(TransactionTestCase):
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
     def setUp(self, mock_users_user_id_post):
-
-        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
-            "testuser"
-        )
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user("testuser")
 
         self.user = User.objects.create_user(
             username="testuser",
@@ -80,10 +76,7 @@ class ActiniaUserResponseSerializerTestCase(TransactionTestCase):
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_get")
     def test_serializer_valid(self, mock_users_user_id_get):
-
-        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(
-            self.user.username, as_dict=False
-        )
+        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(self.user.username, as_dict=False)
 
         serializer = ActiniaUserResponseSerializer(data=self.user_data)
         self.assertTrue(serializer.is_valid())

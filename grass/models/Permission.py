@@ -58,21 +58,15 @@ class Permission(ObjectAuditAbstract):
     action = models.CharField(max_length=50, choices=ACTIONS)
 
     # Generic Foreign Key to link to any model
-    content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE, related_name="grass_permissions"
-    )
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="grass_permissions")
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
 
     # When clause fields
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
-    day_of_week = models.CharField(
-        max_length=9, null=True, blank=True
-    )  # e.g., "Monday"
-    custom_condition = models.TextField(
-        null=True, blank=True
-    )  # Store a custom condition as a string
+    day_of_week = models.CharField(max_length=9, null=True, blank=True)  # e.g., "Monday"
+    custom_condition = models.TextField(null=True, blank=True)  # Store a custom condition as a string
 
     class Meta:
         unique_together = ("actinia_user", "content_type", "object_id", "action")
@@ -109,9 +103,7 @@ class Permission(ObjectAuditAbstract):
 
     def is_valid(self, context=None):
         return (
-            self.is_within_time_range()
-            and self.is_day_of_week()
-            and self.evaluate_custom_condition(context)
+            self.is_within_time_range() and self.is_day_of_week() and self.evaluate_custom_condition(context)
         )
 
         # Supported operators
@@ -160,12 +152,8 @@ class Permission(ObjectAuditAbstract):
         try:
             node = ast.parse(expression, mode="eval").body
             result = self._safe_eval(node, context)
-            logger.debug(
-                f"Evaluated expression: {expression} with context: {context} -> Result: {result}"
-            )
+            logger.debug(f"Evaluated expression: {expression} with context: {context} -> Result: {result}")
             return result
         except Exception as e:
-            logger.error(
-                f"Failed to evaluate expression: {expression} with context: {context}. Error: {e}"
-            )
-            raise ValueError(f"Invalid expression: {e}")
+            logger.error(f"Failed to evaluate expression: {expression} with context: {context}. Error: {e}")
+            raise ValueError(f"Invalid expression: {e}") from e

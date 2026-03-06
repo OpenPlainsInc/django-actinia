@@ -47,14 +47,8 @@ def actinia_user_pre_save_created(sender, instance, **kwargs):
         actinia_user_service = ActiniaUserService()
 
         # Use a custom name if it is set otherwise use the username of the user
-        actinia_username = (
-            instance.actinia_username
-            if instance.actinia_username
-            else instance.user.username
-        )
-        actinia_role = (
-            instance.get_actinia_role_display()
-        )  # get the label of actinia_role
+        actinia_username = instance.actinia_username if instance.actinia_username else instance.user.username
+        actinia_role = instance.get_actinia_role_display()  # get the label of actinia_role
 
         # Generate a password if none is provided
         if not instance.password:
@@ -71,7 +65,7 @@ def actinia_user_pre_save_created(sender, instance, **kwargs):
         )
     except Exception as e:
         logger.error(f"Failed to create ActiniaUser: {str(e)}", exc_info=True)
-        raise ValidationError(f"Failed to create ActiniaUser: {str(e)}")
+        raise ValidationError(f"Failed to create ActiniaUser: {str(e)}") from e
 
 
 @receiver(post_save, sender=ActiniaUser)
@@ -89,9 +83,7 @@ def actinia_user_created(sender, instance, created, **kwargs):
 
         else:
             # Perform actions specific to updates to an existing ActiniaUser
-            logger.info(
-                f"ActiniaUser updated (Not Implemented): {instance.actinia_username}"
-            )
+            logger.info(f"ActiniaUser updated (Not Implemented): {instance.actinia_username}")
             # Example: Sync updated details with the third-party API
             # actinia_user_service.update_actinia_user(
             #     user=instance.actinia_username,
@@ -109,12 +101,10 @@ def actinia_user_deleted(sender, instance, **kwargs):
     print(f"ActiniaUser {instance.actinia_username} is about to be deleted.")
     try:
         actinia_user_service = ActiniaUserService()
-        actinia_user_service.delete_actinia_user(
-            actinia_username=instance.actinia_username
-        )
+        actinia_user_service.delete_actinia_user(actinia_username=instance.actinia_username)
     except Exception as e:
         logger.error(f"Failed to delete ActiniaUser: {str(e)}", exc_info=True)
-        raise ValidationError(f"Failed to delete ActiniaUser: {str(e)}")
+        raise ValidationError(f"Failed to delete ActiniaUser: {str(e)}") from e
 
 
 def notify_admin(instance):

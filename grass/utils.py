@@ -77,9 +77,7 @@ def print_as_json(data):
 
 def auth():
     # print(ACTINIA_SETTINGS)
-    auth = HTTPBasicAuth(
-        ACTINIA_SETTINGS["ACTINIA_USER"], ACTINIA_SETTINGS["ACTINIA_PASSWORD"]
-    )
+    auth = HTTPBasicAuth(ACTINIA_SETTINGS["ACTINIA_USER"], ACTINIA_SETTINGS["ACTINIA_PASSWORD"])
     return auth
 
 
@@ -149,7 +147,6 @@ def split_grass_command(grass_command: str):
 
 
 def create_actinia_process_chain(command: List[dict]) -> Optional[dict]:
-
     PCHAIN = {"version": "1", "list": list()}
     PCHAIN.update({"list": command})
 

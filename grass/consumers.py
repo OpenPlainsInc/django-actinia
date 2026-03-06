@@ -51,9 +51,7 @@ class ActiniaResourceConsumer(AsyncWebsocketConsumer):
         print("ActiniaResourceConsumer: Resource Name: ", self.resource_name)
 
         self.resource_group_name = "actinia_%s" % self.resource_name
-        print(
-            "ActiniaResourceConsumer: Resource Group Name: ", self.resource_group_name
-        )
+        print("ActiniaResourceConsumer: Resource Group Name: ", self.resource_group_name)
 
         # Join room group
         await self.channel_layer.group_add(self.resource_group_name, self.channel_name)
@@ -65,9 +63,7 @@ class ActiniaResourceConsumer(AsyncWebsocketConsumer):
         print("ActiniaResourceConsumer: Disconnect Close Code:", close_code)
 
         # Leave room group
-        await self.channel_layer.group_discard(
-            self.resource_group_name, self.channel_name
-        )
+        await self.channel_layer.group_discard(self.resource_group_name, self.channel_name)
 
     # Receive message from WebSocket
     async def receive(self, text_data):
@@ -101,9 +97,7 @@ class ActiniaResourceConsumer(AsyncWebsocketConsumer):
         if message in ["accepted"]:
             tasks.asyncResourceStatus.delay(user_id, resource_id)
         elif message in ["running"]:
-            await self.send(
-                text_data=json.dumps({"message": message, "resource_id": resource_id})
-            )
+            await self.send(text_data=json.dumps({"message": message, "resource_id": resource_id}))
             tasks.asyncResourceStatus.delay(user_id, resource_id)
 
         elif message == "finished":
@@ -150,6 +144,4 @@ class ActiniaResourceConsumer(AsyncWebsocketConsumer):
 
         else:
             # Send message to WebSocket
-            await self.send(
-                text_data=json.dumps({"message": message, "resource_id": resource_id})
-            )
+            await self.send(text_data=json.dumps({"message": message, "resource_id": resource_id}))

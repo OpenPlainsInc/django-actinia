@@ -9,26 +9,18 @@ from ..mocks.ActiniaLocationsMocks import ActiniaLocationsAPIMocks
 
 class LocationTestCase(TransactionTestCase):
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_post")
     def setUp(self, mock_users_user_id_post, mock_locations_location_name_post):
         self.username = "testuser99"
         self.location_name = "TestLocation"
         self.location_epsg = 3358
         self.user_password = "testpassword"
 
-        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
-            self.username
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(self.username)
+        mock_locations_location_name_post.return_value = ActiniaLocationsAPIMocks.create_location(
+            self.location_name, self.location_epsg
         )
-        mock_locations_location_name_post.return_value = (
-            ActiniaLocationsAPIMocks.create_location(
-                self.location_name, self.location_epsg
-            )
-        )
-        self.user = User.objects.create_user(
-            username=self.username, password=self.user_password
-        )
+        self.user = User.objects.create_user(username=self.username, password=self.user_password)
 
         self.actinia_user = self.user.actinia_user
 

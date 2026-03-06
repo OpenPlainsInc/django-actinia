@@ -88,12 +88,10 @@ def actinia_user_deleted(sender, instance, **kwargs):
             logger.info(f"ActiniaUser {instance.actinia_username} was deleted.")
     except Exception as e:
         logger.error(f"Failed to delete ActiniaUser: {str(e)}", exc_info=True)
-        raise ValidationError(f"Failed to delete ActiniaUser: {str(e)}")
+        raise ValidationError(f"Failed to delete ActiniaUser: {str(e)}") from e
 
 
 def notify_admin(instance):
     # Example function to notify an admin about the new user
     # This could be an email, a Slack message, or another form of notification
-    logger.info(
-        f"Notifying admin about new ActiniaUser attached to User: {instance.actinia_user}"
-    )
+    logger.info(f"Notifying admin about new ActiniaUser attached to User: {instance.actinia_user}")

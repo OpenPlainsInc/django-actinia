@@ -35,6 +35,4 @@ from rest_framework import serializers
 
 class UserListResponseSerializer(serializers.Serializer):
     status = serializers.CharField(help_text="The status of the request")
-    user_list = serializers.ListField(
-        child=serializers.CharField(), help_text="The names of all users"
-    )
+    user_list = serializers.ListField(child=serializers.CharField(), help_text="The names of all users")

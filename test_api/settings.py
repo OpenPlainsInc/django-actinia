@@ -283,7 +283,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f'redis://{env("REDIS_USER")}:{env("REDIS_PASSWORD")}@django-redis-cache:6370',
+        "LOCATION": f"redis://{env('REDIS_USER')}:{env('REDIS_PASSWORD')}@django-redis-cache:6370",
         "OPTIONS": {
             "db": "10",
             "parser_class": "redis.connection._HiredisParser",
@@ -383,21 +383,15 @@ CHANNEL_LAYERS = {
         # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [
-                f'redis://{env("REDIS_USER")}:{env("REDIS_PASSWORD")}@django-redis-cache:6370/5'
-            ],
+            "hosts": [f"redis://{env('REDIS_USER')}:{env('REDIS_PASSWORD')}@django-redis-cache:6370/5"],
         },
     },
 }
 
 # Celery
 # Running in Databases 0 and 1
-CELERY_BROKER_URL = (
-    f'redis://{env("REDIS_USER")}:{env("REDIS_PASSWORD")}@django-redis-cache:6370/0'
-)
-CELERY_RESULT_BACKEND = (
-    f'redis://{env("REDIS_USER")}:{env("REDIS_PASSWORD")}@django-redis-cache:6370/1'
-)
+CELERY_BROKER_URL = f"redis://{env('REDIS_USER')}:{env('REDIS_PASSWORD')}@django-redis-cache:6370/0"
+CELERY_RESULT_BACKEND = f"redis://{env('REDIS_USER')}:{env('REDIS_PASSWORD')}@django-redis-cache:6370/1"
 
 # CELERY_TIMEZONE = "America/New_York"
 

@@ -39,9 +39,7 @@ class UserInfoResponseModelPermissionsSerializer(serializers.Serializer):
     process_num_limit = serializers.IntegerField(required=False)
     process_time_limit = serializers.CharField(required=False)
     accessible_datasets = serializers.JSONField(required=False)
-    accessible_modules = serializers.ListField(
-        child=serializers.CharField(), required=False
-    )
+    accessible_modules = serializers.ListField(child=serializers.CharField(), required=False)
 
 
 class UserInfoResponseModelSerializer(ResponseStatusSerializer):

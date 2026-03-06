@@ -11,7 +11,7 @@ To start development on this project, fork this repository and follow the follow
 $ git clone YOUR_FORKED_REPO_URL
 ```
 
-* Enter the directory
+ Enter the directory
 
 ```bash
 cd django-actinia/
@@ -79,46 +79,54 @@ git checkout -b new-feature
 
 ## Set up your python env
 
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management. Install it first:
+
 ```bash
-# create a virtual environment
-$ python3 -m venv venv
-# activate the virtual environment
-$ source venv/bin/activate
+# Install uv (macOS/Linux)
+$ curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Then sync the project environment (uv creates and manages the virtual environment automatically):
+
+```bash
+$ uv sync --all-groups
 ```
 
 ### Pre-Commit
 
 To improve code quality install pre-commit to perform precommit checks before push code to GitHub.
+This project uses [ruff](https://docs.astral.sh/ruff/) for linting and formatting.
 
 ```bash
-# Install pre-commit
-(venv) $ pip install pre-commit
 # Run pre-commit install to setup the git hook scripts
-(venv) $ pre-commit install
+$ uv run pre-commit install
+
+# Run ruff manually
+$ uv run ruff check .
+$ uv run ruff format .
 ```
 
 ### Install Dependencies
 
 ```bash
-# install django-extensions in development mode
-(venv) $ pip install -e .
-# install dependencies
-(venv) $ pip install Django -r requirements-dev.txt
+# Install the package in development mode with all dependencies
+$ uv sync --all-groups
 
-(venv) $ python manage.py runserver
+# Run the development server
+$ uv run python manage.py runserver
 ```
 
 ### Build Package
 
 ```bash
 # Build
-python setup.py sdist
+$ uv build
 
-# Install
-python -m pip install --user django-actinia/dist/django-grass-0.0.1a0.tar.gz
+# Install locally
+$ uv pip install dist/django_grass-0.0.1a0.tar.gz
 
 # Uninstall
-python -m pip uninstall django-actinia
+$ uv pip uninstall django-actinia
 ```
 
 ### Testing
@@ -138,18 +146,15 @@ docker compose --env-file .test.env --file docker-compose-test.yml exec api pyth
 To run tests against a particular `python` and `django` version installed inside your virtual environment, you may use:
 
 ```bash
-# install pytest
-(venv) $ pip install pytest-django # `python manage.py test` or `make test` also work
-(venv) $ pytest # `python manage.py test` or `make test` also
+$ uv run python manage.py test
+# or
+$ uv run pytest
 ```
 
 To run tests against all supported `python` and `django` versions, you may run:
 
 ```bash
-# install dependency
-(venv) $ pip install tox
-# run tests
-(venv) $ tox
+$ uv run tox
 ```
 
 ### Documentation
@@ -158,9 +163,7 @@ The project uses the Numpy Docstring standard to document code and is build usin
 To generate documentation you may run the following commands:
 
 ```bash
-# install dependency
-(venv) $ pip install sphinx
 # build new docs from source
-(venv) $ sphinx-apidoc -f -o docs/source actina/
+$ uv run sphinx-apidoc -f -o docs/source actinia/
 # Generate new site from docs
-(venv) $ sphinx-build -b html docs/source/ docs/build/html
+$ uv run sphinx-build -b html docs/source/ docs/build/html

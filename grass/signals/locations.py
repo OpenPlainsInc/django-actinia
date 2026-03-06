@@ -41,11 +41,9 @@ from django.core.exceptions import ValidationError
 def location_pre_save_created(sender, instance, **kwargs):
     try:
         project_service = ProjectService()
-        project_service.create_project(
-            project_name=instance.name, project_epsg=instance.epsg
-        )
+        project_service.create_project(project_name=instance.name, project_epsg=instance.epsg)
     except Exception as e:
-        raise ValidationError(f"Failed to create location: {str(e)}")
+        raise ValidationError(f"Failed to create location: {str(e)}") from e
 
 
 @receiver(post_save, sender=Location)
@@ -63,4 +61,4 @@ def location_deleted(sender, instance, **kwargs):
         project_service = ProjectService()
         project_service.delete_project(project_name=instance.name)
     except Exception as e:
-        raise ValidationError(f"Failed to delete location: {str(e)}")
+        raise ValidationError(f"Failed to delete location: {str(e)}") from e

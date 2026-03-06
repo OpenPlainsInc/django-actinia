@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("grass", "0005_region_rename_users_location_actinia_users"),
     ]
@@ -13,15 +12,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="location",
             name="slug",
-            field=models.SlugField(
-                blank=True, editable=False, max_length=150, unique=True
-            ),
+            field=models.SlugField(blank=True, editable=False, max_length=150, unique=True),
         ),
         migrations.AddField(
             model_name="mapset",
             name="slug",
-            field=models.SlugField(
-                blank=True, editable=False, max_length=150, unique=True
-            ),
+            field=models.SlugField(blank=True, editable=False, max_length=150, unique=True),
         ),
     ]

@@ -39,11 +39,12 @@ from actinia_openapi_python_client.models.simple_response_model import (
 
 
 class ActiniaUsersAPIMocks:
-
     # Actinia Users Requests
     @staticmethod
-    def get_users(user_list=["actinia-gdi"]):
+    def get_users(user_list=None):
         """Mock response for getting users at GET: /users"""
+        if user_list is None:
+            user_list = ["actinia-gdi"]
         return {"status": "success", "user_list": user_list}
 
     @staticmethod
