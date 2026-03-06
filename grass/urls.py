@@ -35,7 +35,6 @@ from django.urls import path, include
 from rest_framework import routers
 from django.views.decorators.cache import cache_page
 
-
 # from grass.views.general.locations import locations
 
 # from grass.views.ActiniaUserView import ActiniaUserView
@@ -49,7 +48,6 @@ from grass.views.general.mapsets import MapsetViewSet
 
 
 from rest_framework.routers import DefaultRouter
-
 
 app_name = "grass"
 

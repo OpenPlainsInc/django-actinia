@@ -1,3 +1,80 @@
 [build-system]
-requires = ['setuptools>=40.8.0', 'wheel']
-build-backend = 'setuptools.build_meta:__legacy__'
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-grass"
+version = "0.0.1-alpha.0"
+description = "A Django package to utilize Actinia REST API for GRASS GIS for distributed computational analysis and modeling."
+readme = "README.rst"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+dependencies = [
+    "actinia-openapi-python-client>=0.0.5",
+    "actinia-python-client>=0.4.1",
+    "celery>=5.4.0",
+    "channels>=4.1.0",
+    "channels-redis>=4.2.0",
+    "daphne>=4.1.2",
+    "Django>=5.1",
+    "django-cors-headers>=4.4.0",
+    "django-debug-toolbar>=4.4.6",
+    "django-environ>=0.11.2",
+    "django-extensions>=3.2.3",
+    "django-filter>=24.3",
+    "django-guardian>=2.4.0",
+    "django-storages>=1.14.4",
+    "djangorestframework>=3.15.2",
+    "djangorestframework-gis>=1.1",
+    "drf-spectacular>=0.27.2",
+    "google-cloud-storage>=2.18.2",
+    "graphql-core>=3.2.3",
+    "hiredis>=3.0.0",
+    "httpx>=0.27.2",
+    "msgpack>=1.0.8",
+    "pillow>=10.4.0",
+    "psycopg2-binary>=2.9.9",
+    "pystac>=1.10.1",
+    "python-dateutil>=2.9.0.post0",
+    "python-slugify>=8.0.4",
+    "pytz>=2024.1",
+    "PyYAML>=6.0.2",
+    "redis>=5.0.8",
+    "webcolors>=24.8.0",
+    "websocket-client>=1.8.0",
+    "Werkzeug>=3.0.4",
+]
+
+[project.urls]
+Homepage = "https://openplainsinc.github.io/django-actinia"
+Repository = "https://github.com/openplainsinc/django-actinia"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.0",
+    "pre-commit>=3.8.0",
+    "pytest>=8.3.2",
+    "pytest-subtests>=0.7.0",
+    "schemathesis>=3.35.1",
+    "Sphinx>=8.0.2",
+    "sphinx-material>=0.0.36",
+    "tox>=4.18.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["actinia*", "grass*"]
+
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "B9", "C90"]
+ignore = ["E203", "E265", "E266", "E501", "F403", "F401"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 18
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "test_api/settings"
+testpaths = ["tests"]
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
