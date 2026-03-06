@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("grass", "0006_location_slug_mapset_slug"),
     ]

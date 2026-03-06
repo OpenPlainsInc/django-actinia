@@ -46,9 +46,7 @@ class ActiniaUserTestCase(TransactionTestCase):
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
     def setUp(self, mock_users_user_id_post):
         self.username = "testuser"
-        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
-            self.username
-        )
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(self.username)
         # Set up non-modified objects used by all test methods
         self.user = User.objects.create_user(
             username=self.username,
@@ -60,15 +58,9 @@ class ActiniaUserTestCase(TransactionTestCase):
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_delete")
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
-    def test_actinia_user_create_actinia_user(
-        self, mock_users_user_id_post, mock_users_user_id_delete
-    ):
-        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
-            self.username
-        )
-        mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
-            self.username
-        )
+    def test_actinia_user_create_actinia_user(self, mock_users_user_id_post, mock_users_user_id_delete):
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(self.username)
+        mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(self.username)
 
         # Assert that the actinia user is saved correctly
         self.assertEqual(self.actinia_user.actinia_username, self.username)
@@ -83,15 +75,9 @@ class ActiniaUserTestCase(TransactionTestCase):
 
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_delete")
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
-    def test_actinia_user_user_exists(
-        self, mock_users_user_id_post, mock_users_user_id_delete
-    ):
-        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user_error(
-            self.username
-        )
-        mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(
-            self.username
-        )
+    def test_actinia_user_user_exists(self, mock_users_user_id_post, mock_users_user_id_delete):
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user_error(self.username)
+        mock_users_user_id_delete.return_value = ActiniaUsersAPIMocks.delete_user(self.username)
 
         with self.assertRaises(IntegrityError):
             ActiniaUser.objects.create(

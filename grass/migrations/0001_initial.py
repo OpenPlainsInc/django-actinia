@@ -12,7 +12,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -288,9 +287,7 @@ class Migration(migrations.Migration):
                 ("actinia_username", models.CharField(max_length=50, unique=True)),
                 (
                     "token",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="grass.token"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="grass.token"),
                 ),
             ],
             options={
@@ -397,16 +394,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="location",
             name="organization",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="grass.organization"
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="grass.organization"),
         ),
         migrations.AddField(
             model_name="location",
             name="owner",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name="location",
@@ -426,9 +419,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name="mapset",
-            constraint=models.UniqueConstraint(
-                fields=("name", "location", "owner"), name="unique_mapset"
-            ),
+            constraint=models.UniqueConstraint(fields=("name", "location", "owner"), name="unique_mapset"),
         ),
         migrations.AddConstraint(
             model_name="location",

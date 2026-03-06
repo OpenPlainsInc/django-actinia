@@ -57,9 +57,7 @@ class ActiniaUser(ObjectAuditAbstract):
         settings.AUTH_USER_MODEL, related_name="actinia_user", on_delete=models.CASCADE
     )
     password = models.CharField(max_length=128, blank=True)
-    api_token = models.CharField(
-        max_length=255, blank=True
-    )  # Token for third-party API access
+    api_token = models.CharField(max_length=255, blank=True)  # Token for third-party API access
 
     def save(self, *args, **kwargs):
         # Trigger the pre_save and post_save signal

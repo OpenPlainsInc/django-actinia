@@ -74,18 +74,14 @@ class ProjectService:
     def __init__(self):
         try:
             configuration = actinia_openapi_python_client.Configuration(
-                host=f'{ACTINIA_SETTINGS["ACTINIA_BASEURL"]}/api/v3/',
+                host=f"{ACTINIA_SETTINGS['ACTINIA_BASEURL']}/api/v3/",
                 username=ACTINIA_SETTINGS["ACTINIA_USER"],
                 password=ACTINIA_SETTINGS["ACTINIA_PASSWORD"],
             )
             with actinia_openapi_python_client.ApiClient(configuration) as api_client:
-                self.api_instance = actinia_openapi_python_client.LocationManagementApi(
-                    api_client
-                )
+                self.api_instance = actinia_openapi_python_client.LocationManagementApi(api_client)
         except Exception as e:
-            self.logger.error(
-                f"Exception occurred during Actinia Location service initialization: {e}"
-            )
+            self.logger.error(f"Exception occurred during Actinia Location service initialization: {e}")
             raise
 
     def get_projects(self):
@@ -100,19 +96,13 @@ class ProjectService:
                     # Check if locations exist in database
                     return serializer.data
                 else:
-                    self.logger.warning(
-                        f"ActiniaLocations retrevial warning: {serializer.data}"
-                    )
+                    self.logger.warning(f"ActiniaLocations retrevial warning: {serializer.data}")
                     return serializer.data
             else:
-                self.logger.error(
-                    f"LocationResponseSerializer Serialization Error: {serializer.errors}"
-                )
+                self.logger.error(f"LocationResponseSerializer Serialization Error: {serializer.errors}")
                 return serializer.errors
         except ApiException as e:
-            self.logger.error(
-                f"Exception when calling LocationManagementApi->locations_get: {e}"
-            )
+            self.logger.error(f"Exception when calling LocationManagementApi->locations_get: {e}")
 
     def create_project(self, project_name, project_epsg):
         """
@@ -127,9 +117,7 @@ class ProjectService:
             self.logger.info(f"create_project.api_response: {api_response}")
             serializer = ProcessingResponseSerializer(data=api_response)
             if serializer.is_valid():
-                self.logger.info(
-                    f"Create Project Serialized Response: {serializer.data}"
-                )
+                self.logger.info(f"Create Project Serialized Response: {serializer.data}")
                 if serializer.data["status"] == ResourceStatusEnum.FINISHED.label:
                     self.logger.info(f"Location created: {project_name}")
                     return serializer.data
@@ -137,9 +125,7 @@ class ProjectService:
                     self.logger.error(f"Error: {serializer.data}")
                     return serializer.data
             else:
-                self.logger.error(
-                    f"ProcessingResponseSerializer Serialization Error: {serializer.errors}"
-                )
+                self.logger.error(f"ProcessingResponseSerializer Serialization Error: {serializer.errors}")
                 return serializer.errors
         except ApiException as e:
             self.logger.error(
@@ -151,23 +137,17 @@ class ProjectService:
         Get a project (Location) for the user
         """
         try:
-            api_response = self.api_instance.locations_location_name_info_get(
-                project_name
-            )
+            api_response = self.api_instance.locations_location_name_info_get(project_name)
             serializer = MapsetInfoResponseSerializer(data=api_response)
             if serializer.is_valid():
                 if serializer.data["status"] == "finished":
                     self.logger.info(f"ActiniaLocation retrieved: {project_name}")
                     return serializer.data
                 else:
-                    self.logger.error(
-                        f"ActiniaLocation retrieval failed: {serializer.data['message']}"
-                    )
+                    self.logger.error(f"ActiniaLocation retrieval failed: {serializer.data['message']}")
                     return serializer.data
             else:
-                self.logger.error(
-                    f"MapsetInfoResponseSerializer Serialization Error: {serializer.errors}"
-                )
+                self.logger.error(f"MapsetInfoResponseSerializer Serialization Error: {serializer.errors}")
                 return serializer.errors
 
         except ApiException as e:
@@ -181,23 +161,17 @@ class ProjectService:
         """
         try:
             location_name = project_name
-            api_response = self.api_instance.locations_location_name_delete(
-                location_name
-            )
+            api_response = self.api_instance.locations_location_name_delete(location_name)
             serializer = ResponseStatusSerializer(data=api_response)
             if serializer.is_valid():
                 if serializer.data["status"] == ResponseStatusEnum.SUCCESS.label:
                     self.logger.info(f"ActiniaProject deleted: {location_name}")
                     return serializer.data
                 else:
-                    self.logger.error(
-                        f"ActiniaProject deletion failed: {serializer.data['message']}"
-                    )
+                    self.logger.error(f"ActiniaProject deletion failed: {serializer.data['message']}")
                     return serializer.data
             else:
-                self.logger.error(
-                    f"ResponseStatusSerializer Serialization Error: {serializer.errors}"
-                )
+                self.logger.error(f"ResponseStatusSerializer Serialization Error: {serializer.errors}")
                 return serializer.errors
         except ApiException as e:
             self.logger.error(

@@ -8,7 +8,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("contenttypes", "0002_remove_content_type_name"),
         ("grass", "0009_remove_location_unique_location_and_more"),
@@ -33,9 +32,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="mapset",
             name="allowed_users",
-            field=models.ManyToManyField(
-                related_name="accessible_mapsets", to="grass.actiniauser"
-            ),
+            field=models.ManyToManyField(related_name="accessible_mapsets", to="grass.actiniauser"),
         ),
         migrations.AlterField(
             model_name="actiniauser",
@@ -54,9 +51,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="location",
             name="actinia_users",
-            field=models.ManyToManyField(
-                related_name="projects", to="grass.actiniauser"
-            ),
+            field=models.ManyToManyField(related_name="projects", to="grass.actiniauser"),
         ),
         migrations.CreateModel(
             name="Layer",
@@ -77,9 +72,7 @@ class Migration(migrations.Migration):
                 ("public", models.BooleanField(default=False)),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, editable=False, max_length=150, unique=True
-                    ),
+                    models.SlugField(blank=True, editable=False, max_length=150, unique=True),
                 ),
                 ("mutable", models.BooleanField(default=False)),
                 (
@@ -105,9 +98,7 @@ class Migration(migrations.Migration):
                 ("bbox", django.contrib.gis.db.models.fields.PolygonField(srid=4326)),
                 (
                     "actinia_owner",
-                    models.ManyToManyField(
-                        related_name="layers", to="grass.actiniauser"
-                    ),
+                    models.ManyToManyField(related_name="layers", to="grass.actiniauser"),
                 ),
                 (
                     "created_by",
@@ -221,9 +212,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "unique_together": {
-                    ("actinia_user", "content_type", "object_id", "action")
-                },
+                "unique_together": {("actinia_user", "content_type", "object_id", "action")},
             },
         ),
     ]

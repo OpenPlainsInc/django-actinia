@@ -12,9 +12,6 @@ def test_InputParameterSerializer():
         assert serializer.validated_data["param"] == "raster"
         assert serializer.validated_data["value"] == "elevation30m@PERMANENT"
         assert serializer.validated_data["import_descr"]["import_type"] == "raster"
-        assert (
-            serializer.validated_data["import_descr"]["import_path"]
-            == "/path/to/raster.tif"
-        )
+        assert serializer.validated_data["import_descr"]["import_path"] == "/path/to/raster.tif"
     else:
         print("Serializer is not valid.")

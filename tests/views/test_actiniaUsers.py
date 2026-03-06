@@ -44,9 +44,7 @@ from ..mocks.ActiniaUsersAPIMocks import ActiniaUsersAPIMocks
 from ..mocks.ActiniaLocationsMocks import ActiniaLocationsAPIMocks
 
 
-class ActiniaUserViewSetAPITestCase(
-    APITestCase, URLPatternsTestCase, TransactionTestCase
-):
+class ActiniaUserViewSetAPITestCase(APITestCase, URLPatternsTestCase, TransactionTestCase):
     urlpatterns = [
         path("api/v1/", include("grass.urls")),
     ]
@@ -55,12 +53,8 @@ class ActiniaUserViewSetAPITestCase(
     @patch("actinia_openapi_python_client.UserManagementApi.users_user_id_post")
     def setUp(self, mock_users_user_id_post, mock_users_user_id_get):
         # Create a user to authenticate requests
-        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user(
-            "testuser"
-        )
-        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(
-            self.user.username, as_dict=False
-        )
+        mock_users_user_id_post.return_value = ActiniaUsersAPIMocks.create_user("testuser")
+        mock_users_user_id_get.return_value = ActiniaUsersAPIMocks.get_user(self.user.username, as_dict=False)
         self.user = User.objects.create_user(username="testuser", password="testpass")
 
         # Log in the user to generate an auth token or session
@@ -90,9 +84,7 @@ class ActiniaUserViewSetAPITestCase(
             "actinia_users": [],
         }
         # URL for the API endpoint
-        self.url = reverse(
-            "grass:actinia-user-list"
-        )  # Assuming your API uses DRF router URLs
+        self.url = reverse("grass:actinia-user-list")  # Assuming your API uses DRF router URLs
 
     def test_list_actinia_users(self):
         """Test the GET request for listing actinia users"""
@@ -102,9 +94,7 @@ class ActiniaUserViewSetAPITestCase(
         # Ensure the response is successful
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("count"), 1)
-        self.assertEqual(
-            response.data.get("results")[0].get("actinia_username"), "testuser"
-        )
+        self.assertEqual(response.data.get("results")[0].get("actinia_username"), "testuser")
         # Check the returned data
         self.assertGreaterEqual(len(response.data), 1)
 
@@ -138,9 +128,7 @@ class ActiniaUserViewSetAPITestCase(
         # Check if the location was updated correctly
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    @patch(
-        "actinia_openapi_python_client.LocationManagementApi.locations_location_name_post"
-    )
+    @patch("actinia_openapi_python_client.LocationManagementApi.locations_location_name_post")
     @patch("actinia_openapi_python_client.LocationManagementApi.locations_get")
     def test_actinia_user_with_location(
         self,
@@ -150,15 +138,11 @@ class ActiniaUserViewSetAPITestCase(
         """Test deleting a location (DELETE request)"""
 
         # Mock the get locations response
-        mock_locations_get.return_value = ActiniaLocationsAPIMocks.get_locations(
-            location_list=[]
-        )
+        mock_locations_get.return_value = ActiniaLocationsAPIMocks.get_locations(location_list=[])
 
         # Mock the create location response
-        mock_locations_location_name_post.return_value = (
-            ActiniaLocationsAPIMocks.create_location(
-                self.location_data["name"], self.location_data["epsg"]
-            )
+        mock_locations_location_name_post.return_value = ActiniaLocationsAPIMocks.create_location(
+            self.location_data["name"], self.location_data["epsg"]
         )
 
         # Create a location

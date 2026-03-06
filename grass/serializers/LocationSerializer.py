@@ -40,7 +40,6 @@ logger = logging.getLogger(__name__)
 
 
 class LocationSerializer(serializers.ModelSerializer):
-
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
     actinia_users = serializers.PrimaryKeyRelatedField(
         many=True, queryset=ActiniaUser.objects.all(), required=False
@@ -86,8 +85,6 @@ class LocationSerializer(serializers.ModelSerializer):
                 # Add the user's ActiniaUser instance to the actinia_users field
                 location.actinia_users.add(user.actinia_user)
             else:
-                logger.warning(
-                    f"ActiniaUser instance not found for user {user.username}"
-                )
+                logger.warning(f"ActiniaUser instance not found for user {user.username}")
 
         return location

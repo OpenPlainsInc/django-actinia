@@ -60,9 +60,7 @@ class ActiniaWebhookFinishedReceiver(APIView):
             # * Execute a process
 
             # serializer.save()
-            return Response(
-                {"message": "Webhook received successfully"}, status=status.HTTP_200_OK
-            )
+            return Response({"message": "Webhook received successfully"}, status=status.HTTP_200_OK)
         else:
             print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

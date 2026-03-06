@@ -58,9 +58,7 @@ class MapsetInfoResponse(Mapset):
     """
 
     layers = models.ManyToManyField("Layer", related_name="mapsets")
-    region = models.ForeignKey(
-        "Region", on_delete=models.CASCADE, related_name="mapsets"
-    )
+    region = models.ForeignKey("Region", on_delete=models.CASCADE, related_name="mapsets")
 
     class Meta:
         verbose_name = "MapsetInfoResponse"

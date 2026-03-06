@@ -11,16 +11,28 @@
 
 A Django package to utilize `Actinia <https://actinia.mundialis.de/>`__ REST API for GRASS GIS for distributed compuational analysis and modeling.
 
-Requirments
+Requirements
 ------------
 
-* django (>= 4.0)
-* celery (>=5.2.6)
-* django-rest-framework (>=3.13)
-* django-rest-framework-gis (>=0.18)
-* requests (>=2.27)
+* Python >= 3.12
+* django (>= 5.1)
+* celery (>=5.4)
+* django-rest-framework (>=3.15)
+* django-rest-framework-gis (>=1.1)
+* GDAL (system dependency)
 
 Detailed documentation is in the "docs" directory.
+
+Installation
+------------
+
+Install using `uv <https://docs.astral.sh/uv/>`__::
+
+    uv add django-grass
+
+Or with pip::
+
+    pip install django-grass
 
 Quick start
 -----------
@@ -74,12 +86,14 @@ Quick start
 Documentation
 -------------
 
-1. Genearte the API Docs from the source code.
+1. Generate the API Docs from the source code.
 
 .. code:: bash
-    sphinx-apidoc -f -o docs/source actina/
+
+    uv run sphinx-apidoc -f -o docs/source actinia/
 
 2. Build the docs site
 
 .. code:: bash
-    sphinx-build -b html docs/source/ docs/build/html
+
+    uv run sphinx-build -b html docs/source/ docs/build/html

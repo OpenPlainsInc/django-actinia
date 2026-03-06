@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("grass", "0003_mapset_users"),
     ]
@@ -13,15 +12,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="location",
             name="users",
-            field=models.ManyToManyField(
-                related_name="locations", to="grass.actiniauser"
-            ),
+            field=models.ManyToManyField(related_name="locations", to="grass.actiniauser"),
         ),
         migrations.AlterField(
             model_name="mapset",
             name="users",
-            field=models.ManyToManyField(
-                related_name="mapsets", to="grass.actiniauser"
-            ),
+            field=models.ManyToManyField(related_name="mapsets", to="grass.actiniauser"),
         ),
     ]

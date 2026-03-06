@@ -59,12 +59,8 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
         The users who have access to the mapset.
     """
 
-    project = models.ForeignKey(
-        Location, editable=False, on_delete=models.CASCADE, related_name="mapsets"
-    )
-    allowed_users = models.ManyToManyField(
-        "ActiniaUser", related_name="accessible_mapsets"
-    )
+    project = models.ForeignKey(Location, editable=False, on_delete=models.CASCADE, related_name="mapsets")
+    allowed_users = models.ManyToManyField("ActiniaUser", related_name="accessible_mapsets")
 
     class Meta:
         unique_together = (
@@ -84,9 +80,7 @@ class Mapset(ObjectInfoAbstract, ObjectAuditAbstract):
         if Mapset.objects.filter(
             name=self.name, location__name=self.location.name, owner=self.owner
         ).exists():
-            raise ValidationError(
-                "A mapset with this name, location, and owner already exists."
-            )
+            raise ValidationError("A mapset with this name, location, and owner already exists.")
 
     def save(self, *args, **kwargs):
         self.clean()  # Perform custom validation

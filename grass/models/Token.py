@@ -64,9 +64,7 @@ class Token(ObjectAuditAbstract):
     """
 
     token = models.CharField(max_length=255, blank=False, unique=True, editable=False)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tokens"
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tokens")
     actinia_user = models.ForeignKey(
         "grass.ActiniaUser",
         on_delete=models.CASCADE,
@@ -74,9 +72,7 @@ class Token(ObjectAuditAbstract):
         related_name="actinia_tokens",
     )
     expires = models.DateTimeField(null=True)
-    token_type = models.CharField(
-        max_length=2, choices=TokenTypeEnum.choices, default=TokenTypeEnum.USER
-    )
+    token_type = models.CharField(max_length=2, choices=TokenTypeEnum.choices, default=TokenTypeEnum.USER)
     api_key = models.BooleanField(default=False)
 
     def __actinia_token_request_url(self, base_url, task):
@@ -98,9 +94,7 @@ class Token(ObjectAuditAbstract):
         return now < self.expires
 
     @classmethod
-    def generate_actinia_token(
-        cls, base_url, actinia_user, api_key=False, expiration_time=86400
-    ):
+    def generate_actinia_token(cls, base_url, actinia_user, api_key=False, expiration_time=86400):
         """
         Generate authorization token for user and store in Tokens
         """

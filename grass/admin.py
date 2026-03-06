@@ -36,7 +36,6 @@ from django.contrib.contenttypes.models import ContentType
 # from django.contrib.contenttypes.admin import ContentTypeAdmin
 from .models import ActiniaUser, Location, Mapset, Region, Token, Layer, Permission
 
-
 # class LocationInline(admin.TabularInline):
 #     model = Location
 #     extra = 0
