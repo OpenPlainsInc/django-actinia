@@ -131,6 +131,7 @@ rich>=13.8.0
 rpds-py>=0.20.0
 rsa>=4.9
 schemathesis>=3.35.1
+setuptools>=40.8.0
 selenium>=4.24.0
 service-identity>=24.1.0
 shellingham>=1.5.4
