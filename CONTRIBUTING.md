@@ -11,7 +11,7 @@ To start development on this project, fork this repository and follow the follow
 $ git clone YOUR_FORKED_REPO_URL
 ```
 
-* Enter the directory
+ Enter the directory
 
 ```bash
 cd django-actinia/
