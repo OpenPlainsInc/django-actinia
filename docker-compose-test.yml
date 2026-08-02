@@ -54,7 +54,7 @@ services:
       - "6379:6379"
 
   valkey:
-    image: valkey/valkey:8.1-alpine
+    image: valkey/valkey:9.1-alpine
     volumes:
       - ./valkey_data:/data
     environment:
