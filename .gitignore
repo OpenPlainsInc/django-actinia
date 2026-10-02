@@ -135,3 +135,7 @@ dump.rdb
 # actinia
 actinia-core-data/
 docs/
+
+# private Claude context and local test env
+CLAUDE.local.md
+.test.env

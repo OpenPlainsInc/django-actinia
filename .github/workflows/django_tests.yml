@@ -58,6 +58,12 @@ jobs:
     - name: Build and install package
       run: uv pip install -e .
 
+    - name: Provide the test environment file
+      # settings read .test.env through django-environ; the tracked copy was
+      # removed, so the placeholder example stands in. Variables the job sets
+      # below take precedence over the file.
+      run: cp .test.env.example .test.env
+
     - name: Run migrations
       env:
         POSTGRES_DBNAME: test_db
