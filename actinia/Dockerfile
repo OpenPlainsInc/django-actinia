@@ -1,4 +1,4 @@
-FROM mundialis/actinia-core:7.1.1
+FROM mundialis/actinia-core:7.2.2
 # actinia-core and plugins installation
 WORKDIR /build
 
